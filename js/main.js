@@ -304,8 +304,8 @@ color: rgb(30,152,255);
 var title1 = 'NitaiPage'
 var title2 = `Welcome to my Homepage`
 var content = `
-版 本 号：1.2.11
-更新日期：2024-08-30
+版 本 号：1.2.12
+更新日期：2024-08-31
 
 AboutME:  https://nitai.us.kg/about
 `
