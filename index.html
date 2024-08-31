@@ -299,6 +299,8 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 深浅模式辅助判段块 -->
+                        <div id="switchSetOn" class="a_switch" style="display: none;"></div>
                         <!-- 设置 -->
                         <div class="mainConts" style="overflow-y: auto;">
                             <div class="set_blocks set_blocks_new" style="margin-top: 10px;">
@@ -604,17 +606,26 @@
                                 </div>
                                 <div class="set_tip">
                                     <span class="set_text"><big>更新日志</big></span>
-                                    <div class="update_logs" style="margin: 0px 10px;">
-                                        <ul>
+                                    <div class="update_logs" style="margin: 0px 10px; height: 300px; overflow-y: auto; overflow-x: hidden;">
+                                        <ul>                                            
+                                            <li>V1.2.12 (2024.08.31)</li>
+                                                <ul type="none" class="update_log_text">
+                                                    - 修复：农历自定义开关问题<br>
+                                                    - 修复：更新日志版块排版布局<br>
+                                                    - 修复：农历自定义字体大小问题<br>
+                                                    - 修复：浅色背景导致的按钮颜色问题<br>
+                                                </ul>
                                             <li>V1.2.11 (2024.08.30)</li>
                                                 <ul type="none" class="update_log_text">
                                                     - 优化：主题切换细节<br>
+                                                    - 修复：时钟自定义内容保存问题<br>
+                                                    - 修复：日期自定义内容保存问题<br>
                                                     - 新增：农历显示开关<br>
                                                     - 新增：农历自定义(粗细、大小、透明度调整)滑块<br>
                                                 </ul>
                                             <li>V1.2.10 (2024.08.22)</li>
                                                 <ul type="none" class="update_log_text">
-                                                    - 优化：部分细节<br>
+                                                    - 优化：折叠/展开细节<br>
                                                     - 新增：主题选择<br>
                                                     - 新增：时间显秒开关<br>
                                                     - 新增：时钟自定义(粗细、大小、透明度调整)滑块<br>

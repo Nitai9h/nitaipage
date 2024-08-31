@@ -15,7 +15,7 @@
 
 ---
 
-* [imsyy](https://imsyy.top/)
+* [imsyy](https://www.imsyy.top/)
 * [青柠起始页](https://limestart.cn/)
 * [sou2](https://github.com/yeetime/sou2/)
 
