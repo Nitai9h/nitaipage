@@ -38,6 +38,7 @@ window.addEventListener('load', function () {
     document.fonts.add(font);
 
     // 初始化时间秒数状态
+    const timesState = getCookie('times');
     if (timesState === 'on') {
         $("#toggletimes").addClass('on');
         if ($('#switchSetOn').hasClass('switchon')) {
@@ -64,25 +65,25 @@ window.addEventListener('load', function () {
     //初始化三大滑块
     //time
     fontSizeSlider.value = parseInt(getCookie('fontSize'), 10) || 0;
-    timeText.style.fontSize = 2.75 + 3 * (fontSizeSlider.value / 100) + 'rem'; // 设置新字体大小
+    timeText.style.fontSize = 2.75 + 3 * (fontSizeSlider.value / 100) + 'rem';
     fontThickSlider.value = parseInt(getCookie('fontThick'), 10) || 0;
-    timeText.style.fontWeight = 100 + 800 * (fontThickSlider.value / 100); // 设置新 font-weight
+    timeText.style.fontWeight = 100 + 800 * (fontThickSlider.value / 100);
     opacitySlider.value = parseInt(getCookie('opacity'), 10) || 100;
-    timeText.style.opacity = opacitySlider.value / 100; // 设置新 opacity
+    timeText.style.opacity = opacitySlider.value / 100;
     //day
     dayFontSizeSlider.value = parseInt(getCookie('dayFontSize'), 10) || 0;
-    day.style.fontSize = 1.05 + 3 * (dayFontSizeSlider.value / 100) + 'rem'; // 设置新字体大小
+    day.style.fontSize = 1.05 + 3 * (dayFontSizeSlider.value / 100) + 'rem';
     dayFontThickSlider.value = parseInt(getCookie('dayFontThick'), 10) || 0;
-    day.style.fontWeight = 100 + 800 * (dayFontThickSlider.value / 100); // 设置新 font-weight
+    day.style.fontWeight = 100 + 800 * (dayFontThickSlider.value / 100);
     dayOpacitySlider.value = parseInt(getCookie('dayOpacity'), 10) || 100;
-    day.style.opacity = dayOpacitySlider.value / 100; // 设置新 opacity
+    day.style.opacity = dayOpacitySlider.value / 100;
     //lunar
     lunarFontSizeSlider.value = parseInt(getCookie('lunarFontSize'), 10) || 0;
-    lunar.style.fontSize = 0.8 + 2.5 * (lunarFontSizeSlider.value / 100) + 'rem'; // 设置新字体大小
+    lunar.style.fontSize = 0.8 + 2.5 * (lunarFontSizeSlider.value / 100) + 'rem';
     lunarFontThickSlider.value = parseInt(getCookie('lunarFontThick'), 10) || 0;
-    lunar.style.fontWeight = 100 + 800 * (lunarFontThickSlider.value / 100); // 设置新 font-weight
+    lunar.style.fontWeight = 100 + 800 * (lunarFontThickSlider.value / 100);
     lunarOpacitySlider.value = parseInt(getCookie('lunarOpacity'), 10) || 100;
-    lunar.style.opacity = lunarOpacitySlider.value / 100; // 设置新 opacity
+    lunar.style.opacity = lunarOpacitySlider.value / 100;
 
 }, false)
 
