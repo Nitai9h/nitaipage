@@ -1,7 +1,3 @@
-document.getElementById('toggletimes').onclick = function() {
-    toggletimes();
-  };
-
 function setCookie(name, value, days) {
     var expires = "";
     if (days) {
@@ -45,6 +41,9 @@ function toggletimes() {
 
 // 初始化时间秒数状态
 window.onload = function() {
+    $("#toggletimes").click(function () {
+        toggletimes()
+    });
     const timesState = getCookie('times');
     if (timesState === 'on') {
         $("#toggletimes").addClass('on');

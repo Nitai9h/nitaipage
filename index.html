@@ -9,7 +9,7 @@
     <!-- jQuery -->
     <script src="./js/jquery.min.js"></script>
     <!-- Lunar -->
-    <script type="text/javascript" src="./js/lunar.js"></script>
+    <script src="./js/lunar.js"></script>
     <!-- 引入样式 -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
     <link rel="stylesheet" type="text/css" href="./css/font.css">
@@ -23,11 +23,7 @@
         src="./js/iziToast.min.js">
     </script>
     <!-- IE Out -->
-    <script>
-        if ( /*@cc_on!@*/ false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href =
-            "https://www.imsyy.top/upgrade-your-browser/index.html?referrer=" + encodeURIComponent(window.location
-            .href);
-    </script>
+    <script type="text/javascript" src="./js/ie-out.js"></script>
 </head>
 
 <body>
@@ -408,8 +404,8 @@
                                         <span class="set_text" style="color: gray;"><small>是否展示农历</small></span>
                                     </div>
                                     <div>
+                                        <script src="./js/times.js"></script>
                                         <div class="switch" id="togglelunar"></div>
-                                        <script src="./js/times.js" nonce="toggle-switch-time"></script>
                                     </div>
                                 </div>
                                 <!-- 时间显秒块 -->
@@ -419,8 +415,8 @@
                                         <span class="set_text" style="color: gray;"><small>是否在时间处展示秒数</small></span>
                                     </div>
                                     <div>
+                                        <script src="./js/times.js"></script>
                                         <div class="switch" id="toggletimes"></div>
-                                        <script src="./js/times.js" nonce="toggle-switch-time"></script>
                                     </div>
                                 </div>
                                 <!-- 主题块 -->
@@ -722,9 +718,7 @@
                                 <div class="set_version">
                                     <span class="set_text"><big>版权信息</big></span>
                                     <span class="set_version-text">Copyright&nbsp;&copy;                
-                                    <script>
-                                        document.write(new Date().getFullYear())
-                                    </script>&nbsp;<a href="https://nitai.us.kg/">Nitai</a></span>
+                                        <script type="text/javascript" src="./js/year.js"></script>&nbsp;<a href="https://nitai.us.kg/">Nitai</a></span>
                                     <span class="set_version-text2">Open&nbsp;Source&nbsp;By&nbsp;<a href="https://www.imsyy.top/" target="_blank" style="color: rgb(180, 180, 180);">imsyy</a></span>
                                 </div>
                             </div>

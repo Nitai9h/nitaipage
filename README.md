@@ -4,6 +4,10 @@
 
 >基于 Snavigation V1.1 ( Open Source by imsyy )
 
+## 一键部署到 Vercel
+
+[![Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Nitai9h/nitaipage)
+
 ## 未来计划
 
 * 备忘
