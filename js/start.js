@@ -1,6 +1,6 @@
-document.getElementById('toggleStart').onclick = function() {
+document.getElementById('toggleStart').onclick = function () {
     toggleStart();
-  };
+};
 
 function setCookie(name, value, days) {
     var expires = "";
@@ -42,7 +42,7 @@ function toggleStart() {
 }
 
 // 初始化开关状态
-window.onload = function() {
+window.onload = function () {
     const quickStartState = getCookie('quickStart');
     if (quickStartState === 'on') {
         document.getElementById('toggleStart').classList.add('on');
@@ -55,5 +55,21 @@ window.onload = function() {
         if ($('#switchSetOn').hasClass('switchon')) {
             $("#toggleStart").removeClass('switchon');
         }
+    }
+};
+
+//初始化搜索建议
+window.onload = () => {
+    const applyThemeState = cookieManager.get('applyTheme');
+    applyTheme(applyThemeState || 'dark');
+    updateSelectedOptionText(applyThemeState === 'light' ? '浅色模式' : '深色模式');
+
+    const selectedSearchAPI = cookieManager.get('selectedSearchAPI');
+    if (selectedSearchAPI === 'bing') {
+        selectOption('必应', document.getElementById('dropdown-suggest-bing'));
+    } else if (selectedSearchAPI === 'google') {
+        selectOption('谷歌', document.getElementById('dropdown-suggest-google'));
+    } else {
+        selectOption('百度', document.getElementById('dropdown-suggest-baidu'));
     }
 };

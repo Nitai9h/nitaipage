@@ -1298,7 +1298,7 @@ input[type="radio"]:checked+label {
     width: 100%;
     /* 使下拉窗口宽度与下拉菜单一致 */
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    z-index: 20;
     border-radius: 6px;
     /* 下拉菜单圆角 */
     opacity: 0;

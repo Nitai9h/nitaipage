@@ -52,16 +52,6 @@ window.addEventListener('load', function () {
         }
     }
 
-    // 初始化主题
-    const applyThemeState = getCookie('applyTheme');
-    if (applyThemeState === 'light') {
-        applyLightTheme();
-        updateSelectedOptionText('浅色模式');
-    } else {
-        applyDarkTheme();
-        updateSelectedOptionText('深色模式');
-    }
-
     //初始化三大滑块
     //time
     fontSizeSlider.value = parseInt(getCookie('fontSize'), 10) || 0;
@@ -305,8 +295,8 @@ color: rgb(30,152,255);
 var title1 = 'NitaiPage'
 var title2 = `Welcome to my Homepage`
 var content = `
-版 本 号：1.2.13
-更新日期：2024-11-03
+版 本 号：1.2.14
+更新日期：2024-11-10
 
 AboutME:  https://nitai.us.kg/about
 `
