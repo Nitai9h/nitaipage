@@ -1,0 +1,1447 @@
+/*
+作者:D.Young
+主页：https://yyv.me/
+github：https://github.com/5iux/sou
+日期：2019-07-26
+版权所有，请勿删除
+========================================
+由 yeetime 修改
+github：https://github.com/yeetime/sou2
+日期：2019-12-13
+========================================
+由 imsyy 二次修改
+github：https://github.com/imsyy/sou2
+日期：2022-03-10
+*/
+
+//展开图标判断
+var toolAll = document.querySelector('.tool-all');
+
+// 默认搜索引擎列表
+var se_list_preinstall = {
+    '1': {
+        id: 1,
+        title: "百度",
+        url: "https://www.baidu.com/s",
+        name: "wd",
+        icon: "iconfont icon-baidu",
+    },
+    '2': {
+        id: 2,
+        title: "必应",
+        url: "https://cn.bing.com/search",
+        name: "q",
+        icon: "iconfont icon-bing",
+    },
+    '3': {
+        id: 3,
+        title: "谷歌",
+        url: "https://www.google.com/search",
+        name: "q",
+        icon: "iconfont icon-google",
+    },
+    '4': {
+        id: 4,
+        title: "搜狗",
+        url: "https://www.sogou.com/web",
+        name: "query",
+        icon: "iconfont icon-sougousousuo",
+    },
+    '5': {
+        id: 5,
+        title: "360",
+        url: "https://www.so.com/s",
+        name: "q",
+        icon: "iconfont icon-a-360sousuo",
+    },
+    '6': {
+        id: 6,
+        title: "微博",
+        url: "https://s.weibo.com/weibo",
+        name: "q",
+        icon: "iconfont icon-xinlangweibo",
+    },
+    '7': {
+        id: 7,
+        title: "知乎",
+        url: "https://www.zhihu.com/search",
+        name: "q",
+        icon: "iconfont icon-zhihu",
+    },
+    '8': {
+        id: 8,
+        title: "Github",
+        url: "https://github.com/search",
+        name: "q",
+        icon: "iconfont icon-github",
+    },
+    '9': {
+        id: 9,
+        title: "BiliBili",
+        url: "https://search.bilibili.com/all",
+        name: "keyword",
+        icon: "iconfont icon-bilibilidonghua",
+    },
+    '10': {
+        id: 10,
+        title: "淘宝",
+        url: "https://s.taobao.com/search",
+        name: "q",
+        icon: "iconfont icon-taobao",
+    },
+    '11': {
+        id: 11,
+        title: "京东",
+        url: "https://search.jd.com/Search",
+        name: "keyword",
+        icon: "iconfont icon-jingdong",
+    }
+};
+
+// 默认快捷方式
+var quick_list_preinstall = {
+    '1': {
+        title: "Nitai 博客",
+        url: "https://nitai.us.kg/",
+    },
+    '2': {
+        title: "GitHub",
+        url: "https://github.com/",
+    },
+    '3': {
+        title: "CloudFlare",
+        url: "https://dash.cloudflare.com/",
+    },
+    '4': {
+        title: "腾讯云",
+        url: "https://console.cloud.tencent.com/",
+    },
+    '5': {
+        title: "阿里云",
+        url: "https://console.aliyun.com/",
+    },
+    '6': {
+        title: "百度网盘",
+        url: "https://pan.baidu.com/",
+    },
+    '7': {
+        title: "阿里云盘",
+        url: "https://www.aliyundrive.com/drive/",
+    },
+    '8': {
+        title: "CSDN",
+        url: "https://www.csdn.net/",
+    },
+    '9': {
+        title: "哔哩哔哩",
+        url: "https://www.bilibili.com/",
+    }
+};
+
+// 获取搜索引擎列表
+function getSeList() {
+    var se_list_local = Cookies.get('se_list');
+    if (se_list_local !== "{}" && se_list_local) {
+        return JSON.parse(se_list_local);
+    } else {
+        setSeList(se_list_preinstall);
+        return se_list_preinstall;
+    }
+}
+
+// 设置搜索引擎列表
+function setSeList(se_list) {
+    if (se_list) {
+        Cookies.set('se_list', se_list, {
+            expires: 36500
+        });
+        return true;
+    }
+    return false;
+}
+
+// 获得默认搜索引擎
+function getSeDefault() {
+    var se_default = Cookies.get('se_default');
+    return se_default ? se_default : "2";
+}
+
+//背景图片
+var bg_img_preinstall = {
+    "type": "1", // 1:使用主题默认的背景图片 2:关闭背景图片 3:使用自定义的背景图片
+    "path": "", //自定义图片
+};
+
+// 获取背景图片
+function getBgImg() {
+    var bg_img_local = Cookies.get('bg_img');
+    if (bg_img_local && bg_img_local !== "{}") {
+        return JSON.parse(bg_img_local);
+    } else {
+        setBgImg(bg_img_preinstall);
+        return bg_img_preinstall;
+    }
+}
+
+// 设置背景图片
+function setBgImg(bg_img) {
+    if (bg_img) {
+        Cookies.set('bg_img', bg_img, {
+            expires: 36500
+        });
+        return true;
+    }
+    return false;
+}
+
+// 设置-壁纸
+//$('#bg').attr('src','https://api.dujin.org/bing/1920.php')
+function setBgImgInit() {
+    var bg_img = getBgImg();
+    $("input[name='wallpaper-type'][value=" + bg_img["type"] + "]").click();
+    if (bg_img["type"] === "5") {
+        $("#wallpaper-url").val(bg_img["path"]);
+        $("#wallpaper-button").fadeIn(100);
+        $("#wallpaper_url").fadeIn(100);
+    } else {
+        $("#wallpaper_url").fadeOut(300);
+        $("#wallpaper-button").fadeOut(300);
+    }
+
+    switch (bg_img["type"]) {
+        case "1":
+            var pictures = new Array();
+            pictures[0] = './img/background1.webp';
+            pictures[1] = './img/background2.webp';
+            pictures[2] = './img/background3.webp';
+            pictures[3] = './img/background4.webp';
+            pictures[4] = './img/background5.webp';
+            pictures[5] = './img/background6.webp';
+            pictures[6] = './img/background7.webp';
+            pictures[7] = './img/background8.webp';
+            pictures[8] = './img/background9.webp';
+            pictures[9] = './img/background10.webp';
+            var rd = Math.floor(Math.random() * 10);
+            $('#bg').attr('src', pictures[rd]) //随机默认壁纸
+            break;
+        case "2":
+            $('#bg').attr('src', 'https://api.dujin.org/bing/1920.php') //必应每日
+            break;
+        case "3":
+            $('#bg').attr('src', 'https://unsplash.it/1600/900?random') //随机风景
+            break;
+        case "4":
+            $('#bg').attr('src', 'https://api.lolimi.cn/API/dmt/api.php?type=image') //随机二次元
+            break;
+        case "5":
+                $('#bg').attr('src', bg_img["path"]); //自定义
+            break;
+    }
+}
+
+// 搜索框高亮
+function focusWd() {
+    $("body").addClass("onsearch");
+}
+
+// 搜索框取消高亮
+function blurWd() {
+    $("body").removeClass("onsearch");
+    //隐藏输入
+    $(".wd").val("");
+    //隐藏搜索建议
+    $("#keywords").hide();
+}
+
+// 搜索建议开关
+function toggleSuggest() {
+    const switchElement = document.getElementById('toggleSuggest');
+    switchElement.classList.toggle('on');
+}
+
+// 搜索建议提示
+function keywordReminder() {
+    var keyword = $(".wd").val();
+    const suggestElement = document.getElementById('toggleSuggest');
+    if (suggestElement.classList.contains('on')) {
+    if (keyword != "") {
+        $.ajax({
+            url: 'https://suggestion.baidu.com/su?wd=' + keyword,
+            dataType: 'jsonp',
+            jsonp: 'cb', //回调函数的参数名(键值)key
+            success: function (data) {
+                //获取宽度
+                $("#keywords").css("width", $('.sou').width());
+                $("#keywords").empty().show();
+                $.each(data.s, function (i, val) {
+                    $('#keywords').append(`<div class="keyword" data-id="${i + 1}"><i class='iconfont icon-sousuo'></i>${val}</div>`);
+                });
+                $("#keywords").attr("data-length", data.s["length"]);
+                $(".keyword").click(function () {
+                    $(".wd").val($(this).text());
+                    $("#search-submit").click();
+                });
+            },
+            error: function () {
+                $("#keywords").empty().show();
+                $("#keywords").hide();
+            }
+        })
+    } else {
+        $("#keywords").empty().show();
+        $("#keywords").hide();
+    }
+}
+}
+
+// 搜索框数据加载
+function searchData() {
+    var se_default = getSeDefault();
+    var se_list = getSeList();
+    var defaultSe = se_list[se_default];
+    if (defaultSe) {
+        $(".search").attr("action", defaultSe["url"]);
+        $("#icon-se").attr("class", defaultSe["icon"]);
+        $(".wd").attr("name", defaultSe["name"]);
+    }
+    const startElement = document.getElementById('toggleStart');
+    if (startElement.classList.contains('on')) {
+        //快速使用
+        var wid = $("body").width();
+        if (wid < 640) {
+            $(".wd").attr('autocomplete', 'off');
+        } else {
+            $(".wd").focus();
+            focusWd();
+        }
+    }
+}
+
+// 快速使用开关
+function toggleStart() {
+    const switchElement = document.getElementById('toggleStart');
+    switchElement.classList.toggle('on');
+}
+// 搜索引擎列表加载
+function seList() {
+    var html = "";
+    var se_list = getSeList();
+    for (var i in se_list) {
+        html += `<div class='se-li' data-url='${se_list[i]["url"]}' data-name='${se_list[i]["name"]}' data-icon='${se_list[i]["icon"]}'>
+        <a class='se-li-text'><i id='icon-sou-list' class='${se_list[i]["icon"]}'></i><span>${se_list[i]["title"]}</span></a></div>`;
+    }
+    $(".search-engine-list").html(html);
+}
+
+// 设置-搜索引擎列表加载
+function setSeInit() {
+    var se_default = getSeDefault();
+    var se_list = getSeList();
+    var html = "";
+    for (var i in se_list) {
+        var tr = `<div class='se_list_div'><div class='se_list_num'>${i}</div>`;
+        if (i === se_default) {
+            tr = `<div class='se_list_div'><div class='se_list_num'>
+            <i class='iconfont icon-home'></i></div>`;
+        }
+        tr += `<div class='se_list_name'>${se_list[i]["title"]}</div>
+        <div class='se_list_button'>
+        <button class='set_se_default' value='${i}' style='border-radius: 8px 0px 0px 8px;'>
+        <i class='iconfont icon-home'></i></button>
+        <button class='edit_se' value='${i}'>
+        <i class='iconfont icon-xiugai'></i></button>
+        <button class='delete_se' value='${i}' style='border-radius: 0px 8px 8px 0px;'>
+        <i class='iconfont icon-delete'></i></button></div>
+        </div>`;
+        html += tr;
+    }
+    $(".se_list_table").html(html);
+}
+
+// 获取快捷方式列表
+function getQuickList() {
+    var quick_list_local = Cookies.get('quick_list');
+    if (quick_list_local !== "{}" && quick_list_local) {
+        return JSON.parse(quick_list_local);
+    } else {
+        setQuickList(quick_list_preinstall);
+        return quick_list_preinstall;
+    }
+}
+
+// 设置快捷方式列表
+function setQuickList(quick_list) {
+    if (quick_list) {
+        Cookies.set('quick_list', quick_list, {
+            expires: 36500
+        });
+        return true;
+    }
+    return false;
+}
+
+// 快捷方式数据加载
+function quickData() {
+    var html = "";
+    var quick_list = getQuickList();
+    for (var i in quick_list) {
+        html += `<div class="quick">
+                    <a href="${quick_list[i]['url']}" target="_blank">${quick_list[i]['title']}</a>
+                </div>`;
+    }
+    $(".quick-all").html(html);
+}
+
+// 设置-快捷方式加载
+function setQuickInit() {
+    var quick_list = getQuickList();
+    var html = "";
+    for (var i in quick_list) {
+        tr = `
+        <div class='quick_list_div'>
+            <div class='quick_list_div_num'>${i}</div>
+            <div class='quick_list_div_name'>${quick_list[i]['title']}</div>
+            <div class='quick_list_div_button'>
+                <button class='edit_quick' value='${i}' style='border-radius: 8px 0px 0px 8px;'>
+                <i class='iconfont icon-xiugai'></i></button>
+                <button class='delete_quick' value='${i}' style='border-radius: 0px 8px 8px 0px;'>
+                <i class='iconfont icon-delete'></i></button>
+            </div>
+        </div>`;
+        html += tr;
+    }
+    $(".quick_list_table").html(html);
+}
+
+/**
+ * 下载文本为文件
+ * @param filename 文件名
+ * @param text     内容
+ */
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+// 打开设置
+function openSet() {
+    $("#fold").removeClass('out-new');
+    $("#menu").addClass('on');
+
+    openBox();
+
+    if ($('body').hasClass('onsearch')) {
+        $("body").removeClass('onsearch');
+    }
+
+    if ($('#tool-all').hasClass('big-b')) {
+        $("#tool-all").addClass('hidden');
+    }
+
+    //更改设置图标
+    $("#icon-menu").attr("class", "iconfont icon-home");
+
+    //隐藏书签打开设置
+    $(".mark").css({
+        "display": "none",
+    });
+    $(".set").css({
+        "display": "flex",
+    });
+
+    $("#icon-expand").css("display", "");
+    $("#fold").css("display", "");
+}
+
+// 关闭设置
+function closeSet() {
+    $("#icon-expand").css("display", "none");
+    $("#fold").css("display", "none");
+    $("#fold").addClass('out-new');
+    $("#menu").removeClass('on');
+
+    closeBox();
+
+    //更改设置图标
+    $("#icon-menu").attr("class", "iconfont icon-shezhi");
+
+    //隐藏设置
+    $(".set").css({
+        "display": "none",
+    });
+
+    if ($('#tool-all').hasClass('big-b')) {
+        $("#tool-all").removeClass('hidden');
+    }
+
+    // 刷新主页数据
+    seList();
+    quickData();
+}
+
+// 书签显示
+function openBox() {
+    $("#fold").removeClass('out-new');
+    $("#content").addClass('box');
+    $(".mark").css({
+        "display": "flex",
+    });
+
+    if ($('body').hasClass('onsearch')) {
+        $("body").removeClass('onsearch');
+    }
+    if ($('#tool-all').hasClass('big-b')) {
+        $("#tool-all").addClass('hidden');
+    }
+
+    //时间上移
+    $(".tool-all").css({
+        "transform": 'translateY(-160%)'
+    });
+    //背景模糊
+    $('#bg').css({
+        "transform": 'scale(1.08)',
+        "filter": "blur(10px)",
+        "transition": "ease 0.3s",
+    });
+
+    $("#icon-expand").css("display", "");
+    $("#fold").css("display", "");
+}
+
+// 书签关闭
+function closeBox() {
+    $("#icon-expand").css("display", "none");
+    $("#fold").css("display", "none");
+    $("#fold").addClass('out-new');
+    $("#content").removeClass('box');
+    $(".mark").css({
+        "display": "none",
+    });
+
+    if ($('#tool-all').hasClass('big-b')) {
+        $("#tool-all").removeClass('hidden');
+    }
+
+    //时间下移
+    $(".tool-all").css({
+        "transform": 'translateY(-120%)'
+    });
+    //背景模糊
+    $('#bg').css({
+        "transform": 'scale(1)',
+        "filter": "blur(0px)",
+        "transition": "ease 0.3s",
+    });
+}
+
+//显示设置搜索引擎列表
+function showSe() {
+    $(".se_list").show();
+    $(".se_add_preinstall").show();
+}
+
+//隐藏设置搜索引擎列表
+function hideSe() {
+    $(".se_list").hide();
+    $(".se_add_preinstall").hide();
+}
+
+//显示设置快捷方式列表
+function showQuick() {
+    $(".quick_list").show();
+    $(".se_add_preinstalls").show();
+}
+
+//隐藏设置快捷方式列表
+function hideQuick() {
+    $(".quick_list").hide();
+    $(".se_add_preinstalls").hide();
+}
+
+
+$(document).ready(function () {
+
+    // 搜索框数据加载
+    searchData();
+
+    // 搜索引擎列表加载
+    seList();
+
+    // 快捷方式数据加载
+    quickData();
+
+    // 壁纸数据加载
+    setBgImgInit();
+
+    // 点击事件
+    $(document).on('click', function (e) {
+        // 选择搜索引擎点击
+        if ($(".search-engine").is(":hidden") && $(".se").is(e.target) || $(".search-engine").is(":hidden") && $("#icon-se").is(e.target)) {
+            if ($(".se").is(e.target) || $("#icon-se").is(e.target)) {
+                //获取宽度
+                $(".search-engine").css("width", $('.sou').width() - 30);
+                //出现动画
+                $(".search-engine").slideDown(160);
+            }
+        } else {
+            if (!$(".search-engine").is(e.target) && $(".search-engine").has(e.target).length === 0) {
+                $(".search-engine").slideUp(160);
+            }
+        }
+
+        // 自动提示隐藏
+        if (!$(".sou").is(e.target) && $(".sou").has(e.target).length === 0) {
+            $("#keywords").hide();
+        }
+    });
+
+    // 时间点击
+    $("#time_text").click(function () {
+        if ($("#content").attr("class") === "box") {
+            if ($('#tool-all').hasClass('big-b')) {
+                $("#tool-all").removeClass('hidden');
+            }
+            closeBox();
+            closeSet();
+            blurWd();
+        } else {
+            if ($('#tool-all').hasClass('big-b')) {
+                $("#tool-all").addClass('hidden');
+            }
+            openBox();
+        }
+    });
+
+    // 搜索引擎列表点击
+    $(".search-engine-list").on("click", ".se-li", function () {
+        var url = $(this).attr('data-url');
+        var name = $(this).attr('data-name');
+        var icon = $(this).attr('data-icon');
+        $(".search").attr("action", url);
+        $(".wd").attr("name", name);
+        $("#icon-se").attr("class", icon);
+        $(".search-engine").slideUp(160);
+    });
+
+    // 搜索引擎列表点击
+    $(".search-engine-list").on("click", ".se-li", function () {
+        var url = $(this).attr('data-url');
+        var name = $(this).attr('data-name');
+        var icon = $(this).attr('data-icon');
+        $(".search").attr("action", url);
+        $(".wd").attr("name", name);
+        $("#icon-se").attr("class", icon);
+        $(".search-engine").slideUp(160);
+    });
+
+    // 搜索框点击事件
+    $(document).on('click', '.sou', function () {
+        focusWd();
+        $(".search-engine").slideUp(160);
+    });
+
+    $(document).on('click', '.wd', function () {
+        focusWd();
+        keywordReminder();
+        $(".search-engine").slideUp(160);
+    });
+
+    // 点击其他区域关闭事件
+    $(document).on('click', '.close_sou', function () {
+        $(".onsearch").slideDown(160);
+        blurWd();
+        closeSet();
+    });
+
+    // 点击搜索引擎时隐藏自动提示
+    $(document).on('click', '.se', function () {
+        $('#keywords').toggle();
+    });
+
+    // 恢复自动提示
+    $(document).on('click', '.se-li', function () {
+        $('#keywords').show();
+    });
+
+    // 自动提示 (调用百度 api）
+    $('.wd').keyup(function (event) {
+        var key = event.keyCode;
+        // 屏蔽上下键
+        var shieldKey = [38, 40];
+        if (shieldKey.includes(key)) return;
+        keywordReminder();
+    });
+
+    // 点击自动提示的搜索建议
+    $("#keywords").on("click", ".wd", function () {
+        var wd = $(this).text();
+        $(".wd").val(wd);
+        $(".search").submit();
+        //隐藏输入
+        $(".wd").val("");
+        $("#keywords").hide();
+    });
+
+    // 自动提示键盘方向键选择操作
+    $(".wd").keydown(function (event) { //上下键获取焦点
+        var key = event.keyCode;
+        if ($.trim($(this).val()).length === 0) return;
+
+        var id = $(".choose").attr("data-id");
+        if (id === undefined) id = 0;
+
+        if (key === 38) {
+            /*向上按钮*/
+            id--;
+        } else if (key === 40) {
+            /*向下按钮*/
+            id++;
+        } else {
+            return;
+        }
+        var length = $("#keywords").attr("data-length");
+        if (id > length) id = 1;
+        if (id < 1) id = length;
+
+        $(".keyword[data-id=" + id + "]").addClass("choose").siblings().removeClass("choose");
+        $(".wd").val($(".keyword[data-id=" + id + "]").text());
+    });
+
+    // 菜单点击
+    $("#menu").click(function () {
+        if ($(this).attr("class") === "on") {
+            closeSet();
+        } else {
+            openSet();
+
+            // 设置内容加载
+            setSeInit(); //搜索引擎设置
+            setQuickInit(); //快捷方式设置
+        }
+    });
+
+    // 快捷方式添加按钮点击
+    $("#set-quick").click(function () {
+        openSet();
+
+        // 设置内容加载
+        setSeInit(); //搜索引擎设置
+        setQuickInit(); //快捷方式设置
+
+        //添加快捷方式
+        $("#set-quick-menu").trigger('click');
+        $(".set_quick_list_add").trigger('click');
+    });
+
+    // 修改默认搜索引擎
+    $(".se_list_table").on("click", ".set_se_default", function () {
+        var name = $(this).val();
+        Cookies.set('se_default', name, {
+            expires: 36500
+        });
+        iziToast.show({
+            timeout: 8000,
+            message: '是否设置为默认搜索引擎？',
+            buttons: [
+                ['<button>确认</button>', function (instance, toast) {
+                    setSeInit();
+                    instance.hide({
+                        transitionOut: 'flipOutX',
+                    }, toast, 'buttonName');
+                    iziToast.show({
+                        message: '设置成功'
+                    });
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 1000);
+                }, true],
+                ['<button>取消</button>', function (instance, toast) {
+                    instance.hide({
+                        transitionOut: 'flipOutX',
+                    }, toast, 'buttonName');
+                }]
+            ]
+        });
+    });
+
+    // 搜索引擎添加
+    $(".set_se_list_add").click(function () {
+        $(".se_add_content input").val("");
+
+        hideSe();
+        $(".se_add_content").show();
+    });
+
+    // 搜索引擎保存
+    $(".se_add_save").click(function () {
+        var key_inhere = $(".se_add_content input[name='key_inhere']").val();
+        var key = $(".se_add_content input[name='key']").val();
+        var title = $(".se_add_content input[name='title']").val();
+        var url = $(".se_add_content input[name='url']").val();
+        var name = $(".se_add_content input[name='name']").val();
+        //var icon = $(".se_add_content input[name='icon']").val();
+        var icon = "iconfont icon-wangluo";
+
+        var num = /^\+?[1-9][0-9]*$/;
+        if (!num.test(key)) {
+            iziToast.show({
+                timeout: 2000,
+                message: '序号 ' + key + ' 不是正整数'
+            });
+            return;
+        }
+
+        var se_list = getSeList();
+
+        if (se_list[key]) {
+            iziToast.show({
+                timeout: 8000,
+                message: '搜索引擎 ' + key + ' 已有数据，是否覆盖？',
+                buttons: [
+                    ['<button>确认</button>', function (instance, toast) {
+                        se_list[key] = {
+                            title: title,
+                            url: url,
+                            name: name,
+                            icon: icon,
+                        };
+                        setSeList(se_list);
+                        setSeInit();
+                        $(".se_add_content").hide();
+                        //显示列表
+                        showSe();
+
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                        iziToast.show({
+                            message: '覆盖成功'
+                        });
+                    }, true],
+                    ['<button>取消</button>', function (instance, toast) {
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                    }]
+                ]
+            });
+            return;
+        }
+
+        if (key_inhere && key !== key_inhere) {
+            delete se_list[key_inhere];
+        }
+
+        se_list[key] = {
+            title: title,
+            url: url,
+            name: name,
+            icon: icon,
+        };
+        setSeList(se_list);
+        setSeInit();
+        iziToast.show({
+            timeout: 2000,
+            message: '添加成功'
+        });
+        $(".se_add_content").hide();
+        showSe();
+    });
+
+    // 关闭表单
+    $(".se_add_cancel").click(function () {
+        $(".se_add_content").hide();
+
+        //显示列表
+        showSe();
+    });
+
+    // 搜索引擎修改
+    $(".se_list").on("click", ".edit_se", function () {
+
+        var se_list = getSeList();
+        var key = $(this).val();
+        $(".se_add_content input[name='key_inhere']").val(key);
+        $(".se_add_content input[name='key']").val(key);
+        $(".se_add_content input[name='title']").val(se_list[key]["title"]);
+        $(".se_add_content input[name='url']").val(se_list[key]["url"]);
+        $(".se_add_content input[name='name']").val(se_list[key]["name"]);
+        // $(".se_add_content input[name='icon']").val("iconfont icon-Earth");
+
+        //隐藏列表
+        hideSe();
+
+        $(".se_add_content").show();
+    });
+
+    // 搜索引擎删除
+    $(".se_list").on("click", ".delete_se", function () {
+        var se_default = getSeDefault();
+        var key = $(this).val();
+        if (key == se_default) {
+            iziToast.show({
+                message: '默认搜索引擎不可删除'
+            });
+        } else {
+            iziToast.show({
+                timeout: 8000,
+                message: '搜索引擎 ' + key + ' 是否删除？',
+                buttons: [
+                    ['<button>确认</button>', function (instance, toast) {
+                        var se_list = getSeList();
+                        delete se_list[key];
+                        setSeList(se_list);
+                        setSeInit();
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                        iziToast.show({
+                            message: '删除成功'
+                        });
+                    }, true],
+                    ['<button>取消</button>', function (instance, toast) {
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                    }]
+                ]
+            });
+        }
+    });
+
+    // 恢复预设搜索引擎
+    $(".set_se_list_preinstall").click(function () {
+        iziToast.show({
+            timeout: 8000,
+            message: '现有搜索引擎数据将被清空',
+            buttons: [
+                ['<button>确认</button>', function (instance, toast) {
+                    setSeList(se_list_preinstall);
+                    Cookies.set('se_default', 1, {
+                        expires: 36500
+                    });
+                    setSeInit();
+                    instance.hide({
+                        transitionOut: 'flipOutX',
+                    }, toast, 'buttonName');
+                    iziToast.show({
+                        message: '重置成功'
+                    });
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 1000);
+                }, true],
+                ['<button>取消</button>', function (instance, toast) {
+                    instance.hide({
+                        transitionOut: 'flipOutX',
+                    }, toast, 'buttonName');
+                }]
+            ]
+        });
+    });
+
+    // 设置-快捷方式添加
+    $(".set_quick_list_add").click(function () {
+        $(".quick_add_content input").val("");
+        $(".quick_add_content").show();
+
+        //隐藏列表
+        hideQuick();
+    });
+
+    // 设置-快捷方式保存
+    $(".quick_add_save").click(function () {
+        var key_inhere = $(".quick_add_content input[name='key_inhere']").val();
+        var key = $(".quick_add_content input[name='key']").val();
+        var title = $(".quick_add_content input[name='title']").val();
+        var url = $(".quick_add_content input[name='url']").val();
+        var img = $(".quick_add_content input[name='img']").val();
+
+        var num = /^\+?[1-9][0-9]*$/;
+        if (!num.test(key)) {
+            iziToast.show({
+                timeout: 2000,
+                message: '快捷方式 ' + key + ' 不是正整数'
+            });
+            return;
+        }
+
+        var quick_list = getQuickList();
+
+        if (quick_list[key]) {
+            iziToast.show({
+                timeout: 8000,
+                message: '快捷方式 " + key + " 已有数据，是否覆盖？',
+                buttons: [
+                    ['<button>确认</button>', function (instance, toast) {
+                        quick_list[key] = {
+                            title: title,
+                            url: url,
+                            img: img,
+                        };
+                        setQuickList(quick_list);
+                        setQuickInit();
+                        $(".quick_add_content").hide();
+                        //显示列表
+                        showQuick();
+
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                        iziToast.show({
+                            message: '覆盖成功'
+                        });
+                    }, true],
+                    ['<button>取消</button>', function (instance, toast) {
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                    }]
+                ]
+            });
+            return;
+        }
+
+        if (key_inhere && key != key_inhere) {
+            delete quick_list[key_inhere];
+        }
+
+        quick_list[key] = {
+            title: title,
+            url: url,
+            img: img,
+        };
+        setQuickList(quick_list);
+        setQuickInit();
+        $(".quick_add_content").hide();
+        iziToast.show({
+            timeout: 2000,
+            message: '添加成功'
+        });
+
+        //显示列表
+        showQuick();
+    });
+
+    // 设置-快捷方式关闭添加表单
+    $(".quick_add_cancel").click(function () {
+        $(".quick_add_content").hide();
+
+        //显示列表
+        showQuick();
+    });
+
+    //恢复预设快捷方式
+    $(".set_quick_list_preinstall").click(function () {
+        iziToast.show({
+            timeout: 8000,
+            message: '快捷方式数据将被清空',
+            buttons: [
+                ['<button>确认</button>', function (instance, toast) {
+                    setQuickList(quick_list_preinstall);
+                    setQuickInit();
+                    instance.hide({
+                        transitionOut: 'flipOutX',
+                    }, toast, 'buttonName');
+                    iziToast.show({
+                        timeout: 2000,
+                        message: '重置成功'
+                    });
+                    // setTimeout(function () {
+                    //     window.location.reload()
+                    // }, 1000);
+                }, true],
+                ['<button>取消</button>', function (instance, toast) {
+                    instance.hide({
+                        transitionOut: 'flipOutX',
+                    }, toast, 'buttonName');
+                }]
+            ]
+        });
+    });
+
+    // 快捷方式修改
+    $(".quick_list").on("click", ".edit_quick", function () {
+
+        var quick_list = getQuickList();
+        var key = $(this).val();
+        $(".quick_add_content input[name='key_inhere']").val(key);
+        $(".quick_add_content input[name='key']").val(key);
+        $(".quick_add_content input[name='title']").val(quick_list[key]["title"]);
+        $(".quick_add_content input[name='url']").val(quick_list[key]["url"]);
+        $(".quick_add_content input[name='img']").val(quick_list[key]["img"]);
+
+        //隐藏列表
+        hideQuick();
+
+        $(".quick_add_content").show();
+    });
+
+    // 快捷方式删除
+    $(".quick_list").on("click", ".delete_quick", function () {
+
+        var key = $(this).val();
+
+        iziToast.show({
+            timeout: 8000,
+            message: '快捷方式 ' + key + ' 是否删除？',
+            buttons: [
+                ['<button>确认</button>', function (instance, toast) {
+                    var quick_list = getQuickList();
+                    delete quick_list[key];
+                    setQuickList(quick_list);
+                    setQuickInit();
+                    instance.hide({
+                        transitionOut: 'flipOutX',
+                    }, toast, 'buttonName');
+                    iziToast.show({
+                        timeout: 2000,
+                        message: '删除成功'
+                    });
+                }, true],
+                ['<button>取消</button>', function (instance, toast) {
+                    instance.hide({
+                        transitionOut: 'flipOutX',
+                    }, toast, 'buttonName');
+                }]
+            ]
+        });
+    });
+
+    // 壁纸设置
+    $("#wallpaper").on("click", ".set-wallpaper", function () {
+        var type = $(this).val();
+        var bg_img = getBgImg();
+        bg_img["type"] = type;
+
+        if (type === "1") {
+            $('.set_text', '#wallpaper_text').html("默认壁纸");
+            setBgImg(bg_img);
+            iziToast.show({
+                message: '壁纸设置成功，刷新生效',
+            });
+        }
+
+        if (type === "2") {
+            $('.set_text', '#wallpaper_text').html("必应每日一图，每天更新");
+            setBgImg(bg_img);
+            iziToast.show({
+                message: '壁纸设置成功，刷新生效',
+            });
+        }
+
+        if (type === "3") {
+            $('.set_text', '#wallpaper_text').html("随机风景图，每次刷新后更换");
+            setBgImg(bg_img);
+            iziToast.show({
+                message: '壁纸设置成功，刷新生效',
+            });
+        }
+
+        if (type === "4") {
+            $('.set_text', '#wallpaper_text').html("随机二次元图，每次刷新后更换");
+            setBgImg(bg_img);
+            iziToast.show({
+                message: '壁纸设置成功，刷新生效',
+            });
+        }
+
+        if (type === "5") {
+            $('.set_text', '#wallpaper_text').html("自定义壁纸地址");
+            $("#wallpaper_url").fadeIn(100);
+            $("#wallpaper-button").fadeIn(100);
+            $("#wallpaper-url").val(bg_img["path"]);
+        } else {
+            $("#wallpaper_url").fadeOut(300);
+            $("#wallpaper-button").fadeOut(300);
+        }
+    });
+
+    // 自定义壁纸设置保存
+    $(".wallpaper_save").click(function () {
+        var url = $("#wallpaper-url").val();
+        var reg = /^http(s)?:\/\/(([\w-]+\.)+[\w-]|localhost)+(:[0-9]{1,5})?(\/[\w- ./?%&=]*)?$/g;
+        if (!reg.test(url)) {
+            iziToast.show({
+                timeout: 8000,
+                message: '检测到链接可能不是可用状态，是否强制设置',
+                buttons: [
+                    ['<button>确认</button>', function (instance, toast) {
+                        setQuickList();
+                        setQuickInit();
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                        var bg_img = getBgImg();
+                        bg_img["type"] = "5";
+                        bg_img["path"] = url;
+                        setBgImg(bg_img);
+                        iziToast.show({
+                           message: '链接设置成功，刷新生效',
+                        });
+                        // setTimeout(function () {
+                        //     window.location.reload()
+                        // }, 1000);
+                    }, true],
+                    ['<button>取消</button>', function (instance, toast) {
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                    }]
+                ]
+            });
+        } else {
+            var bg_img = getBgImg();
+            bg_img["type"] = "5";
+            bg_img["path"] = url;
+            setBgImg(bg_img);
+            iziToast.show({
+                message: '链接设置成功，刷新生效',
+            });
+        }
+    });
+
+    // 我的数据导出
+    $("#my_data_out").click(function () {
+        var cookies = Cookies.get();
+        var json = JSON.stringify(cookies);
+        download("Nitaipage-back-up-" + $.now() + ".json", json);
+        iziToast.show({
+            timeout: 2000,
+            message: '已导出备份文件至下载目录'
+        });
+    });
+
+    // 我的数据导入 点击触发文件选择
+    $("#my_data_in").click(function () {
+        $("#my_data_file").click();
+    });
+
+    // 选择文件后读取文件内容
+    $("#my_data_file").change(function () {
+        var selectedFile = document.getElementById('my_data_file').files[0];
+        var name = selectedFile.name;//读取选中文件的文件名
+        var size = selectedFile.size;//读取选中文件的大小
+        console.log("文件名:"+name+" 大小:"+size);
+
+        var reader = new FileReader(); //这是核心,读取操作就是由它完成.
+        reader.readAsText(selectedFile); //读取文件的内容,也可以读取文件的URL
+        reader.onload = function () {
+            //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
+            //console.log(this.result);
+
+            // json 格式校验
+            var mydata;
+            try {
+                mydata = JSON.parse(this.result);
+            } catch (e) {
+                iziToast.show({
+                    timeout: 2000,
+                    message: '"'+name+'"'+'数据解析异常'
+                });
+                return;
+            }
+            if (typeof mydata != 'object') {
+                iziToast.show({
+                    timeout: 2000,
+                    message: '"'+name+'"'+'数据格式错误'
+                });
+                return;
+            }
+
+            iziToast.show({
+                timeout: 8000,
+                message: '当前数据将会被'+'"'+name+'"'+'覆盖！是否继续导入？',
+                buttons: [
+                    ['<button>确认</button>', function (instance, toast) {
+                        for (var key in mydata) {
+                            Cookies.set(key, mydata[key], {
+                                expires: 36500
+                            });
+                        }
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                        iziToast.show({
+                            timeout: 2000,
+                            message: '"'+name+'"'+'导入成功'
+                        });
+                        setTimeout(function () {
+                            window.location.reload()
+                        }, 1000);
+                    }, true],
+                    ['<button>取消</button>', function (instance, toast) {
+                        instance.hide({
+                            transitionOut: 'flipOutX',
+                        }, toast, 'buttonName');
+                        setTimeout(function () {
+                            window.location.reload()
+                        }, 1000);
+                    }]
+                ]
+            });
+        }
+    });
+});
+
+//New-UI
+    // 选择所有可能带有 'mobile-b' 和 'set_tip_sec_new' 类的元素
+    const elements = document.querySelectorAll('.mobile-b.set_tip_sec_new');
+
+    // 检查视口宽度并移除 'set_tip_sec_new' 类
+    function checkViewportAndRemoveClass() {
+        if (window.innerWidth <= 1200) {
+            elements.forEach(element => {
+                element.classList.remove('set_tip_sec_new');
+            });
+        } else {
+            // 如果视口宽度大于 1200px，可以重新添加 'set_tip_sec_new' 类
+            elements.forEach(element => {
+                element.classList.add('set_tip_sec_new');
+            });
+        }
+    }
+
+    // 初始化检查
+    checkViewportAndRemoveClass();
+
+    // 添加事件监听器以响应窗口大小变化
+    window.addEventListener('resize', checkViewportAndRemoveClass);
+
+    // 获取输入框元素
+    const input = document.getElementById('wallpaper-url');
+
+    // 添加焦点监听
+    input.addEventListener('focus', () => {
+        // 监听窗口的 resize 事件，此事件会在键盘弹出时触发
+        window.addEventListener('resize', handleResize);
+    });
+
+    // 移除焦点监听
+    input.addEventListener('blur', () => {
+        window.removeEventListener('resize', handleResize);
+    });
+
+    function handleResize() {
+        // 计算输入框距离底部的距离
+        const inputRect = input.getBoundingClientRect();
+        const distanceToBottom = window.innerHeight - inputRect.bottom;
+
+        // 如果输入框被键盘遮挡，则滚动页面使输入框可见
+        if (distanceToBottom < 0) {
+            window.scrollTo(0, inputRect.top - window.innerHeight);
+        }
+    }
+
+// 获取所有的壁纸选项
+const wallpapers = document.querySelectorAll('.set-wallpaper');
+
+// 获取需要控制显示的元素
+const wallpaperText = document.getElementById('wallpaper_text');
+const wallpaperText1 = document.getElementById('wallpaper_text_1');
+const wallpaperText2 = document.getElementById('wallpaper_text_2');
+const wallpaperText3 = document.getElementById('wallpaper_text_3');
+const wallpaperText4 = document.getElementById('wallpaper_text_4');
+const wallpaperText5 = document.getElementById('wallpaper_text_5');
+
+// 为每个壁纸选项添加事件监听器
+wallpapers.forEach(wallpaper => {
+    wallpaper.addEventListener('change', function() {
+        // 检查当前选中的壁纸的值是否为1
+        if (this.value === '1') {
+            // 如果是1，则移除wallpaper_hid类
+            wallpaperText1.classList.remove('wallpaper_hid');
+        } else {
+            // 否则，添加wallpaper_hid类以隐藏
+            wallpaperText1.classList.add('wallpaper_hid');
+        }
+        if (this.value === '2') {
+            // 如果是2，则移除wallpaper_hid类
+            wallpaperText2.classList.remove('wallpaper_hid');
+        } else {
+            // 否则，添加wallpaper_hid类以隐藏
+            wallpaperText2.classList.add('wallpaper_hid');
+        }
+        if (this.value === '3') {
+            // 如果是3，则移除wallpaper_hid类
+            wallpaperText3.classList.remove('wallpaper_hid');
+        } else {
+            // 否则，添加wallpaper_hid类以隐藏
+            wallpaperText3.classList.add('wallpaper_hid');
+        }
+        if (this.value === '4') {
+            // 如果是4，则移除wallpaper_hid类
+            wallpaperText4.classList.remove('wallpaper_hid');
+        } else {
+            // 否则，添加wallpaper_hid类以隐藏
+            wallpaperText4.classList.add('wallpaper_hid');
+        }
+        if (this.value === '5') {
+            // 如果是5，则移除wallpaper_hid类
+            wallpaperText5.classList.remove('wallpaper_hid');
+        } else {
+            // 否则，添加wallpaper_hid类以隐藏
+            wallpaperText5.classList.add('wallpaper_hid');
+        }
+    });
+
+});
+
+//动态修改背景提示窗口居中、动态修改图标设置
+function updateClassBasedOnScreenWidth() {
+    const SaveWallpaper = document.querySelector('#wallpaper-button');
+    const fontsFir = document.querySelector('#iconfont-fir');
+    const fontsSec = document.querySelector('#iconfont-sec');
+    const wallpaperURL = document.querySelector('#wallpaper-url');
+    const element = document.querySelector('#set_blocks_backblock');
+    if (window.innerWidth < 1200) {
+        element.classList.remove('set_blocks_thi_new');
+        fontsFir.classList.add('set_font_new');
+        fontsSec.classList.add('set_font_new');
+        wallpaperURL.classList.add('set_wallpaper_class');
+        SaveWallpaper.classList.add('set_wallpaper_save_center');
+    } else {
+        element.classList.add('set_blocks_thi_new');
+        fontsFir.classList.remove('set_font_new');
+        fontsSec.classList.remove('set_font_new');
+        wallpaperURL.classList.remove('set_wallpaper_class');
+        SaveWallpaper.classList.remove('set_wallpaper_save_center');
+    }
+}
+
+// 初始化时调用一次
+updateClassBasedOnScreenWidth();
+
+// 当窗口大小改变时调用
+window.addEventListener('resize', updateClassBasedOnScreenWidth);
+
+//明亮主题
+function toggleDropdown() {
+    document.getElementById("dropdownContent").classList.toggle("show");
+}
+
+function selectOption(option, element) {
+    document.getElementById("dropdown-selected-option").innerText = option;
+    const items = document.querySelectorAll('.dropdown-item');
+    items.forEach(item => item.classList.remove('dropdown-selected'));
+    element.classList.add('dropdown-selected');
+    document.getElementById("dropdownContent").classList.remove("show");
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.dropdown')) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+            dropdowns[i].classList.remove('show');
+        }
+    }
+}
