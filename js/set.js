@@ -234,7 +234,7 @@ function setBgImgInit() {
             $('#bg').attr('src', 'https://api.lolimi.cn/API/dmt/api.php?type=image') //随机二次元
             break;
         case "5":
-                $('#bg').attr('src', bg_img["path"]); //自定义
+            $('#bg').attr('src', bg_img["path"]); //自定义
             break;
     }
 }
@@ -253,45 +253,39 @@ function blurWd() {
     $("#keywords").hide();
 }
 
-// 搜索建议开关
-function toggleSuggest() {
-    const switchElement = document.getElementById('toggleSuggest');
-    switchElement.classList.toggle('on');
-}
-
 // 搜索建议提示
 function keywordReminder() {
     var keyword = $(".wd").val();
-    const suggestElement = document.getElementById('toggleSuggest');
+    const suggestElement = document.getElementById('toggleSuggests');
     if (suggestElement.classList.contains('on')) {
-    if (keyword != "") {
-        $.ajax({
-            url: 'https://suggestion.baidu.com/su?wd=' + keyword,
-            dataType: 'jsonp',
-            jsonp: 'cb', //回调函数的参数名(键值)key
-            success: function (data) {
-                //获取宽度
-                $("#keywords").css("width", $('.sou').width());
-                $("#keywords").empty().show();
-                $.each(data.s, function (i, val) {
-                    $('#keywords').append(`<div class="keyword" data-id="${i + 1}"><i class='iconfont icon-sousuo'></i>${val}</div>`);
-                });
-                $("#keywords").attr("data-length", data.s["length"]);
-                $(".keyword").click(function () {
-                    $(".wd").val($(this).text());
-                    $("#search-submit").click();
-                });
-            },
-            error: function () {
-                $("#keywords").empty().show();
-                $("#keywords").hide();
-            }
-        })
-    } else {
-        $("#keywords").empty().show();
-        $("#keywords").hide();
+        if (keyword != "") {
+            $.ajax({
+                url: 'https://suggestion.baidu.com/su?wd=' + keyword,
+                dataType: 'jsonp',
+                jsonp: 'cb', //回调函数的参数名(键值)key
+                success: function (data) {
+                    //获取宽度
+                    $("#keywords").css("width", $('.sou').width());
+                    $("#keywords").empty().show();
+                    $.each(data.s, function (i, val) {
+                        $('#keywords').append(`<div class="keyword" data-id="${i + 1}"><i class='iconfont icon-sousuo'></i>${val}</div>`);
+                    });
+                    $("#keywords").attr("data-length", data.s["length"]);
+                    $(".keyword").click(function () {
+                        $(".wd").val($(this).text());
+                        $("#search-submit").click();
+                    });
+                },
+                error: function () {
+                    $("#keywords").empty().show();
+                    $("#keywords").hide();
+                }
+            })
+        } else {
+            $("#keywords").empty().show();
+            $("#keywords").hide();
+        }
     }
-}
 }
 
 // 搜索框数据加载
@@ -980,7 +974,7 @@ $(document).ready(function () {
         if (quick_list[key]) {
             iziToast.show({
                 timeout: 8000,
-                message: '快捷方式 " + key + " 已有数据，是否覆盖？',
+                message: '快捷方式 ' + key + ' 已有数据，是否覆盖？',
                 buttons: [
                     ['<button>确认</button>', function (instance, toast) {
                         quick_list[key] = {
@@ -1186,7 +1180,7 @@ $(document).ready(function () {
                         bg_img["path"] = url;
                         setBgImg(bg_img);
                         iziToast.show({
-                           message: '链接设置成功，刷新生效',
+                            message: '链接设置成功，刷新生效',
                         });
                         // setTimeout(function () {
                         //     window.location.reload()
@@ -1231,7 +1225,7 @@ $(document).ready(function () {
         var selectedFile = document.getElementById('my_data_file').files[0];
         var name = selectedFile.name;//读取选中文件的文件名
         var size = selectedFile.size;//读取选中文件的大小
-        console.log("文件名:"+name+" 大小:"+size);
+        console.log("文件名:" + name + " 大小:" + size);
 
         var reader = new FileReader(); //这是核心,读取操作就是由它完成.
         reader.readAsText(selectedFile); //读取文件的内容,也可以读取文件的URL
@@ -1246,21 +1240,21 @@ $(document).ready(function () {
             } catch (e) {
                 iziToast.show({
                     timeout: 2000,
-                    message: '"'+name+'"'+'数据解析异常'
+                    message: '"' + name + '"' + '数据解析异常'
                 });
                 return;
             }
             if (typeof mydata != 'object') {
                 iziToast.show({
                     timeout: 2000,
-                    message: '"'+name+'"'+'数据格式错误'
+                    message: '"' + name + '"' + '数据格式错误'
                 });
                 return;
             }
 
             iziToast.show({
                 timeout: 8000,
-                message: '当前数据将会被'+'"'+name+'"'+'覆盖！是否继续导入？',
+                message: '当前数据将会被' + '"' + name + '"' + '覆盖！是否继续导入？',
                 buttons: [
                     ['<button>确认</button>', function (instance, toast) {
                         for (var key in mydata) {
@@ -1273,7 +1267,7 @@ $(document).ready(function () {
                         }, toast, 'buttonName');
                         iziToast.show({
                             timeout: 2000,
-                            message: '"'+name+'"'+'导入成功'
+                            message: '"' + size + '"' + '导入成功'
                         });
                         setTimeout(function () {
                             window.location.reload()
@@ -1294,53 +1288,53 @@ $(document).ready(function () {
 });
 
 //New-UI
-    // 选择所有可能带有 'mobile-b' 和 'set_tip_sec_new' 类的元素
-    const elements = document.querySelectorAll('.mobile-b.set_tip_sec_new');
+// 选择所有可能带有 'mobile-b' 和 'set_tip_sec_new' 类的元素
+const elements = document.querySelectorAll('.mobile-b.set_tip_sec_new');
 
-    // 检查视口宽度并移除 'set_tip_sec_new' 类
-    function checkViewportAndRemoveClass() {
-        if (window.innerWidth <= 1200) {
-            elements.forEach(element => {
-                element.classList.remove('set_tip_sec_new');
-            });
-        } else {
-            // 如果视口宽度大于 1200px，可以重新添加 'set_tip_sec_new' 类
-            elements.forEach(element => {
-                element.classList.add('set_tip_sec_new');
-            });
-        }
+// 检查视口宽度并移除 'set_tip_sec_new' 类
+function checkViewportAndRemoveClass() {
+    if (window.innerWidth <= 1200) {
+        elements.forEach(element => {
+            element.classList.remove('set_tip_sec_new');
+        });
+    } else {
+        // 如果视口宽度大于 1200px，可以重新添加 'set_tip_sec_new' 类
+        elements.forEach(element => {
+            element.classList.add('set_tip_sec_new');
+        });
     }
+}
 
-    // 初始化检查
-    checkViewportAndRemoveClass();
+// 初始化检查
+checkViewportAndRemoveClass();
 
-    // 添加事件监听器以响应窗口大小变化
-    window.addEventListener('resize', checkViewportAndRemoveClass);
+// 添加事件监听器以响应窗口大小变化
+window.addEventListener('resize', checkViewportAndRemoveClass);
 
-    // 获取输入框元素
-    const input = document.getElementById('wallpaper-url');
+// 获取输入框元素
+const input = document.getElementById('wallpaper-url');
 
-    // 添加焦点监听
-    input.addEventListener('focus', () => {
-        // 监听窗口的 resize 事件，此事件会在键盘弹出时触发
-        window.addEventListener('resize', handleResize);
-    });
+// 添加焦点监听
+input.addEventListener('focus', () => {
+    // 监听窗口的 resize 事件，此事件会在键盘弹出时触发
+    window.addEventListener('resize', handleResize);
+});
 
-    // 移除焦点监听
-    input.addEventListener('blur', () => {
-        window.removeEventListener('resize', handleResize);
-    });
+// 移除焦点监听
+input.addEventListener('blur', () => {
+    window.removeEventListener('resize', handleResize);
+});
 
-    function handleResize() {
-        // 计算输入框距离底部的距离
-        const inputRect = input.getBoundingClientRect();
-        const distanceToBottom = window.innerHeight - inputRect.bottom;
+function handleResize() {
+    // 计算输入框距离底部的距离
+    const inputRect = input.getBoundingClientRect();
+    const distanceToBottom = window.innerHeight - inputRect.bottom;
 
-        // 如果输入框被键盘遮挡，则滚动页面使输入框可见
-        if (distanceToBottom < 0) {
-            window.scrollTo(0, inputRect.top - window.innerHeight);
-        }
+    // 如果输入框被键盘遮挡，则滚动页面使输入框可见
+    if (distanceToBottom < 0) {
+        window.scrollTo(0, inputRect.top - window.innerHeight);
     }
+}
 
 // 获取所有的壁纸选项
 const wallpapers = document.querySelectorAll('.set-wallpaper');
@@ -1355,7 +1349,7 @@ const wallpaperText5 = document.getElementById('wallpaper_text_5');
 
 // 为每个壁纸选项添加事件监听器
 wallpapers.forEach(wallpaper => {
-    wallpaper.addEventListener('change', function() {
+    wallpaper.addEventListener('change', function () {
         // 检查当前选中的壁纸的值是否为1
         if (this.value === '1') {
             // 如果是1，则移除wallpaper_hid类
@@ -1437,7 +1431,7 @@ function selectOption(option, element) {
     document.getElementById("dropdownContent").classList.remove("show");
 }
 
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (!event.target.matches('.dropdown')) {
         const dropdowns = document.getElementsByClassName("dropdown-content");
         for (let i = 0; i < dropdowns.length; i++) {
