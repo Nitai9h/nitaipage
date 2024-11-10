@@ -42,55 +42,69 @@ var se_list_preinstall = {
     },
     '4': {
         id: 4,
+        title: "Yandex",
+        url: "https://yandex.eu/search",
+        name: "text",
+        icon: "iconfont icon-yandex",
+    },
+    '5': {
+        id: 5,
+        title: "Duckduckgo",
+        url: "https://duckduckgo.com",
+        name: "t=h_&q",
+        icon: "iconfont icon-duckduckgo",
+    },
+    '6': {
+        id: 6,
         title: "搜狗",
         url: "https://www.sogou.com/web",
         name: "query",
         icon: "iconfont icon-sougousousuo",
     },
-    '5': {
-        id: 5,
+    '7': {
+        id: 7,
         title: "360",
         url: "https://www.so.com/s",
         name: "q",
         icon: "iconfont icon-a-360sousuo",
     },
-    '6': {
-        id: 6,
+    '8': {
+        id: 8,
         title: "微博",
         url: "https://s.weibo.com/weibo",
         name: "q",
         icon: "iconfont icon-xinlangweibo",
     },
-    '7': {
-        id: 7,
+    '9': {
+        id: 9,
         title: "知乎",
         url: "https://www.zhihu.com/search",
         name: "q",
         icon: "iconfont icon-zhihu",
     },
-    '8': {
-        id: 8,
+    '10': {
+        id: 10,
         title: "Github",
         url: "https://github.com/search",
         name: "q",
         icon: "iconfont icon-github",
     },
-    '9': {
-        id: 9,
+    '11': {
+        id: 11,
         title: "BiliBili",
         url: "https://search.bilibili.com/all",
         name: "keyword",
         icon: "iconfont icon-bilibilidonghua",
     },
-    '10': {
-        id: 10,
+    '12': {
+        id: 12,
         title: "淘宝",
         url: "https://s.taobao.com/search",
         name: "q",
         icon: "iconfont icon-taobao",
     },
-    '11': {
-        id: 11,
+    '13': {
+        id: 13,
         title: "京东",
         url: "https://search.jd.com/Search",
         name: "keyword",
@@ -254,7 +268,89 @@ function blurWd() {
 }
 
 // 搜索建议提示
-function keywordReminder() {
+//谷歌
+function keywordReminderGoogle() {
+    var keyword = $(".wd").val();
+    const suggestElement = document.getElementById('toggleSuggests');
+    if (suggestElement.classList.contains('on')) {
+        if (keyword != "") {
+            $.ajax({
+                url: 'https://suggestqueries.google.com/complete/search?client=youtube&q=' + keyword,
+                dataType: 'jsonp',
+                jsonp: 'callback', // 回调函数的参数名(键值)key
+                success: function (data) {
+                    // 获取宽度
+                    $("#keywords").css("width", $('.sou').width());
+                    $("#keywords").empty().show();
+
+                    // 提取关键词建议
+                    const suggestions = data[1].map(item => item[0]);
+
+                    $.each(suggestions, function (i, val) {
+                        $('#keywords').append(`<div class="keyword" data-id="${i + 1}"><i class='iconfont icon-sousuo'></i>${val}</div>`);
+                    });
+
+                    $("#keywords").attr("data-length", suggestions.length);
+                    $(".keyword").click(function () {
+                        $(".wd").val($(this).text());
+                        $("#search-submit").click();
+                    });
+                },
+                error: function () {
+                    $("#keywords").empty().show();
+                    $("#keywords").hide();
+                }
+            })
+        } else {
+            $("#keywords").empty().show();
+            $("#keywords").hide();
+        }
+    }
+}
+
+//必应
+function keywordReminderBing() {
+    var keyword = $(".wd").val();
+    const suggestElement = document.getElementById('toggleSuggests');
+    if (suggestElement.classList.contains('on')) {
+        if (keyword != "") {
+            $.ajax({
+                url: 'https://api.bing.com/qsonhs.aspx?type=cb&q=' + keyword,
+                dataType: 'jsonp',
+                jsonp: 'cb', //回调函数的参数名(键值)key
+                success: function (data) {
+                    // 获取宽度
+                    $("#keywords").css("width", $('.sou').width());
+                    $("#keywords").empty().show();
+                    if (data && data.AS && data.AS.Results) {
+                        data.AS.Results.forEach(function (result) {
+                            if (result.Suggests) {
+                                result.Suggests.forEach(function (suggest) {
+                                    $('#keywords').append(`<div class="keyword" data-id="${suggest.Sk}"><i class='iconfont icon-sousuo'></i>${suggest.Txt}</div>`);
+                                });
+                            }
+                        });
+                        $("#keywords").attr("data-length", data.AS.Results.reduce((total, result) => total + (result.Suggests ? result.Suggests.length : 0), 0));
+                    }
+                    $(".keyword").click(function () {
+                        $(".wd").val($(this).text());
+                        $("#search-submit").click();
+                    });
+                },
+                error: function () {
+                    $("#keywords").empty().show();
+                    $("#keywords").hide();
+                }
+            })
+        } else {
+            $("#keywords").empty().show();
+            $("#keywords").hide();
+        }
+    }
+}
+
+//百度
+function keywordReminderBaidu() {
     var keyword = $(".wd").val();
     const suggestElement = document.getElementById('toggleSuggests');
     if (suggestElement.classList.contains('on')) {
@@ -284,6 +380,22 @@ function keywordReminder() {
         } else {
             $("#keywords").empty().show();
             $("#keywords").hide();
+        }
+    }
+}
+
+//搜索建议
+function keywordReminder() {
+    const suggestSetElement = document.getElementById('suggestSetOn');
+    if (suggestSetElement) {
+        // 从搜索建议辅助判断块获取搜索建议源
+        const suggestSetElementClassList = suggestSetElement.classList;
+        if (suggestSetElementClassList.contains('google')) {
+            keywordReminderGoogle();
+        } else if (suggestSetElementClassList.contains('bing')) {
+            keywordReminderBing();
+        } else {
+            keywordReminderBaidu();
         }
     }
 }
@@ -666,7 +778,7 @@ $(document).ready(function () {
         $('#keywords').show();
     });
 
-    // 自动提示 (调用百度 api）
+    // 自动提示
     $('.wd').keyup(function (event) {
         var key = event.keyCode;
         // 屏蔽上下键

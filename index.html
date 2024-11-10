@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>拟态起始页</title>
+    <link rel="manifest" href="./manifest.json" />
     <link rel="icon" type="image/png" href="./favicon.ico">
     <!-- jQuery -->
     <script src="./js/jquery.min.js"></script>
@@ -297,13 +298,15 @@
                         </div>
                         <!-- 深浅模式辅助判段块 -->
                         <div id="switchSetOn" class="a_switch" style="display: none;"></div>
+                        <!-- 搜索建议辅助判段块 -->
+                        <div id="suggestSetOn" class="" style="display: none;"></div>
                         <!-- 设置 -->
                         <div class="mainConts" style="overflow-y: auto;">
                             <div class="set_blocks set_blocks_new" style="margin-top: 10px;">
                                 <span class="set_text" style="color: white; margin-top: 10px;">&nbsp;<span
-                                        id="iconfont-sec" class="iconfont mobile"
-                                        style="font-size: 20px !important;">&#xe616;</span><big>面板设置</big></span>
-                                <!-- 占位块5 -->
+                                        id="iconfont-sec" class="iconfont icon-tab mobile"
+                                        style="font-size: 20px !important;"></span><big>面板设置</big></span>
+                                <!-- 占位块 -->
                                 <div class="set_tip set_tip_new text_left mobile" style="opacity: 0;">
                                     <div>
                                         <span class="set_text" id="wallpaper_text">恭喜你发现了这里，这里什么也没有</span><br>
@@ -421,10 +424,10 @@
                                     </div>
                                 </div>
                                 <!-- 农历显示块 -->
-                                <div id="toggle_time" class="set_tip set_tip_new text_right">
+                                <div id="time_lunar" class="set_tip set_tip_new text_right">
                                     <div>
                                         <span class="set_text"><big>显示农历&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text" style="color: gray;"><small>是否展示农历</small></span>
+                                        <span class="set_text" style="color: gray;"><small>是否在时间下展示农历</small></span>
                                     </div>
                                     <div>
                                         <script src="./js/times.js"></script>
@@ -432,7 +435,7 @@
                                     </div>
                                 </div>
                                 <!-- 时间显秒块 -->
-                                <div id="toggle_time" class="set_tip set_tip_new text_right">
+                                <div id="time_show" class="set_tip set_tip_new text_right">
                                     <div>
                                         <span class="set_text"><big>时间显秒&nbsp;</big><span class="desktop"></span></span>
                                         <span class="set_text" style="color: gray;"><small>是否在时间处展示秒数</small></span>
@@ -445,38 +448,38 @@
                                 <!-- 主题块 -->
                                 <div id="dropdown_theme" class="set_tip set_tip_new text_right">
                                     <div>
-                                        <span class="set_text"><big>主题控制&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text" style="color: gray;"><small>默认深色</small></span>
+                                        <span class="set_text"><big>主题选择&nbsp;</big><span class="desktop"></span></span>
+                                        <span class="set_text" style="color: gray;"><small>默认使用深色模式</small></span>
                                     </div>
-                                    <div class="dropdown" data-onclick="toggleDropdown"
+                                    <div class="dropdown" id="dropdown-theme"
                                         style="display: flex; justify-content: space-between;">
-                                        <span id="selected-option">深色模式</span>
-                                        <span id="iconfont-folding" class="iconfont icon-folding"></span>
-                                        <div class="dropdown-content" id="dropdownContent">
-                                            <div id="dropdown-dark" class="dropdown-item dropdown-selected"
-                                                data-onclick="selectOption('深色模式', this)">
-                                                <span class="checked">✔</span> 深色模式
-                                            </div>
-                                            <div id="dropdown-light" class="dropdown-item"
-                                                data-onclick="selectOption('浅色模式', this)">
+                                        <span id="selected-theme">浅色模式</span>
+                                        <span id="iconfont-folding-theme" class="iconfont icon-folding"></span>
+                                        <div class="dropdown-content" id="dropdownTheme">
+                                            <div id="dropdown-theme-light" class="dropdown-item dropdown-selected"
+                                                data-theme="light">
                                                 <span class="checked"></span> 浅色模式
+                                            </div>
+                                            <div id="dropdown-theme-dark" class="dropdown-item" data-theme="dark">
+                                                <span class="checked">✔</span> 深色模式
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <span class="set_text" style="color: white; margin-top: 10px;">&nbsp;<span
-                                        id="iconfont-sec" class="iconfont mobile"
-                                        style="font-size: 20px !important;">&#xe616;</span><big>搜索设置</big></span>
-                                <!-- 占位块4 -->
+                                        id="iconfont-sec" class="iconfont icon-tab mobile"
+                                        style="font-size: 20px !important;"></span><big>搜索设置</big></span>
+                                <!-- 占位块 -->
                                 <div class="set_tip set_tip_new text_left mobile" style="opacity: 0;">
                                     <div>
                                         <span class="set_text" id="wallpaper_text">恭喜你发现了这里，这里什么也没有</span><br>
                                     </div>
                                 </div>
-                                <!-- 搜索建议块 -->
+                                <!-- 搜索建议(开关)块 -->
                                 <div id="toggle_suggest" class="set_tip set_tip_new text_right">
                                     <div>
-                                        <span class="set_text"><big>搜索建议&nbsp;</big><span class="desktop"></span></span>
+                                        <span class="set_text"><big>搜索建议开关&nbsp;</big><span
+                                                class="desktop"></span></span>
                                         <span class="set_text" style="color: gray;"><small>是否展示搜索建议</small></span>
                                     </div>
                                     <div>
@@ -496,10 +499,34 @@
                                         <script src="./js/start.js" nonce="toggle-switch-start"></script>
                                     </div>
                                 </div>
+                                <!-- 搜索建议(选择)块 -->
+                                <div id="dropdown_suggest" class="set_tip set_tip_new text_right">
+                                    <div>
+                                        <span class="set_text"><big>搜索建议选择&nbsp;</big><span
+                                                class="desktop"></span></span>
+                                        <span class="set_text" style="color: gray;"><small>选择搜索建议来源</small></span>
+                                    </div>
+                                    <div class="dropdown" id="dropdown-suggest"
+                                        style="display: flex; justify-content: space-between;">
+                                        <span id="selected-option">百度</span>
+                                        <span id="iconfont-folding" class="iconfont icon-folding"></span>
+                                        <div class="dropdown-content" id="dropdownSuggest">
+                                            <div id="dropdown-suggest-google" class="dropdown-item dropdown-selected">
+                                                <span class="checked"></span> 谷歌
+                                            </div>
+                                            <div id="dropdown-suggest-bing" class="dropdown-item">
+                                                <span class="checked"></span> 必应
+                                            </div>
+                                            <div id="dropdown-suggest-baidu" class="dropdown-item">
+                                                <span class="checked">✔</span> 百度
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <span class="set_text" style="color: white; margin-top: 10px;">&nbsp;<span
-                                        id="iconfont-sec" class="iconfont mobile"
-                                        style="font-size: 20px !important;">&#xe616;</span><big>数据设置</big></span>
-                                <!-- 占位块3 -->
+                                        id="iconfont-sec" class="iconfont icon-tab mobile"
+                                        style="font-size: 20px !important;"></span><big>数据设置</big></span>
+                                <!-- 占位块 -->
                                 <div class="set_tip set_tip_new text_left mobile" style="z-index: 0; opacity: 0;">
                                     <div>
                                         <span class="set_text" id="wallpaper_text">恭喜你发现了这里，这里什么也没有</span><br>
@@ -541,22 +568,22 @@
                                             重置</div>
                                     </div>
                                 </div>
-                                <!-- 占位块1 -->
+                                <!-- 占位块 -->
                                 <div class="set_tip set_tip_new mobile" style="opacity: 0;">
                                     <div>
                                         <span class="set_text" id="wallpaper_text">恭喜你发现了这里，这里什么也没有</span><br>
                                     </div>
                                 </div>
                                 <span class="set_text" style="color: white;">&nbsp;<span id="iconfont-fir"
-                                        class="iconfont mobile"
-                                        style="font-size: 20px !important;">&#xe616;</span><big>背景设置</big></span>
+                                        class="iconfont icon-tab mobile"
+                                        style="font-size: 20px !important;"></span><big>背景设置</big></span>
                                 <!-- 背景块 -->
                                 <div id="set_blocks_backblock" class="set_blocks_sec_new">
                                     <!-- 背景信息块 -->
                                     <div class="set_tip set_tip_new set_tip_sec_new set_tip_for_new mobile-b">
                                         <div>
-                                            <span class="set_text"><span class="iconfont"
-                                                    style="font-size: 32px !important;">&#xe615;</span></span>
+                                            <span class="set_text"><span class="iconfont icon-act"
+                                                    style="font-size: 22px !important;"></span></span>
                                             <span class="set_text" style="color: gray;"><big>提示</big><span
                                                     class="desktop"></span></span>
                                             <span class="set_text"><small>请点击选项以查看各项说明</small></span>
@@ -651,13 +678,22 @@
                                 <div class="set_tip">
                                     <span class="set_text" align="center"><img id="favo-icon"
                                             src="./img/icon/favicon_144.png" style="width: 32px; height: 32px;"
-                                            align="center"><br><small>V1.2.13</small><br><big>拟态起始页</big></span>
+                                            align="center"><br><small>V1.2.14</small><br><big>拟态起始页</big></span>
                                 </div>
                                 <div class="set_tip">
                                     <span class="set_text"><big>更新日志</big></span>
                                     <div class="update_logs"
                                         style="margin: 0px 10px; height: 300px; overflow-y: auto; overflow-x: hidden;">
                                         <ul>
+                                            <li>V1.2.14 (2024.11.10)</li>
+                                            <ul type="none" class="update_log_text">
+                                                - 优化：二级窗口折叠功能<br>
+                                                - 优化：设置选项展示效果<br>
+                                                - 增加：多个搜索建议源<br>
+                                                - 增加：多个搜索引擎<br>
+                                                - 增加：多个待使用图标<br>
+                                                - 增加：PWA支持<br>
+                                            </ul>
                                             <li>V1.2.13 (2024.11.03)</li>
                                             <ul type="none" class="update_log_text">
                                                 - 优化：导入导出功能细节<br>
@@ -794,7 +830,7 @@
                 </div>
                 <!-- 版本信息 -->
                 <div class="foot">
-                    <div class="power"><small>拟态起始页 V1.2.13</small></a>
+                    <div class="power"><small>拟态起始页 v1.2.14</small></a>
                     </div>
                 </div>
     </section>
@@ -812,6 +848,7 @@
     <script type="text/javascript" src="./js/dropdown.js"></script>
     <script type="text/javascript" src="./js/times.js"></script>
     <script type="text/javascript" src="./js/time.js"></script>
+    <script src="./service-worker.js"></script>
 </body>
 
 </html>

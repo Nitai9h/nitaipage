@@ -8,11 +8,12 @@
     .set {
         margin-top: 180px;
     }
+
     /*NewUI*/
     .set_blocks_new {
-        flex-wrap: nowrap; 
-        display: flex; 
-        justify-content: flex-start; 
+        flex-wrap: nowrap;
+        display: flex;
+        justify-content: flex-start;
         align-content: stretch;
         flex-direction: column;
     }
@@ -30,6 +31,7 @@
     .set_font_new {
         display: none;
     }
+
     .mobile {
         display: none;
     }
@@ -49,9 +51,9 @@
 
     /*NewUI*/
     .set_blocks_new {
-        flex-wrap: nowrap; 
-        display: flex; 
-        justify-content: flex-start; 
+        flex-wrap: nowrap;
+        display: flex;
+        justify-content: flex-start;
         align-content: stretch;
         flex-direction: column
     }
@@ -129,13 +131,13 @@
 
     /*NewUI*/
     .set_blocks_new {
-        flex-wrap: nowrap; 
-        display: flex; 
-        justify-content: flex-start; 
+        flex-wrap: nowrap;
+        display: flex;
+        justify-content: flex-start;
         align-content: stretch;
         flex-direction: column;
     }
-    
+
     .set_tip_new {
         width: 82%;
         margin-left: 2.5%;
@@ -155,17 +157,11 @@
 }
 
 /* 大于1200px时 */
-@media (min-width: 1200px) {
-    #toggle_suggest {
-        width: 100% !important;
-    }
-    #toggle_start {
-        width: 100% !important;
-    }
-    #dropdown_theme {
-        width: 100% !important;
-    }
-    #toggle_time {
+@media (min-width: 1201px) {
+
+    #dropdown_theme,
+    #toggle_time,
+    #dropdown_suggest {
         width: 100% !important;
     }
 }

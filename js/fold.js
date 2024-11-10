@@ -1,6 +1,12 @@
 // 引入 cookie
-function setCookie(foldcookie, value) {
-    document.cookie = foldcookie + "=" + (value || "") + "; path=/";
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
 // cookie 存储
@@ -18,7 +24,7 @@ function getCookie(foldcookie) {
 $(document).ready(function () {
     var toolAll = $('#tool-all');
     var hasBigBClass = getCookie('toolAllClass') === 'true';
-    
+
     if (hasBigBClass) {
         toolAll.addClass('big-b');
         $("#icon-expand").removeClass('icon-fold');
@@ -34,12 +40,12 @@ $(document).ready(function () {
         $(this).attr("class", "iconfont icon-fold");
     }
 
-    $('#icon-expand').on('click', function() {
+    $('#icon-expand').on('click', function () {
         var hasBigBClass = toolAll.hasClass('big-b');
-        
+
         // 切换 big-b 类
         toolAll.toggleClass('big-b');
-        
+
         // 更新 cookie
         setCookie('toolAllClass', toolAll.hasClass('big-b'));
 
@@ -61,7 +67,7 @@ $(document).ready(function () {
     });
 
 });
-    
+
 //通过big-b设置基础内容
 
 if ($('#tool-all').hasClass('big-b')) {
