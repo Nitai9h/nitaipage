@@ -36,6 +36,13 @@ body {
     font-size: 100%;
 }
 
+body.onsearch {
+    .close_sou {
+        transition: 0.3s;
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+}
+
 *,
 a,
 p {
@@ -206,9 +213,12 @@ img.error {
 }
 
 .num {
-    display: inline-block; /* 确保元素以块状显示 */
-    width: 20px; /* 设置每个数字容器的宽度 */
-    text-align: center; /* 居中文本 */
+    display: inline-block;
+    /* 确保元素以块状显示 */
+    width: 20px;
+    /* 设置每个数字容器的宽度 */
+    text-align: center;
+    /* 居中文本 */
 }
 
 #time_text {
@@ -490,7 +500,7 @@ img.error {
     -ms-animation: fade 0.75s;
 }
 
-.big{
+.big {
     margin-top: 0px !important;
     height: 80%;
 }
@@ -612,7 +622,8 @@ img.error {
 }
 
 /* 设置区域统一样式 */
-#menu, #fold {
+#menu,
+#fold {
     width: 44px;
     height: 44px;
     position: absolute;
@@ -637,19 +648,22 @@ img.error {
     left: 8px;
 }
 
-#menu:hover, #fold:hover {
+#menu:hover,
+#fold:hover {
     cursor: pointer;
     transition: 0.3s;
     background: var(--main-background-color);
     border-radius: 8px;
 }
 
-#menu:active, #fold:active {
+#menu:active,
+#fold:active {
     cursor: pointer;
     transform: scale(0.90);
 }
 
-#menu i, #fold i {
+#menu i,
+#fold i {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1099,7 +1113,7 @@ input[type="radio"]:checked+label {
 
 /*更新日志*/
 .update_log_text {
-    color:darkgray;
+    color: darkgray;
 }
 
 /*NewUI*/
@@ -1209,19 +1223,23 @@ input[type="radio"]:checked+label {
     align-items: center;
     justify-content: space-between;
 }
+
 .text-content {
     display: flex;
     flex-direction: column;
 }
+
 .switch {
     width: 40px;
     height: 20px;
     background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 4px; /* 圆角 */
+    border-radius: 4px;
+    /* 圆角 */
     position: relative;
     cursor: pointer;
     transition: background-color 0.3s;
 }
+
 .switch::before {
     content: '';
     position: absolute;
@@ -1230,80 +1248,117 @@ input[type="radio"]:checked+label {
     width: 16px;
     height: 16px;
     background-color: white;
-    border-radius: 4px; /* 圆角 */
+    border-radius: 4px;
+    /* 圆角 */
     transition: transform 0.3s;
 }
+
 .switch.on {
     background-color: #8e8e8e;
 }
+
 .switchon {
     background-color: rgba(255, 255, 255, 0.7) !important;
 }
+
 .switch.on::before {
     transform: translateX(20px);
 }
 
 /* 下拉菜单 */
 .dropdown {
-    width: 150px; /* 下拉菜单宽度 */
-    background-color: rgba(255, 255, 255, 0.03); /* 修改背景色 */
+    width: 150px;
+    /* 下拉菜单宽度 */
+    background-color: rgba(255, 255, 255, 0.03);
+    /* 修改背景色 */
     color: #333;
     padding: 10px;
-    border-radius: 6px; /* Dropdown 整体圆角 */
+    border-radius: 6px;
+    /* Dropdown 整体圆角 */
     font-size: 14px;
     cursor: pointer;
     position: relative;
-    transition: box-shadow 0.3s ease; /* 添加过渡效果 */
-    border: 0.2px solid rgba(255, 255, 255, 0.5); /* 添加白色边框 */
+    transition: box-shadow 0.3s ease;
+    /* 添加过渡效果 */
+    border: 0.2px solid rgba(255, 255, 255, 0.5);
+    /* 添加白色边框 */
 }
+
 .dropdown:hover {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* 添加发光效果，减弱发光强度 */
-    border: 0.2px solid rgba(255, 255, 255, 0.5); /* 添加白色边框 */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    /* 添加发光效果，减弱发光强度 */
+    border: 0.2px solid rgba(255, 255, 255, 0.5);
+    /* 添加白色边框 */
 }
+
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: #4b4b4b;
-    width: 100%; /* 使下拉窗口宽度与下拉菜单一致 */
+    width: 100%;
+    /* 使下拉窗口宽度与下拉菜单一致 */
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    border-radius: 6px; /* 下拉菜单圆角 */
-    opacity: 0; /* 初始透明度 */
-    transition: opacity 0.2s ease, transform 0.2s ease; /* 过渡效果 */
-    top: 100%; /* 紧贴控件底部 */
-    left: 0; /* 左对齐 */
-    transform: translateY(-10px); /* 向上偏移 */
+    border-radius: 6px;
+    /* 下拉菜单圆角 */
+    opacity: 0;
+    /* 初始透明度 */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    /* 过渡效果 */
+    top: 100%;
+    /* 紧贴控件底部 */
+    left: 0;
+    /* 左对齐 */
+    transform: translateY(-10px);
+    /* 向上偏移 */
 }
+
 .dropdown-content.show {
-    display: block; /* 显示下拉内容 */
-    opacity: 1; /* 全部可见 */
-    transform: translateY(0); /* 还原偏移 */
+    display: block;
+    /* 显示下拉内容 */
+    opacity: 1;
+    /* 全部可见 */
+    transform: translateY(0);
+    /* 还原偏移 */
 }
+
 .dropdown-content div {
     color: white;
     padding: 12px 16px;
     text-decoration: none;
-    display: flex; /* 使用 flex 布局 */
-    align-items: center; /* 垂直居中 */
+    display: flex;
+    /* 使用 flex 布局 */
+    align-items: center;
+    /* 垂直居中 */
     cursor: pointer;
-    border-radius: 6px; /* 每项圆角 */
-    background-color: #4b4b4b; /* 与 dropdown-content 一样的背景 */
-    transition: background-color 0.3s; /* 添加过渡效果 */
+    border-radius: 6px;
+    /* 每项圆角 */
+    background-color: #4b4b4b;
+    /* 与 dropdown-content 一样的背景 */
+    transition: background-color 0.3s;
+    /* 添加过渡效果 */
 }
+
 .dropdown-content div:hover {
-    background-color: #575757; /* 鼠标悬停效果 */
+    background-color: #575757;
+    /* 鼠标悬停效果 */
 }
+
 .dropdown-selected {
-    background-color: #333; /* 选中项的背景颜色 */
+    background-color: #333;
+    /* 选中项的背景颜色 */
 }
+
 .checked {
-    margin-right: 8px; /* 调整对勾位置 */
+    margin-right: 8px;
+    /* 调整对勾位置 */
 }
 
 /*时间显秒*/
 .times_none {
     display: none;
 }
+
 .times_block {
     display: block !important;
 }
@@ -1312,8 +1367,10 @@ input[type="radio"]:checked+label {
 .time_slider {
     appearance: none;
     width: 100%;
-    height: 10px; /* 设置滑块的高度 */
-    background: rgba(255, 255, 255, 0.2); /* 背景颜色 */
+    height: 10px;
+    /* 设置滑块的高度 */
+    background: rgba(255, 255, 255, 0.2);
+    /* 背景颜色 */
     border-radius: 10px;
     outline: none;
     margin: 0;
@@ -1322,8 +1379,10 @@ input[type="radio"]:checked+label {
 .time_slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 10px; /* 设置滑块球的大小 */
-    height: 10px; /* 设置滑块球的大小 */
+    width: 10px;
+    /* 设置滑块球的大小 */
+    height: 10px;
+    /* 设置滑块球的大小 */
     border-radius: 50%;
     background: white;
     cursor: pointer;
@@ -1331,17 +1390,31 @@ input[type="radio"]:checked+label {
 }
 
 .time_slider::-moz-range-thumb {
-    width: 10px; /* 设置滑块球的大小 */
-    height: 10px; /* 设置滑块球的大小 */
+    width: 10px;
+    /* 设置滑块球的大小 */
+    height: 10px;
+    /* 设置滑块球的大小 */
     border-radius: 50%;
     background: white;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
+.slider_fill {
+    position: relative;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
 .lunar_date_off {
     display: none !important;
 }
+
 .lunar_date_on {
     display: block !important;
+}
+
+.issues {
+    color: white;
 }

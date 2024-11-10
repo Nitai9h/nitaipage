@@ -134,7 +134,7 @@ function time() {
         sDisplay = '<span id="point">:</span>' + s;
     }
 
-// 农历
+    // 农历
     var lunarD = Lunar.fromDate(new Date());
     var ganZhiYear = lunarD.getYearInGanZhiByLiChun();
     var shengXiao = lunarD.getYearShengXiao();
@@ -243,50 +243,50 @@ $(window).mousedown(function (event) {
 });
 
 //取消鼠标右键菜单
-document.body.oncontextmenu = function() {
+document.body.oncontextmenu = function () {
     return false;
-  };
+};
 
 // Tab 键点击事件
 $(document).on('keydown', function (event) {
-    if (event.keyCode === 9) { 
+    if (event.keyCode === 9) {
         $("#time_text").click();
     }
 });
 
 //清除
-document.getElementById('resetButton').addEventListener('click', function() {
-        // 清除所有 cookie
-        iziToast.show({
-            timeout: 8000,
-            message: '是否重置？',
-            buttons: [
-                ['<button>确认</button>', function (instance, toast) {
-                    setSeInit();
-                    instance.hide({
-                        transitionOut: 'flipOutX',
-                    }, toast, 'buttonName');
-                    iziToast.show({
-                        message: '设置成功'
-                    });
-                    var cookies = document.cookie.split(";");
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = cookies[i];
-                        var eqPos = cookie.indexOf("=");
-                        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                    }
-                    
-                    // 刷新页面
-                    location.reload();
-                }, true],
-                ['<button>取消</button>', function (instance, toast) {
-                    instance.hide({
-                        transitionOut: 'flipOutX',
-                    }, toast, 'buttonName');
-                }]
-            ]
-        });
+document.getElementById('resetButton').addEventListener('click', function () {
+    // 清除所有 cookie
+    iziToast.show({
+        timeout: 8000,
+        message: '是否重置？',
+        buttons: [
+            ['<button>确认</button>', function (instance, toast) {
+                setSeInit();
+                instance.hide({
+                    transitionOut: 'flipOutX',
+                }, toast, 'buttonName');
+                iziToast.show({
+                    message: '设置成功'
+                });
+                var cookies = document.cookie.split(";");
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i];
+                    var eqPos = cookie.indexOf("=");
+                    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                }
+
+                // 刷新页面
+                location.reload();
+            }, true],
+            ['<button>取消</button>', function (instance, toast) {
+                instance.hide({
+                    transitionOut: 'flipOutX',
+                }, toast, 'buttonName');
+            }]
+        ]
+    });
 });
 
 //控制台输出
@@ -305,8 +305,8 @@ color: rgb(30,152,255);
 var title1 = 'NitaiPage'
 var title2 = `Welcome to my Homepage`
 var content = `
-版 本 号：1.2.12
-更新日期：2024-08-31
+版 本 号：1.2.13
+更新日期：2024-11-03
 
 AboutME:  https://nitai.us.kg/about
 `
