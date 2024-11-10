@@ -28,11 +28,15 @@ function toggleStart() {
     const startElement = document.getElementById('toggleStart');
     if (startElement.classList.contains('on')) {
         startElement.classList.remove('on');
-        $("#toggleStart").removeClass('switchon');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggleStart").removeClass('switchon');
+        }
         setCookie('quickStart', 'off', 365); // 设置 "off" 状态
     } else {
         startElement.classList.add('on');
-        $("#toggleStart").addClass('switchon');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggleStart").addClass('switchon');
+        }
         setCookie('quickStart', 'on', 365); // 设置 "on" 状态
     }
 }
@@ -42,8 +46,14 @@ window.onload = function() {
     const quickStartState = getCookie('quickStart');
     if (quickStartState === 'on') {
         document.getElementById('toggleStart').classList.add('on');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggleStart").addClass('switchon');
+        }
     }
     if (quickStartState === 'off') {
         document.getElementById('toggleStart').classList.remove('on');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggleStart").removeClass('switchon');
+        }
     }
 };

@@ -41,9 +41,15 @@ window.addEventListener('load', function () {
     const timesState = getCookie('times');
     if (timesState === 'on') {
         $("#toggletimes").addClass('on');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggletimes").addClass('switchon');
+        }
     }
     if (timesState === 'off') {
         $("#toggletimes").removeClass('on');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggletimes").removeClass('switchon');
+        }
     }
 
     // 初始化主题
@@ -56,28 +62,28 @@ window.addEventListener('load', function () {
         updateSelectedOptionText('深色模式');
     }
 
-    //初始化两大滑块块
+    //初始化三大滑块
     //time
     fontSizeSlider.value = parseInt(getCookie('fontSize'), 10) || 0;
-    timeText.style.fontSize = 2.75 + 3 * (fontSizeSlider.value / 100) + 'rem'; // 设置新字体大小
+    timeText.style.fontSize = 2.75 + 3 * (fontSizeSlider.value / 100) + 'rem';
     fontThickSlider.value = parseInt(getCookie('fontThick'), 10) || 0;
-    timeText.style.fontWeight = 100 + 800 * (fontThickSlider.value / 100); // 设置新 font-weight
+    timeText.style.fontWeight = 100 + 800 * (fontThickSlider.value / 100);
     opacitySlider.value = parseInt(getCookie('opacity'), 10) || 100;
-    timeText.style.opacity = opacitySlider.value / 100; // 设置新 opacity
+    timeText.style.opacity = opacitySlider.value / 100;
     //day
     dayFontSizeSlider.value = parseInt(getCookie('dayFontSize'), 10) || 0;
-    day.style.fontSize = 1.05 + 3 * (dayFontSizeSlider.value / 100) + 'rem'; // 设置新字体大小
+    day.style.fontSize = 1.05 + 3 * (dayFontSizeSlider.value / 100) + 'rem';
     dayFontThickSlider.value = parseInt(getCookie('dayFontThick'), 10) || 0;
-    day.style.fontWeight = 100 + 800 * (dayFontThickSlider.value / 100); // 设置新 font-weight
+    day.style.fontWeight = 100 + 800 * (dayFontThickSlider.value / 100);
     dayOpacitySlider.value = parseInt(getCookie('dayOpacity'), 10) || 100;
-    day.style.opacity = dayOpacitySlider.value / 100; // 设置新 opacity
+    day.style.opacity = dayOpacitySlider.value / 100;
     //lunar
     lunarFontSizeSlider.value = parseInt(getCookie('lunarFontSize'), 10) || 0;
-    lunar.style.fontSize = 1.05 + 3 * (lunarFontSizeSlider.value / 100) + 'rem'; // 设置新字体大小
+    lunar.style.fontSize = 0.8 + 2.5 * (lunarFontSizeSlider.value / 100) + 'rem';
     lunarFontThickSlider.value = parseInt(getCookie('lunarFontThick'), 10) || 0;
-    lunar.style.fontWeight = 100 + 800 * (lunarFontThickSlider.value / 100); // 设置新 font-weight
+    lunar.style.fontWeight = 100 + 800 * (lunarFontThickSlider.value / 100);
     lunarOpacitySlider.value = parseInt(getCookie('lunarOpacity'), 10) || 100;
-    lunar.style.opacity = lunarOpacitySlider.value / 100; // 设置新 opacity
+    lunar.style.opacity = lunarOpacitySlider.value / 100;
 
 }, false)
 
@@ -146,7 +152,6 @@ function time() {
 
 // 引用农历库
 function convertToLunar(date) {
-
     return lunar.year + "年 " + lunar.month + "月 " + lunar.day + "日";
 }
 
@@ -168,19 +173,45 @@ $(function () {
     const searchSuggestState = getCookie('searchSuggests');
     if (searchSuggestState === 'on') {
         $("#toggleSuggests").addClass('on');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggleSuggests").add('switchon');
+        }
     }
     if (searchSuggestState === 'off') {
         $("#toggleSuggests").removeClass('on');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggleSuggests").removeClass('switchon');
+        }
+    }
+    // 初始化农历显示状态
+    const lunarSuggestState = getCookie('lunarSuggests');
+    if (lunarSuggestState === 'on') {
+        $("#togglelunar").addClass('on');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#togglelunar").addClass('switchon');
+        }
+        $(".lunar_date_off").addClass('lunar_date_on');
+    }
+    if (lunarSuggestState === 'off') {
+        $("#togglelunar").removeClass('on');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#togglelunar").removeClass('switchon');
+        }
+        $(".lunar_date_off").removeClass('lunar_date_on');
     }
     // 初始化快速使用开关状态
     const quickStartState = getCookie('quickStart');
     if (quickStartState === 'on') {
         document.getElementById('toggleStart').classList.add('on');
-        $("#toggleStart").addClass('switchon');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggleStart").addClass('switchon');
+        }
     }
     if (quickStartState === 'off') {
         document.getElementById('toggleStart').classList.remove('on');
-        $("#toggleStart").removeClass('switchon');
+        if ($('#switchSetOn').hasClass('switchon')) {
+            $("#toggleStart").removeClass('switchon');
+        }
     }
 })
 
@@ -274,8 +305,8 @@ color: rgb(30,152,255);
 var title1 = 'NitaiPage'
 var title2 = `Welcome to my Homepage`
 var content = `
-版 本 号：1.2.11
-更新日期：2024-08-30
+版 本 号：1.2.12
+更新日期：2024-08-31
 
 AboutME:  https://nitai.us.kg/about
 `

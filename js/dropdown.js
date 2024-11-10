@@ -55,7 +55,7 @@ function openDropdown(dropdownContent) {
         dropdownContent.style.opacity = 1;
         dropdownContent.style.transform = 'translateY(0)';
         dropdownContent.classList.add("show");
-    }, 10); // 提交当前样式以启用过渡
+    }, 0); // 提交当前样式以启用过渡
 }
 
 function closeDropdown(dropdownContent) {
@@ -65,7 +65,7 @@ function closeDropdown(dropdownContent) {
     setTimeout(() => {
         dropdownContent.style.display = 'none';
         dropdownContent.classList.remove("show");
-    }, 150); // 动画时间
+    }, 10); // 动画时间
 }
 
 function selectOption(option, element) {
@@ -126,17 +126,12 @@ function applyLightTheme() {
         updatelog[i].style.color = 'rgba(255, 255, 255, 0.7)';
     }
 
-    var toggleSuggestselement = document.getElementById("toggleSuggests");
-    toggleSuggestselement.classList.add("switchon");
+    var switchonelements = document.querySelectorAll('.switch.on');
+    switchonelements.forEach(function(switchonelement) {
+        switchonelement.classList.add('switchon');
+    });
 
-    var toggleStartelement = document.getElementById("toggleStart");
-    toggleStartelement.classList.add("switchon");
-
-    var toggletimeselement = document.getElementById("toggletimes");
-    toggletimeselement.classList.add("switchon");
-
-    var togglelunarelement = document.getElementById("togglelunar");
-    togglelunarelement.classList.add("switchon");
+    $("#switchSetOn").addClass('switchon');
 }
 
 //深色
@@ -154,17 +149,12 @@ function applyDarkTheme() {
         updatelog[i].style.color = 'darkgray; !important';
     }
 
-    var toggleSuggestselement = document.getElementById("toggleSuggests");
-    toggleSuggestselement.classList.remove("switchon");
+    var switchonelements = document.querySelectorAll('.switch.on');
+    switchonelements.forEach(function(switchonelement) {
+        switchonelement.classList.remove('switchon');
+    });
 
-    var toggleStartelement = document.getElementById("toggleStart");
-    toggleStartelement.classList.remove("switchon");
-
-    var toggletimeselement = document.getElementById("toggletimes");
-    toggletimeselement.classList.remove("switchon");
-
-    var togglelunarelement = document.getElementById("togglelunar");
-    togglelunarelement.classList.remove("switchon");
+    $("#switchSetOn").removeClass('switchon');
 }
 
 function updateSelectedOptionText(option) {

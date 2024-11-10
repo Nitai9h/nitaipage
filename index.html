@@ -9,7 +9,7 @@
     <!-- jQuery -->
     <script src="./js/jquery.min.js"></script>
     <!-- Lunar -->
-    <script type="text/javascript" src="./js/lunar.js"></script>
+    <script src="./js/lunar.js"></script>
     <!-- 引入样式 -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
     <link rel="stylesheet" type="text/css" href="./css/font.css">
@@ -23,11 +23,7 @@
         src="./js/iziToast.min.js">
     </script>
     <!-- IE Out -->
-    <script>
-        if ( /*@cc_on!@*/ false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href =
-            "https://www.imsyy.top/upgrade-your-browser/index.html?referrer=" + encodeURIComponent(window.location
-            .href);
-    </script>
+    <script type="text/javascript" src="./js/ie-out.js"></script>
 </head>
 
 <body>
@@ -299,6 +295,8 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 深浅模式辅助判段块 -->
+                        <div id="switchSetOn" class="a_switch" style="display: none;"></div>
                         <!-- 设置 -->
                         <div class="mainConts" style="overflow-y: auto;">
                             <div class="set_blocks set_blocks_new" style="margin-top: 10px;">
@@ -406,8 +404,8 @@
                                         <span class="set_text" style="color: gray;"><small>是否展示农历</small></span>
                                     </div>
                                     <div>
+                                        <script src="./js/times.js"></script>
                                         <div class="switch" id="togglelunar"></div>
-                                        <script src="./js/times.js" nonce="toggle-switch-time"></script>
                                     </div>
                                 </div>
                                 <!-- 时间显秒块 -->
@@ -417,8 +415,8 @@
                                         <span class="set_text" style="color: gray;"><small>是否在时间处展示秒数</small></span>
                                     </div>
                                     <div>
+                                        <script src="./js/times.js"></script>
                                         <div class="switch" id="toggletimes"></div>
-                                        <script src="./js/times.js" nonce="toggle-switch-time"></script>
                                     </div>
                                 </div>
                                 <!-- 主题块 -->
@@ -600,21 +598,30 @@
                         <div class="mainConts" style="overflow-y: auto;">
                             <div class="set_blocks">
                                 <div class="set_tip">
-                                    <span class="set_text" align="center"><img id="favo-icon" src="./img/icon/favicon_144.png" style="width: 32px; height: 32px;" align="center"><br><small>V1.2.11</small><br><big>拟态起始页</big></span>
+                                    <span class="set_text" align="center"><img id="favo-icon" src="./img/icon/favicon_144.png" style="width: 32px; height: 32px;" align="center"><br><small>V1.2.12</small><br><big>拟态起始页</big></span>
                                 </div>
                                 <div class="set_tip">
                                     <span class="set_text"><big>更新日志</big></span>
-                                    <div class="update_logs" style="margin: 0px 10px;">
-                                        <ul>
+                                    <div class="update_logs" style="margin: 0px 10px; height: 300px; overflow-y: auto; overflow-x: hidden;">
+                                        <ul>                                            
+                                            <li>V1.2.12 (2024.08.31)</li>
+                                                <ul type="none" class="update_log_text">
+                                                    - 修复：农历自定义开关问题<br>
+                                                    - 修复：更新日志版块排版布局<br>
+                                                    - 修复：农历自定义字体大小问题<br>
+                                                    - 修复：浅色背景导致的按钮颜色问题<br>
+                                                </ul>
                                             <li>V1.2.11 (2024.08.30)</li>
                                                 <ul type="none" class="update_log_text">
                                                     - 优化：主题切换细节<br>
+                                                    - 修复：时钟自定义内容保存问题<br>
+                                                    - 修复：日期自定义内容保存问题<br>
                                                     - 新增：农历显示开关<br>
                                                     - 新增：农历自定义(粗细、大小、透明度调整)滑块<br>
                                                 </ul>
                                             <li>V1.2.10 (2024.08.22)</li>
                                                 <ul type="none" class="update_log_text">
-                                                    - 优化：部分细节<br>
+                                                    - 优化：折叠/展开细节<br>
                                                     - 新增：主题选择<br>
                                                     - 新增：时间显秒开关<br>
                                                     - 新增：时钟自定义(粗细、大小、透明度调整)滑块<br>
@@ -711,9 +718,7 @@
                                 <div class="set_version">
                                     <span class="set_text"><big>版权信息</big></span>
                                     <span class="set_version-text">Copyright&nbsp;&copy;                
-                                    <script>
-                                        document.write(new Date().getFullYear())
-                                    </script>&nbsp;<a href="https://nitai.us.kg/">Nitai</a></span>
+                                        <script type="text/javascript" src="./js/year.js"></script>&nbsp;<a href="https://nitai.us.kg/">Nitai</a></span>
                                     <span class="set_version-text2">Open&nbsp;Source&nbsp;By&nbsp;<a href="https://www.imsyy.top/" target="_blank" style="color: rgb(180, 180, 180);">imsyy</a></span>
                                 </div>
                             </div>
@@ -723,7 +728,7 @@
             </div>
     <!-- 版本信息 -->
     <div class="foot">
-            <div class="power"><small>拟态起始页 V1.2.11</small></a> 
+            <div class="power"><small>拟态起始页 V1.2.12</small></a> 
             </div>
         </div>
     </section>
@@ -742,5 +747,4 @@
     <script type="text/javascript" src="./js/times.js"></script>
     <script type="text/javascript" src="./js/time.js"></script>
 </body>
-
 </html>

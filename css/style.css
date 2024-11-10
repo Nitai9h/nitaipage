@@ -1236,7 +1236,7 @@ input[type="radio"]:checked+label {
 .switch.on {
     background-color: #8e8e8e;
 }
-.switch.on {
+.switchon {
     background-color: rgba(255, 255, 255, 0.7) !important;
 }
 .switch.on::before {
