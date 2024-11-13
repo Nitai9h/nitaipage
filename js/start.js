@@ -57,19 +57,3 @@ window.onload = function () {
         }
     }
 };
-
-//初始化搜索建议
-window.onload = () => {
-    const applyThemeState = cookieManager.get('applyTheme');
-    applyTheme(applyThemeState || 'dark');
-    updateSelectedOptionText(applyThemeState === 'light' ? '浅色模式' : '深色模式');
-
-    const selectedSearchAPI = cookieManager.get('selectedSearchAPI');
-    if (selectedSearchAPI === 'bing') {
-        selectOption('必应', document.getElementById('dropdown-suggest-bing'));
-    } else if (selectedSearchAPI === 'google') {
-        selectOption('谷歌', document.getElementById('dropdown-suggest-google'));
-    } else {
-        selectOption('百度', document.getElementById('dropdown-suggest-baidu'));
-    }
-};

@@ -27,7 +27,7 @@ const applyTheme = (theme) => {
 
     const updatelog = document.getElementsByClassName('update_log_text');
     for (let i = 0; i < updatelog.length; i++) {
-        updatelog[i].style.color = theme === 'light' ? 'rgba(255, 255, 255, 0.7)' : 'darkgray';
+        updatelog[i].style.color = theme === 'light' ? 'rgba(255, 255, 255, 0.7)' : 'dark';
     }
 
     const switchonelements = document.querySelectorAll('.switch.on');

@@ -203,6 +203,25 @@ $(function () {
             $("#toggleStart").removeClass('switchon');
         }
     }
+    //初始化搜索建议与主题
+    setTimeout(1)
+    const suggestSetOnDivCheck = document.getElementById("suggestSetOn");
+    const selectedSearchAPI = cookieManager.get('selectedSearchAPI');
+    if (suggestSetOnDivCheck) {
+        suggestSetOnDivCheck.className = ''; //重置搜索建议源
+        suggestSetOnDivCheck.classList.add(selectedSearchAPI);
+    }
+    if (selectedSearchAPI === 'bing') {
+        selectOption('必应', document.getElementById('dropdown-suggest-bing'));
+    } else if (selectedSearchAPI === 'google') {
+        selectOption('谷歌', document.getElementById('dropdown-suggest-google'));
+    } else {
+        selectOption('百度', document.getElementById('dropdown-suggest-baidu'));
+    }
+    const applyThemeState = cookieManager.get('applyTheme');
+        applyTheme(applyThemeState || 'dark');
+        updateSelectedOptionText(applyThemeState === 'light' ? '浅色模式' : '深色模式');
+
 })
 
 
@@ -297,8 +316,10 @@ var title2 = `Welcome to my Homepage`
 var content = `
 版 本 号：1.2.14
 更新日期：2024-11-10
+补丁版本：0.2
+更新日期：2024-11-13
 
-AboutME:  https://nitai.us.kg/about
+About:  https://nitaipage.nitai.us.kg
 `
 console.log(`%c${title1} %c${title2}
 %c${content}`, styleTitle1, styleTitle2, styleContent)
