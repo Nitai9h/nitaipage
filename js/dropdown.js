@@ -198,7 +198,11 @@ function applySearchAPI(api) {
     const suggestSetOnDiv = document.getElementById("suggestSetOn");
     if (suggestSetOnDiv) {
         suggestSetOnDiv.className = ''; //重置搜索建议源
-        suggestSetOnDiv.classList.add(api);
+        if (api && api.trim()) {
+            suggestSetOnDiv.classList.add(api);
+        } else {
+            console.error("Class name is empty or undefined:", api);
+        }
     }
 }
 

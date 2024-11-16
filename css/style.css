@@ -558,6 +558,7 @@ img.error {
     /* overflow: auto; */
     flex-wrap: wrap;
     animation: fade;
+    margin-top: 1%;
     -webkit-animation: fade 0.5s;
     -moz-animation: fade 0.5s;
     -o-animation: fade 0.5s;
@@ -1421,6 +1422,14 @@ input[type="radio"]:checked+label {
 }
 
 .update_text_description {
-    color: 	#aaa7a7;
+    color: #aaa7a7;
     font-size: 0.5rem;
+}
+
+.text_hover:hover {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    /* 悬停时的文字颜色 */
+    text-shadow:
+        0px 0px 20px rgb(255, 255, 255);
 }

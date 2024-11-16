@@ -219,8 +219,8 @@ $(function () {
         selectOption('百度', document.getElementById('dropdown-suggest-baidu'));
     }
     const applyThemeState = cookieManager.get('applyTheme');
-        applyTheme(applyThemeState || 'dark');
-        updateSelectedOptionText(applyThemeState === 'light' ? '浅色模式' : '深色模式');
+    applyTheme(applyThemeState || 'dark');
+    updateSelectedOptionText(applyThemeState === 'light' ? '浅色模式' : '深色模式');
 
 })
 
@@ -311,15 +311,32 @@ color: rgb(244,167,89);
 var styleContent = `
 color: rgb(30,152,255);
 `
-var title1 = 'NitaiPage'
-var title2 = `Welcome to my Homepage`
-var content = `
-版 本 号：1.2.14
-更新日期：2024-11-10
-补丁版本：0.2
-更新日期：2024-11-13
+var title1 = 'NitaiPage';
+var title2 = `Welcome to my Homepage`;
+
+async function fetchData() {
+    try {
+        const response = await fetch('./api/update.json');
+        const data = await response.json();
+
+        // 获取最后一个版本信息
+        const latestVersionInfo = data.versions[0];
+        const latestVersion = latestVersionInfo.version;
+        const latestDate = latestVersionInfo.date;
+
+        var content = `
+版 本 号：${latestVersion}
+更新日期：${latestDate}
 
 About:  https://nitaipage.nitai.us.kg
-`
-console.log(`%c${title1} %c${title2}
-%c${content}`, styleTitle1, styleTitle2, styleContent)
+`;
+
+        console.log(`%c${title1} %c${title2}
+%c${content}`, styleTitle1, styleTitle2, styleContent);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+fetchAndDisplayUpdates()
+fetchData();
