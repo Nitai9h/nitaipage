@@ -1,18 +1,26 @@
 {
-    "latestVersion": "Beta-V1.2.15.1",
+    "latestVersion": "Beta-V1.2.15.2",
     "versions": [
+        {
+            "version": "Beta-V1.2.15.2",
+            "date": "2024.11.17",
+            "updates": [
+                "新增：待办(Todo)页面",
+                "修改：数据导入/导出"
+            ]
+        },
         {
             "version": "Beta-V1.2.15.1",
             "date": "2024.11.16",
             "updates": [
-                "优化：更换日志处理方式"
+                "优化：日志处理方式"
             ]
         },
         {
             "version": "Beta-V1.2.15.0",
             "date": "2024.11.16",
             "updates": [
-                "修改：更换日志处理方式"
+                "修改：日志处理方式"
             ]
         },
         {
