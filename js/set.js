@@ -1316,10 +1316,21 @@ $(document).ready(function () {
         }
     });
 
-    // 我的数据导出
+    // 导出功能
     $("#my_data_out").click(function () {
         var cookies = Cookies.get();
-        var json = JSON.stringify(cookies);
+        var localStorageData = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            localStorageData[key] = localStorage.getItem(key);
+        }
+
+        var data = {
+            cookies: cookies,
+            localStorage: localStorageData
+        };
+
+        var json = JSON.stringify(data);
         download("Nitaipage-back-up-" + $.now() + ".json", json);
         iziToast.show({
             timeout: 2000,
@@ -1327,7 +1338,7 @@ $(document).ready(function () {
         });
     });
 
-    // 我的数据导入 点击触发文件选择
+    // 导入功能 - 点击触发文件选择
     $("#my_data_in").click(function () {
         $("#my_data_file").click();
     });
@@ -1335,15 +1346,15 @@ $(document).ready(function () {
     // 选择文件后读取文件内容
     $("#my_data_file").change(function () {
         var selectedFile = document.getElementById('my_data_file').files[0];
-        var name = selectedFile.name;//读取选中文件的文件名
-        var size = selectedFile.size;//读取选中文件的大小
+        var name = selectedFile.name; // 读取选中文件的文件名
+        var size = selectedFile.size; // 读取选中文件的大小
         console.log("文件名:" + name + " 大小:" + size);
 
-        var reader = new FileReader(); //这是核心,读取操作就是由它完成.
-        reader.readAsText(selectedFile); //读取文件的内容,也可以读取文件的URL
+        var reader = new FileReader(); // 这是核心,读取操作就是由它完成.
+        reader.readAsText(selectedFile); // 读取文件的内容,也可以读取文件的URL
         reader.onload = function () {
-            //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
-            //console.log(this.result);
+            // 当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
+            // console.log(this.result);
 
             // json 格式校验
             var mydata;
@@ -1356,7 +1367,7 @@ $(document).ready(function () {
                 });
                 return;
             }
-            if (typeof mydata != 'object') {
+            if (typeof mydata != 'object' || !mydata.cookies || !mydata.localStorage) {
                 iziToast.show({
                     timeout: 2000,
                     message: '"' + name + '"' + '数据格式错误'
@@ -1369,17 +1380,22 @@ $(document).ready(function () {
                 message: '当前数据将会被' + '"' + name + '"' + '覆盖！是否继续导入？',
                 buttons: [
                     ['<button>确认</button>', function (instance, toast) {
-                        for (var key in mydata) {
-                            Cookies.set(key, mydata[key], {
+                        // 导入 cookie
+                        for (var key in mydata.cookies) {
+                            Cookies.set(key, mydata.cookies[key], {
                                 expires: 36500
                             });
+                        }
+                        // 导入 localStorage
+                        for (var key in mydata.localStorage) {
+                            localStorage.setItem(key, mydata.localStorage[key]);
                         }
                         instance.hide({
                             transitionOut: 'flipOutX',
                         }, toast, 'buttonName');
                         iziToast.show({
                             timeout: 2000,
-                            message: '"' + size + '"' + '导入成功'
+                            message: '导入成功'
                         });
                         setTimeout(function () {
                             window.location.reload()

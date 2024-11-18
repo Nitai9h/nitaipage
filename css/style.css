@@ -711,6 +711,7 @@ img.error {
 }
 
 .set_se_list_add,
+.new_button,
 .set_se_list_preinstall,
 .se_add_save,
 .se_add_cancel,
@@ -731,6 +732,7 @@ img.error {
 }
 
 .set_se_list_add:hover,
+.new_button:hover,
 .set_se_list_preinstall:hover,
 .se_add_save:hover,
 .se_add_cancel:hover,
@@ -745,6 +747,7 @@ img.error {
 }
 
 .set_se_list_add:active,
+.new_button:active,
 .set_se_list_preinstall:active,
 .se_add_save:active,
 .se_add_cancel:active,
@@ -1432,4 +1435,241 @@ input[type="radio"]:checked+label {
     /* 悬停时的文字颜色 */
     text-shadow:
         0px 0px 20px rgb(255, 255, 255);
+}
+
+.todo-all-button {
+
+    height: 100%;
+    width: 100%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-right: 1%;
+    padding-left: 1%;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: var(--main-search-shadow);
+    transition: 0.3s;
+}
+
+.todo-all {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 2%;
+    margin-right: 2%;
+    height: 300px;
+    width: 100%;
+    padding-bottom: 1%;
+    padding-right: 1%;
+    padding-left: 1%;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: var(--main-search-shadow);
+    transition: 0.3s;
+}
+
+.todo-all h2 {
+    font-size: 1.5rem;
+    color: var(--main-text-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+input#newTodo[type="text"] {
+    font-size: 1.05rem;
+    outline: none;
+    height: 40px;
+    width: 90%;
+    border-radius: 8px;
+    padding: 0px 10px;
+    border: none;
+    margin-left: 10px;
+    background: var(--main-input-color);
+}
+
+input#newTodo[type="text"]::placeholder {
+    color: var(--main-input-text-placeholder-color);
+}
+
+.todo_add_ok {
+    display: none;
+}
+
+.todo_cancel {
+    display: none;
+}
+
+.todo-button {
+    display: flex;
+    justify-content: center;
+}
+
+#todo_add_name {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+#todoList,
+#todoArchiveList {
+    list-style-type: none;
+    padding: 0;
+    max-height: 80%;
+    overflow: auto;
+}
+
+#todoList li,
+#todoArchiveList li {
+    padding: 10px;
+    background-color: var(--main-background-color);
+    border-radius: 8px;
+    color: var(--main-text-color);
+    font-size: 1rem;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+}
+
+#todoList li:hover,
+#todoArchiveList li:hover {
+    background-color: var(--main-background-hover-color);
+}
+
+#todoList li button,
+#todoArchiveList li button {
+    background: none;
+    border: none;
+    color: var(--main-text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#todoList li button:hover,
+#todoArchiveList li button:hover {
+    color: var(--main-text-form-hover-color);
+}
+
+#todo_add_main {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#todo_add_main.show {
+    display: block;
+    opacity: 1;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    margin: 4px 0;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.todo_list_div.completed {
+    text-decoration: line-through;
+    color: #9b9b9b !important;
+    text-decoration-thickness: 2px;
+    /*厚度*/
+    text-decoration-color: var(--main-text-color);
+}
+
+#se_list_num {
+    background-color: var(--main-background-color);
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#se_list_num:hover {
+    background-color: var(--main-background-hover-color);
+}
+
+.from_items {
+    display: flex;
+    justify-content: center;
+}
+
+.todo-item {
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.fade-in {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.fade-out {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.todo_show_div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.todo_guide_text {
+    display: grid;
+    justify-items: center;
+}
+
+.todo_guide_text1 {
+    font-size: 5rem;
+    font-weight: 900;
+}
+
+.todo_guide_text2 {
+    font-size: 1.3rem;
+}
+
+.todo_guide-button {
+    display: flex;
+    justify-content: center;
+}
+
+.todo_guide {
+    display: flex;
+    padding: 8px;
+    margin: 4px 0;
+    border-radius: 4px;
+    transition: 0.3s;
+    flex-direction: column;
+    justify-items: stretch;
+    justify-content: space-between;
+    height: 100%;
 }

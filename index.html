@@ -117,6 +117,7 @@
                 <div class="mark" style="display: none;">
                     <div class="tab">
                         <div class="tab-item active">捷径</div>
+                        <div class="tab-item">待办</div>
                     </div>
                     <div class="content products">
                         <!-- 捷径 -->
@@ -124,8 +125,37 @@
                             <div class="quick-all">
                             </div>
                         </div>
-                        <!-- <div class="mainCont"> -->
-                        <!-- </div> -->
+                        <!-- Todo -->
+                        <div class="mainCont selected" style="display: none;">
+                            <div class=" todo-all" style="margin-left: 2%; margin-right: 2%;">
+                                <div id="todo_add_main" style="display: none;">
+                                    <div id="todo_add_name">
+                                        <div>名称</div>
+                                        <input type="text" id="newTodo" placeholder="想做点什么?">
+                                    </div>
+                                </div>
+                                <ul id="todoList" style="display: none;">
+                                </ul>
+                                <ul id="todoArchiveList" style="display: none;">
+                                </ul>
+                                <div id="todo_button" class="todo-button" style="display: none;">
+                                    <div id="todo_add" class="new_button">新增</div>
+                                    <div id="todo_archive" class="new_button">已归档</div>
+                                    <div id="todo_add_ok" class="new_button" style="display: none;">确定</div>
+                                    <div id="todo_cancel" class="new_button" style="display: none;">取消</div>
+                                    <div id="todo_archive_back" class="new_button" style="display: none;">返回</div>
+                                </div>
+                                <div id="todo-guide" class="todo_guide">
+                                    <div class="todo_guide_text">
+                                        <div class="todo_guide_text1">欢迎!</div>
+                                        <div class="todo_guide_text2">快速添加待办事项，点击下方按钮结束引导试试吧!</div>
+                                    </div>
+                                    <div class="todo_guide-button">
+                                        <div id="todo_guide_close" class="new_button">关闭</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- 设置图标 -->
@@ -748,6 +778,8 @@
     <script type="text/javascript" src="./js/dropdown.js"></script>
     <script type="text/javascript" src="./js/times.js"></script>
     <script type="text/javascript" src="./js/time.js"></script>
+    <script type="text/javascript" src="./js/guide.js"></script>
+    <script type="text/javascript" src="./js/todo.js"></script>
 
     <script src="./service-worker.js"></script>
 </body>

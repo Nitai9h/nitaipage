@@ -263,7 +263,7 @@ $(document).on('keydown', function (event) {
     }
 });
 
-//清除
+//重置
 document.getElementById('resetButton').addEventListener('click', function () {
     // 清除所有 cookie
     iziToast.show({
@@ -285,6 +285,8 @@ document.getElementById('resetButton').addEventListener('click', function () {
                     var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
                     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
                 }
+                // 清除 localStorage
+                localStorage.clear();
 
                 // 刷新页面
                 location.reload();
