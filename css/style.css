@@ -1673,3 +1673,11 @@ input#newTodo[type="text"]::placeholder {
     justify-content: space-between;
     height: 100%;
 }
+
+.update_ul {
+    padding-inline-start: 0.5%
+}
+
+.update_text_ul {
+    padding-inline-start: 2.5%
+}

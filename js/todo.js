@@ -46,6 +46,7 @@ window.onload = function () {
     document.getElementById('todo_archive_back').addEventListener('click', function () {
         hideArchiveList();
     });
+
 };
 
 function addTodo() {
@@ -134,6 +135,7 @@ function addTodoToList(todoText, completed = false, archived = false) {
 
         // 更新本地存储
         saveTodos();
+        saveArchives();
     });
 
     let buttonCopy = document.createElement('button');

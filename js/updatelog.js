@@ -23,7 +23,7 @@ async function fetchAndDisplayUpdates() {
         data.versions.forEach(version => {
             const versionElement = document.createElement('ul');
             const versionItem = document.createElement('li');
-            versionItem.setAttribute('type', 'none'); // 添加 type="none"
+            versionElement.setAttribute('class', 'update_ul'); // 添加 class="update_ul"
             versionItem.textContent = `${version.version} (${version.date})`;
             versionElement.appendChild(versionItem);
 
@@ -32,6 +32,7 @@ async function fetchAndDisplayUpdates() {
             version.updates.forEach(update => {
                 const updateItem = document.createElement('li');
                 updateItem.setAttribute('type', 'none'); // 添加 type="none"
+                updatesList.setAttribute('class', 'update_text_ul'); // 添加 class="update_text_ul"
                 updateItem.innerHTML = `<span class="update_log_text">- ${update}</span>`;
                 updatesList.appendChild(updateItem);
             });

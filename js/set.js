@@ -1279,7 +1279,7 @@ $(document).ready(function () {
         if (!reg.test(url)) {
             iziToast.show({
                 timeout: 8000,
-                message: '检测到链接可能不是可用状态，是否强制设置',
+                message: '检测到链接可能不可用，是否强制设置',
                 buttons: [
                     ['<button>确认</button>', function (instance, toast) {
                         setQuickList();
@@ -1348,7 +1348,7 @@ $(document).ready(function () {
         var selectedFile = document.getElementById('my_data_file').files[0];
         var name = selectedFile.name; // 读取选中文件的文件名
         var size = selectedFile.size; // 读取选中文件的大小
-        console.log("文件名:" + name + " 大小:" + size);
+        // console.log("文件名:" + name + " 大小:" + size);
 
         var reader = new FileReader(); // 这是核心,读取操作就是由它完成.
         reader.readAsText(selectedFile); // 读取文件的内容,也可以读取文件的URL
@@ -1395,7 +1395,7 @@ $(document).ready(function () {
                         }, toast, 'buttonName');
                         iziToast.show({
                             timeout: 2000,
-                            message: '导入成功'
+                            message: size + 'K 数据被导入'
                         });
                         setTimeout(function () {
                             window.location.reload()
