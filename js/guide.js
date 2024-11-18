@@ -21,7 +21,7 @@ window.addEventListener('load', function () {
     // 检查todo_guide Cookie的值
     if (cookies.todo_guide === '1') {
         // 显示待办事项按钮和列表
-        document.getElementById('todo_button').style.display = 'block';
+        document.getElementById('todo_button').style.display = 'flex';
         document.getElementById('todoList').style.display = 'block';
 
         // 隐藏引导层
