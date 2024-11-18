@@ -19,6 +19,12 @@ function getCookie(name) {
     return '';
 }
 
+// 监听器
+document.getElementById('toggletimes').addEventListener('click', function () {
+    toggletimes()
+});
+
+
 // 切换时间秒数状态
 function toggletimes() {
     const timeElement = document.getElementById('toggletimes');

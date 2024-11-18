@@ -1,12 +1,20 @@
 {
-    "latestVersion": "Beta-V1.2.15.2",
+    "latestVersion": "Beta-V1.2.15.3",
     "versions": [
+        {
+            "version": "Beta-V1.2.15.3",
+            "date": "2024.11.18",
+            "updates": [
+                "优化：待办(Todo)页面样式",
+                "修复：时间显秒开启问题"
+            ]
+        },
         {
             "version": "Beta-V1.2.15.2",
             "date": "2024.11.17",
             "updates": [
                 "新增：待办(Todo)页面",
-                "修改：数据导入/导出"
+                "修改：数据导入/导出/重置"
             ]
         },
         {
