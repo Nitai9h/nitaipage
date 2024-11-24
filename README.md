@@ -49,6 +49,10 @@ cd /nitaipage
 http-server -p 11123 -o
 ```
 
+## 一键部署到 Netlify
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Nitai9h/nitaipage)
+
 ## 一键部署到 Vercel
 
 [![Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Nitai9h/nitaipage)

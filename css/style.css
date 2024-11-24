@@ -1419,16 +1419,6 @@ input[type="radio"]:checked+label {
     display: block !important;
 }
 
-.issues {
-    color: white;
-    font-size: 0.5rem;
-}
-
-.update_text_description {
-    color: #aaa7a7;
-    font-size: 0.5rem;
-}
-
 .text_hover:hover {
     text-decoration: none;
     color: rgb(255, 255, 255);
@@ -1583,6 +1573,12 @@ input#newTodo[type="text"]::placeholder {
     text-decoration-color: var(--main-text-color);
 }
 
+.todo_list_div {
+    max-width: 76%;
+    word-wrap: break-word;
+    white-space: pre-line;
+}
+
 #se_list_num {
     background-color: var(--main-background-color);
     border: none;
@@ -1641,6 +1637,7 @@ input#newTodo[type="text"]::placeholder {
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
+    width: 84%;
 }
 
 .todo_guide_text {
@@ -1680,4 +1677,67 @@ input#newTodo[type="text"]::placeholder {
 
 .update_text_ul {
     padding-inline-start: 2.5%
+}
+
+.pin {
+    position: absolute;
+    bottom: 10px;
+    z-index: 1000;
+    text-align: center;
+    width: 100%;
+    height: auto;
+    line-height: 20px;
+    bottom: 5%;
+    max-width: 100%;
+    max-height: 6%;
+}
+
+#pinnedTodos {
+    overflow-x: hide;
+}
+
+.pinned-todos {
+    width: fit-content;
+    background: var(--main-background-color);
+    margin: 0 auto;
+    box-shadow: var(--main-search-shadow);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+#pinnedList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    width: 100%;
+    overflow-x: hidden;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    position: relative;
+}
+
+#pinnedList li {
+    padding: 4px;
+    justify-content: space-between;
+    align-items: center;
+    display: inline-block;
+    margin: 4px;
+    background-color: var(--main-background-color);
+    border-radius: 15px;
+    color: var(--main-text-color);
+    text-align: center;
+    transition: background-color 0.3s, transform 0.3s;
+    flex-shrink: 0;
+    margin-right: 10px;
+    border-radius: 8px;
+    padding: 10px;
+    list-style: none;
+    white-space: nowrap;
 }

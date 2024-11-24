@@ -113,6 +113,12 @@
                         </div>
                     </div>
                 </div>
+                <!-- TodoPin -->
+                <div id="Pinned" class="pin">
+                    <div id="pinnedTodos" class="pinned-todos">
+                        <ul id="pinnedList"></ul>
+                    </div>
+                </div>
                 <!-- 时钟二级页 -->
                 <div class="mark" style="display: none;">
                     <div class="tab">
@@ -127,7 +133,8 @@
                         </div>
                         <!-- Todo -->
                         <div class="mainCont selected" style="display: none;">
-                            <div class=" todo-all" style="margin-left: 2%; margin-right: 2%; box-shadow: none;">
+                            <div class=" todo-all"
+                                style="margin-left: 2%; margin-right: 2%; box-shadow: none; max-width: 95%;">
                                 <div id="todo_add_main" style="display: none;">
                                     <div id="todo_add_name">
                                         <div>名称</div>
@@ -724,7 +731,6 @@
                                         <ul type="circle">
                                             <li>节日显示</li>
                                             <li>动态背景</li>
-                                            <li>待办事项</li>
                                             <li>备忘录</li>
                                         </ul>
                                     </div>
@@ -758,7 +764,9 @@
                 </div>
                 <!-- 版本信息 -->
                 <div class="foot">
-                    <div class="power"><small>拟态起始页 </small><small id="footer-version"></small></a>
+                    <div class="power">
+                        <small>拟态起始页 </small>
+                        <small id="footer-version"></small></a>
                     </div>
                 </div>
     </section>
@@ -779,6 +787,7 @@
     <script type="text/javascript" src="./js/time.js"></script>
     <script type="text/javascript" src="./js/guide.js"></script>
     <script type="text/javascript" src="./js/todo.js"></script>
+    <script type="text/javascript" src="./js/todoPin.js"></script>
 
     <script src="./service-worker.js"></script>
 </body>
