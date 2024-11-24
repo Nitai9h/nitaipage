@@ -1,6 +1,13 @@
 {
-    "latestVersion": "Beta-V1.2.15.4",
+    "latestVersion": "Beta-V1.2.15.5",
     "versions": [
+        {
+            "version": "Beta-V1.2.15.5",
+            "date": "2024.11.24",
+            "updates": [
+                "新增：待办项钉在主页功能"
+            ]
+        },
         {
             "version": "Beta-V1.2.15.4",
             "date": "2024.11.18",
@@ -30,7 +37,8 @@
             "version": "Beta-V1.2.15.1",
             "date": "2024.11.16",
             "updates": [
-                "优化：日志处理方式"
+                "优化：日志处理方式",
+                "修改：版权信息"
             ]
         },
         {

@@ -1,9 +1,13 @@
 window.onload = function () {
     let todos = JSON.parse(localStorage.getItem('todos')) || [];
-    todos.forEach(todo => addTodoToList(todo.text, todo.completed, todo.archived));
+    todos.forEach(todo => addTodoToList(todo.text, todo.completed, todo.archived, todo.pinned));
 
     let archives = JSON.parse(localStorage.getItem('todoArchives')) || [];
-    archives.forEach(archive => addTodoToList(archive.text, archive.completed, true));
+    archives.forEach(archive => addTodoToList(archive.text, archive.completed, true, archive.pinned));
+
+    // 同步状态到todo_pin
+    let pinnedTodos = todos.filter(todo => todo.pinned).concat(archives.filter(archive => archive.pinned));
+    localStorage.setItem('todo_pin', JSON.stringify(pinnedTodos));
 
     // 添加事件监听器
     document.getElementById('todo_add').addEventListener('click', function () {
@@ -36,7 +40,7 @@ window.onload = function () {
     });
 
     document.getElementById('todo_add_ok').addEventListener('click', function () {
-        addTodo()
+        addTodo();
     });
 
     document.getElementById('todo_archive').addEventListener('click', function () {
@@ -46,7 +50,6 @@ window.onload = function () {
     document.getElementById('todo_archive_back').addEventListener('click', function () {
         hideArchiveList();
     });
-
 };
 
 function addTodo() {
@@ -76,11 +79,13 @@ function saveTodos() {
         return {
             text: divList.textContent,
             completed: divList.classList.contains('completed'),
-            archived: li.classList.contains('archived')
+            archived: li.classList.contains('archived'),
+            pinned: li.classList.contains('pinned')
         };
     });
     localStorage.setItem('todos', JSON.stringify(todos));
 }
+
 
 function saveArchives() {
     let archives = Array.from(document.querySelectorAll('#todoArchiveList li')).map(li => {
@@ -88,13 +93,14 @@ function saveArchives() {
         return {
             text: divList.textContent,
             completed: divList.classList.contains('completed'),
-            archived: true
+            archived: true,
+            pinned: li.classList.contains('pinned')
         };
     });
     localStorage.setItem('todoArchives', JSON.stringify(archives));
 }
 
-function addTodoToList(todoText, completed = false, archived = false) {
+function addTodoToList(todoText, completed = false, archived = false, pinned = false) {
     let ul = archived ? document.getElementById('todoArchiveList') : document.getElementById('todoList');
 
     // 创建 div
@@ -119,6 +125,10 @@ function addTodoToList(todoText, completed = false, archived = false) {
         li.classList.add('archived');
     }
 
+    if (pinned) {
+        li.classList.add('pinned');
+    }
+
     // 创建 button
     let buttonCheck = document.createElement('button');
     buttonCheck.id = 'se_list_num';
@@ -136,6 +146,7 @@ function addTodoToList(todoText, completed = false, archived = false) {
         // 更新本地存储
         saveTodos();
         saveArchives();
+        savePinnedTodos();
     });
 
     let buttonCopy = document.createElement('button');
@@ -233,7 +244,7 @@ function addTodoToList(todoText, completed = false, archived = false) {
 
                             // 将任务添加到普通任务列表
                             let todos = JSON.parse(localStorage.getItem('todos')) || [];
-                            todos.push({ text: todoText, completed: completed, archived: false });
+                            todos.push({ text: todoText, completed: completed, archived: false, pinned: pinned });
                             localStorage.setItem('todos', JSON.stringify(todos));
 
                             // 重新加载普通列表
@@ -249,7 +260,7 @@ function addTodoToList(todoText, completed = false, archived = false) {
 
                             // 将任务添加到归档列表
                             let archives = JSON.parse(localStorage.getItem('todoArchives')) || [];
-                            archives.push({ text: todoText, completed: completed, archived: true });
+                            archives.push({ text: todoText, completed: completed, archived: true, pinned: pinned });
                             localStorage.setItem('todoArchives', JSON.stringify(archives));
                         }
 
@@ -262,7 +273,8 @@ function addTodoToList(todoText, completed = false, archived = false) {
 
                         // 更新本地存储
                         saveTodos();
-                        saveArchives(); // 新增保存归档的调用
+                        saveArchives();
+                        savePinnedTodos();
                     }, 500); // 淡出动画时间
                 }, true],
                 ['<button>取消</button>', function (instance, toast) {
@@ -274,21 +286,72 @@ function addTodoToList(todoText, completed = false, archived = false) {
         });
     });
 
+    let buttonPin = document.createElement('button');
+    buttonPin.id = 'se_list_num';
+    buttonPin.innerHTML = pinned ? '<i class="iconfont icon-unnail"></i>' : '<i class="iconfont icon-nail"></i>';
+
+    buttonPin.addEventListener('click', function () {
+        if (!li.classList.contains('pinned')) {
+            li.classList.add('pinned');
+            buttonPin.innerHTML = '<i class="iconfont icon-unnail"></i>';
+
+            // 钉住
+            let pinnedLi = document.createElement('li');
+            pinnedLi.textContent = divList.textContent;
+            document.getElementById('pinnedList').appendChild(pinnedLi);
+
+            // 更新本地存储
+            saveTodos();
+            saveArchives();
+            savePinnedTodos();
+        } else {
+            li.classList.remove('pinned');
+            buttonPin.innerHTML = '<i class="iconfont icon-nail"></i>';
+
+            // 取消钉住
+            let pinnedList = document.getElementById('pinnedList');
+            let pinnedItems = pinnedList.querySelectorAll('li');
+            pinnedItems.forEach(pinnedItem => {
+                if (pinnedItem.textContent === divList.textContent) {
+                    pinnedItem.remove();
+                }
+            });
+
+            // 更新本地存储
+            saveTodos();
+            saveArchives();
+            savePinnedTodos();
+        }
+    });
+
     divShow.appendChild(buttonCheck);
     divShow.appendChild(divList);
     divTools.appendChild(buttonDelete);
     divTools.appendChild(buttonCopy);
     divTools.appendChild(buttonMove);
+    divTools.appendChild(buttonPin);
     li.appendChild(divShow);
     li.appendChild(divTools);
     ul.appendChild(li);
+}
+
+function savePinnedTodos() {
+    let pinnedTodos = Array.from(document.querySelectorAll('#pinnedList li')).map(pinnedLi => {
+        return {
+            text: pinnedLi.textContent,
+            completed: false,
+            archived: false,
+            pinned: true
+        };
+    });
+    localStorage.setItem('todo_pin', JSON.stringify(pinnedTodos));
 }
 
 function showArchiveList() {
     document.getElementById('todoList').style.display = 'none';
     document.getElementById('todoArchiveList').innerHTML = ''; // 清空归档列表
     let archives = JSON.parse(localStorage.getItem('todoArchives')) || [];
-    archives.forEach(archive => addTodoToList(archive.text, archive.completed, true));
+    archives.forEach(archive => addTodoToList(archive.text, archive.completed, true, archive.pinned));
     document.getElementById('todoArchiveList').style.display = 'block';
     document.getElementById('todo_add').style.display = 'none';
     document.getElementById('todo_archive').style.display = 'none';
@@ -306,5 +369,5 @@ function hideArchiveList() {
 function reloadTodoList() {
     document.getElementById('todoList').innerHTML = ''; // 清空普通列表
     let todos = JSON.parse(localStorage.getItem('todos')) || [];
-    todos.forEach(todo => addTodoToList(todo.text, todo.completed, todo.archived));
+    todos.forEach(todo => addTodoToList(todo.text, todo.completed, todo.archived, todo.pinned));
 }
