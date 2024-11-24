@@ -1,6 +1,13 @@
 {
-    "latestVersion": "Beta-V1.2.15.5",
+    "latestVersion": "Beta-V1.2.15.6",
     "versions": [
+        {
+            "version": "Beta-V1.2.15.6",
+            "date": "2024.11.24",
+            "updates": [
+                "修复：待办页面显示问题"
+            ]
+        },
         {
             "version": "Beta-V1.2.15.5",
             "date": "2024.11.24",
