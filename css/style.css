@@ -1512,12 +1512,12 @@ input#newTodo[type="text"]::placeholder {
 
 #todoList li,
 #todoArchiveList li {
-    padding: 10px;
+    padding: 2%;
     background-color: var(--main-background-color);
     border-radius: 8px;
     color: var(--main-text-color);
     font-size: 1rem;
-    margin-bottom: 10px;
+    margin-bottom: 2%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1574,7 +1574,6 @@ input#newTodo[type="text"]::placeholder {
 }
 
 .todo_list_div {
-    max-width: 76%;
     word-wrap: break-word;
     white-space: pre-line;
 }
@@ -1637,7 +1636,7 @@ input#newTodo[type="text"]::placeholder {
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
-    width: 84%;
+    width: 75%;
 }
 
 .todo_guide_text {
@@ -1681,7 +1680,6 @@ input#newTodo[type="text"]::placeholder {
 
 .pin {
     position: absolute;
-    bottom: 10px;
     z-index: 1000;
     text-align: center;
     width: 100%;
@@ -1690,10 +1688,12 @@ input#newTodo[type="text"]::placeholder {
     bottom: 5%;
     max-width: 100%;
     max-height: 6%;
+    border-radius: 6px;
 }
 
 #pinnedTodos {
     overflow-x: hide;
+    border-radius: 6px;
 }
 
 .pinned-todos {
@@ -1718,8 +1718,6 @@ input#newTodo[type="text"]::placeholder {
     width: 100%;
     overflow-x: hidden;
     white-space: nowrap;
-    flex-wrap: nowrap;
-    white-space: nowrap;
     position: relative;
 }
 
@@ -1730,14 +1728,12 @@ input#newTodo[type="text"]::placeholder {
     display: inline-block;
     margin: 4px;
     background-color: var(--main-background-color);
-    border-radius: 15px;
     color: var(--main-text-color);
     text-align: center;
     transition: background-color 0.3s, transform 0.3s;
     flex-shrink: 0;
     margin-right: 10px;
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 15px;
     list-style: none;
     white-space: nowrap;
 }

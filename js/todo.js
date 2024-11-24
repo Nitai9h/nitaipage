@@ -9,6 +9,8 @@ window.onload = function () {
     let pinnedTodos = todos.filter(todo => todo.pinned).concat(archives.filter(archive => archive.pinned));
     localStorage.setItem('todo_pin', JSON.stringify(pinnedTodos));
 
+    loadPinnedTodos()
+    
     // 添加事件监听器
     document.getElementById('todo_add').addEventListener('click', function () {
         document.getElementById('todo_add_name').style.display = 'flex';
@@ -370,4 +372,16 @@ function reloadTodoList() {
     document.getElementById('todoList').innerHTML = ''; // 清空普通列表
     let todos = JSON.parse(localStorage.getItem('todos')) || [];
     todos.forEach(todo => addTodoToList(todo.text, todo.completed, todo.archived, todo.pinned));
+}
+
+function loadPinnedTodos() {
+    let pinnedTodos = JSON.parse(localStorage.getItem('todo_pin')) || [];
+    let pinnedList = document.getElementById('pinnedList');
+    pinnedList.innerHTML = ''; // 清空列表
+
+    pinnedTodos.forEach(pinnedTodo => {
+        let li = document.createElement('li');
+        li.textContent = pinnedTodo.text;
+        pinnedList.appendChild(li);
+    });
 }

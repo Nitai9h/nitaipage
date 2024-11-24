@@ -1,6 +1,14 @@
 {
-    "latestVersion": "Beta-V1.2.15.6",
+    "latestVersion": "Beta-V1.2.15.7",
     "versions": [
+        {
+            "version": "Beta-V1.2.15.7",
+            "date": "2024.11.24",
+            "updates": [
+                "修复：待办页面显示问题",
+                "修复：待办页面样式问题"
+            ]
+        },
         {
             "version": "Beta-V1.2.15.6",
             "date": "2024.11.24",

@@ -1395,7 +1395,7 @@ $(document).ready(function () {
                         }, toast, 'buttonName');
                         iziToast.show({
                             timeout: 2000,
-                            message: size + 'Byte 数据被导入'
+                            message: size + ' Byte 数据被导入'
                         });
                         setTimeout(function () {
                             window.location.reload()
