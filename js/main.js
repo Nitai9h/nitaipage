@@ -177,32 +177,28 @@ $(function () {
     const lunarSuggestState = getCookie('lunarSuggests');
     if (lunarSuggestState === 'on') {
         $("#togglelunar").addClass('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#togglelunar").addClass('switchon');
-        }
         $(".lunar_date_off").addClass('lunar_date_on');
     }
     if (lunarSuggestState === 'off') {
         $("#togglelunar").removeClass('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#togglelunar").removeClass('switchon');
-        }
         $(".lunar_date_off").removeClass('lunar_date_on');
     }
     // 初始化快速使用开关状态
     const quickStartState = getCookie('quickStart');
     if (quickStartState === 'on') {
         document.getElementById('toggleStart').classList.add('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#toggleStart").addClass('switchon');
-        }
     }
     if (quickStartState === 'off') {
         document.getElementById('toggleStart').classList.remove('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#toggleStart").removeClass('switchon');
-        }
     }
+    //初始化搜索失焦开关状态
+    const searchLoseState = getCookie('searchLose');
+        if (searchLoseState === 'on') {
+            document.getElementById('toggleSearchLose').classList.add('on');
+        }
+        if (searchLoseState === 'off') {
+            document.getElementById('toggleSearchLose').classList.remove('on');
+        }
     //初始化搜索建议与主题
     setTimeout(1)
     const suggestSetOnDivCheck = document.getElementById("suggestSetOn");
@@ -240,6 +236,11 @@ $(".sou-button").click(function () {
     if ($("body").attr("class") === "onsearch") {
         if ($(".wd").val() != "") {
             $("#search-submit").click();
+            //搜索失焦
+            const searchLoseElement = document.getElementById('toggleSearchLose');
+            if (searchLoseElement.classList.contains('on')) {
+                blurWd();
+            }
         }
     }
 });

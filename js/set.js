@@ -12,6 +12,10 @@ github：https://github.com/yeetime/sou2
 由 imsyy 二次修改
 github：https://github.com/imsyy/sou2
 日期：2022-03-10
+========================================
+由 Nitai 第三次修改
+github：https://github.com/Nitai9h/nitaipage/blob/main/js/set.js
+日期：2024-08-30
 */
 
 //展开图标判断
@@ -147,7 +151,7 @@ var quick_list_preinstall = {
         url: "https://www.csdn.net/",
     },
     '9': {
-        title: "哔哩哔哩",
+        title: "BiliBili",
         url: "https://www.bilibili.com/",
     }
 };
@@ -428,6 +432,7 @@ function toggleStart() {
     const switchElement = document.getElementById('toggleStart');
     switchElement.classList.toggle('on');
 }
+
 // 搜索引擎列表加载
 function seList() {
     var html = "";
@@ -523,7 +528,7 @@ function setQuickInit() {
  * 下载文本为文件
  * @param filename 文件名
  * @param text     内容
- */
+**/
 function download(filename, text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -1331,7 +1336,7 @@ $(document).ready(function () {
         };
 
         var json = JSON.stringify(data);
-        download("Nitaipage-back-up-" + $.now() + ".json", json);
+        download("NitaiPage-BackUp-" + $.now() + ".json", json);
         iziToast.show({
             timeout: 2000,
             message: '已导出备份文件至下载目录'
@@ -1416,17 +1421,14 @@ $(document).ready(function () {
 });
 
 //New-UI
-// 选择所有可能带有 'mobile-b' 和 'set_tip_sec_new' 类的元素
 const elements = document.querySelectorAll('.mobile-b.set_tip_sec_new');
 
-// 检查视口宽度并移除 'set_tip_sec_new' 类
 function checkViewportAndRemoveClass() {
     if (window.innerWidth <= 1200) {
         elements.forEach(element => {
             element.classList.remove('set_tip_sec_new');
         });
     } else {
-        // 如果视口宽度大于 1200px，可以重新添加 'set_tip_sec_new' 类
         elements.forEach(element => {
             element.classList.add('set_tip_sec_new');
         });
@@ -1435,34 +1437,6 @@ function checkViewportAndRemoveClass() {
 
 // 初始化检查
 checkViewportAndRemoveClass();
-
-// 添加事件监听器以响应窗口大小变化
-window.addEventListener('resize', checkViewportAndRemoveClass);
-
-// 获取输入框元素
-const input = document.getElementById('wallpaper-url');
-
-// 添加焦点监听
-input.addEventListener('focus', () => {
-    // 监听窗口的 resize 事件，此事件会在键盘弹出时触发
-    window.addEventListener('resize', handleResize);
-});
-
-// 移除焦点监听
-input.addEventListener('blur', () => {
-    window.removeEventListener('resize', handleResize);
-});
-
-function handleResize() {
-    // 计算输入框距离底部的距离
-    const inputRect = input.getBoundingClientRect();
-    const distanceToBottom = window.innerHeight - inputRect.bottom;
-
-    // 如果输入框被键盘遮挡，则滚动页面使输入框可见
-    if (distanceToBottom < 0) {
-        window.scrollTo(0, inputRect.top - window.innerHeight);
-    }
-}
 
 // 获取所有的壁纸选项
 const wallpapers = document.querySelectorAll('.set-wallpaper');
@@ -1517,34 +1491,6 @@ wallpapers.forEach(wallpaper => {
     });
 
 });
-
-//动态修改背景提示窗口居中、动态修改图标设置
-function updateClassBasedOnScreenWidth() {
-    const SaveWallpaper = document.querySelector('#wallpaper-button');
-    const fontsFir = document.querySelector('#iconfont-fir');
-    const fontsSec = document.querySelector('#iconfont-sec');
-    const wallpaperURL = document.querySelector('#wallpaper-url');
-    const element = document.querySelector('#set_blocks_backblock');
-    if (window.innerWidth < 1200) {
-        element.classList.remove('set_blocks_thi_new');
-        fontsFir.classList.add('set_font_new');
-        fontsSec.classList.add('set_font_new');
-        wallpaperURL.classList.add('set_wallpaper_class');
-        SaveWallpaper.classList.add('set_wallpaper_save_center');
-    } else {
-        element.classList.add('set_blocks_thi_new');
-        fontsFir.classList.remove('set_font_new');
-        fontsSec.classList.remove('set_font_new');
-        wallpaperURL.classList.remove('set_wallpaper_class');
-        SaveWallpaper.classList.remove('set_wallpaper_save_center');
-    }
-}
-
-// 初始化时调用一次
-updateClassBasedOnScreenWidth();
-
-// 当窗口大小改变时调用
-window.addEventListener('resize', updateClassBasedOnScreenWidth);
 
 //明亮主题
 function toggleDropdown() {

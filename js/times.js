@@ -44,23 +44,3 @@ function toggletimes() {
         setCookie('times', 'on', 365); // 设置 "on" 状态
     }
 }
-
-// 初始化时间秒数状态
-window.onload = function() {
-    $("#toggletimes").click(function () {
-        toggletimes()
-    });
-    const timesState = getCookie('times');
-    if (timesState === 'on') {
-        $("#toggletimes").addClass('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#toggletimes").addClass('switchon');
-        }
-    }
-    if (timesState === 'off') {
-        $("#toggletimes").removeClass('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#toggletimes").removeClass('switchon');
-        }
-    }
-};
