@@ -1,6 +1,14 @@
 {
-    "latestVersion": "Beta-V1.2.15.7",
+    "latestVersion": "Beta-V1.2.15.8",
+    "latestReleasVersion" :"V1.2.14.2",
     "versions": [
+        {
+            "version": "Beta-V1.2.15.8",
+            "date": "2024.11.28",
+            "updates": [
+                "优化：部分细节"
+            ]
+        },
         {
             "version": "Beta-V1.2.15.7",
             "date": "2024.11.24",

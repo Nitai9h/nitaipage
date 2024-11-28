@@ -2,6 +2,10 @@ document.getElementById('toggleStart').onclick = function () {
     toggleStart();
 };
 
+document.getElementById('toggleSearchLose').onclick = function () {
+    toggleSearchLose();
+};
+
 function setCookie(name, value, days) {
     var expires = "";
     if (days) {
@@ -40,20 +44,19 @@ function toggleStart() {
         setCookie('quickStart', 'on', 365); // 设置 "on" 状态
     }
 }
-
-// 初始化开关状态
-window.onload = function () {
-    const quickStartState = getCookie('quickStart');
-    if (quickStartState === 'on') {
-        document.getElementById('toggleStart').classList.add('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#toggleStart").addClass('switchon');
+function toggleSearchLose() {
+    const searchLoseElement = document.getElementById('toggleSearchLose');
+    if (searchLoseElement.classList.contains('on')) {
+        searchLoseElement.classList.remove('on');
+        if ($('#searchLoseSetOn').hasClass('switchon')) {
+            $("#toggleSearchLose").removeClass('switchon');
         }
+        setCookie('searchLose', 'off', 365); // 设置 "off" 状态
+    } else {
+    searchLoseElement.classList.add('on');
+    if ($('#searchLoseSetOn').hasClass('switchon')) {
+        $("#toggleSearchLose").addClass('switchon');
     }
-    if (quickStartState === 'off') {
-        document.getElementById('toggleStart').classList.remove('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#toggleStart").removeClass('switchon');
-        }
+    setCookie('searchLose', 'on', 365); // 设置 "on" 状态
     }
-};
+}

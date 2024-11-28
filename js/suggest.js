@@ -44,23 +44,6 @@ function toggleSuggests() {
     }
 }
 
-// 初始化搜索建议状态
-window.onload = function() {
-    const searchSuggestState = getCookie('searchSuggests');
-    if (searchSuggestState === 'on') {
-        $("#toggleSuggests").addClass('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#toggleSuggests").add('switchon');
-        }
-    }
-    if (searchSuggestState === 'off') {
-        $("#toggleSuggests").removeClass('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#toggleSuggests").removeClass('switchon');
-        }
-    }
-};
-
 // 切换农历显示状态
 function togglelunar() {
     const lunarsuggestElement = document.getElementById('togglelunar');
@@ -80,22 +63,3 @@ function togglelunar() {
         setCookie('lunarSuggests', 'on', 365); // 设置 "on" 状态
     }
 }
-
-// 初始化农历显示状态
-window.onload = function() {
-    const lunarSuggestState = getCookie('lunarSuggests');
-    if (lunarSuggestState === 'on') {
-        $("#togglelunar").addClass('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#togglelunar").addClass('switchon');
-        }
-        $(".lunar_date_off").addClass('lunar_date_on');
-    }
-    if (lunarSuggestState === 'off') {
-        $("#togglelunar").removeClass('on');
-        if ($('#switchSetOn').hasClass('switchon')) {
-            $("#togglelunar").removeClass('switchon');
-        }
-        $(".lunar_date_off").removeClass('lunar_date_on');
-    }
-};

@@ -36,11 +36,6 @@ function getCookie(name) {
     return '';
 }
 
-// 初始化滑块
-fontSizeSlider.value = parseInt(getCookie('fontSize'), 10) || 0;
-fontThickSlider.value = parseInt(getCookie('fontThick'), 10) || 0;
-opacitySlider.value = parseInt(getCookie('opacity'), 10) || 100;
-
 // 字体大小
 fontSizeSlider.addEventListener('input', function() {
     const maxIncrease = 3; // 最大增加量为 3rem
@@ -101,12 +96,6 @@ function getCookie(name) {
     return '';
 }
 
-// 初始化滑块
-dayFontSizeSlider.value = parseInt(getCookie('dayFontSize'), 10) || 0;
-dayFontThickSlider.value = parseInt(getCookie('dayFontThick'), 10) || 0;
-dayOpacitySlider.value = parseInt(getCookie('dayOpacity'), 10) || 100;
-
-
 // 字体大小
 dayFontSizeSlider.addEventListener('input', function() {
     const maxIncrease = 3; // 最大增加量为 3rem
@@ -166,12 +155,6 @@ function getCookie(name) {
     }
     return '';
 }
-
-// 初始化滑块
-lunarFontSizeSlider.value = parseInt(getCookie('lunarFontSize'), 10) || 0;
-lunarFontThickSlider.value = parseInt(getCookie('lunarFontThick'), 10) || 0;
-lunarOpacitySlider.value = parseInt(getCookie('lunarOpacity'), 10) || 100;
-
 
 // 字体大小
 lunarFontSizeSlider.addEventListener('input', function() {

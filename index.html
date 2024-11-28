@@ -82,34 +82,6 @@
                     <div id="keywords" style="display: none;"></div>
                     <div class="search-engine" style="display: none;">
                         <div class="search-engine-list">
-                            <div class="se-li">
-                                <a class="se-li-text" data-url="https://www.baidu.com/s" data-name="wd"
-                                    data-icon="iconfont icon-baidu">
-                                    <i id="icon-sou-list" class="iconfont icon-sousuo"></i>
-                                    <span>百度</span>
-                                </a>
-                            </div>
-                            <div class="se-li" data-url="https://cn.bing.com/search" data-name="q"
-                                data-icon="iconfont icon-bing">
-                                <a class="se-li-text">
-                                    <i id="icon-sou-list" class="iconfont icon-bing"></i>
-                                    <span>必应</span>
-                                </a>
-                            </div>
-                            <div class="se-li" data-url="https://www.google.com/search" data-name="q"
-                                data-icon="iconfont icon-google">
-                                <a class="se-li-text">
-                                    <i id="icon-sou-list" class="iconfont icon-google"></i>
-                                    <span>谷歌</span>
-                                </a>
-                            </div>
-                            <div class="se-li" data-url="https://www.sogou.com/web" data-name="query"
-                                data-icon="iconfont icon-bing">
-                                <a class="se-li-text">
-                                    <i id="icon-sou-list" class="iconfont icon-sougousousuo"></i>
-                                    <span>搜狗</span>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -187,37 +159,6 @@
                                 <div class="set_blocks_content">
                                     <div class="se_list">
                                         <div class="se_list_table">
-                                            <div class="se_list_div">
-                                                <div class="se_list_num">
-                                                    <i class="iconfont icon-home"></i>
-                                                </div>
-                                                <div class="se_list_name">百度</div>
-                                                <div class="se_list_button">
-                                                    <button class="set_se_default" value="baidu"
-                                                        style="border-radius: 8px 0px 0px 8px;">
-                                                        <span class="iconfont icon-home"></span>
-                                                    </button>
-                                                    <button class="edit_se" value="baidu">
-                                                        <span class="iconfont icon-xiugai"></span>
-                                                    </button>
-                                                    <button class="delete_se" value="baidu"
-                                                        style="border-radius: 0px 8px 8px 0px;">
-                                                        <span class="iconfont icon-delete"></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="se_list_div">
-                                                <div class="se_list_num">2</div>
-                                                <div class="se_list_name">谷歌</div>
-                                                <div class="se_list_button">
-                                                    <button class="set_se_default" value="google"><span
-                                                            class="iconfont icon-home"></span></button>
-                                                    <button class="edit_se" value="google"><span
-                                                            class="iconfont icon-xiugai"></span></button>
-                                                    <button class="delete_se" value="google"><span
-                                                            class="iconfont icon-delete"></span></button>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="se_add_preinstall">
@@ -233,9 +174,9 @@
                                             <div class="from_items">
                                                 <div class="from_text">顺序</div>
                                                 <input type="hidden" name="key_inhere">
-                                                <input type="number" name="key" placeholder="请填入小于 20 的正整数"
-                                                    autocomplete="off"
-                                                    oninput="if(value>20)value=20;if(value<0)value=0">
+                                                <input type="number" name="key" placeholder="请填入小于 20 的正整数" 
+                                                autocomplete="off" 
+                                                oninput="if(value>20)value=20;if(value<0)value=0">
                                             </div>
                                             <div class="from_items">
                                                 <div class="from_text">名称</div>
@@ -270,32 +211,6 @@
                                 <div class="set_blocks_content">
                                     <div class="quick_list">
                                         <div class="quick_list_table">
-                                            <div class="quick_list_div">
-                                                <div class="quick_list_div_num">1</div>
-                                                <div class="quick_list_div_name">哔哩哔哩</div>
-                                                <div class="quick_list_div_button">
-                                                    <div class="edit_quick" value="1">
-                                                        <span class="iconfont iconbook-edit"></span>
-                                                    </div>
-                                                    <div class="delete_quick" value="1">
-                                                        <span class="iconfont icondelete"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="quick_list_div">
-                                                <div class="quick_list_div_num">2</div>
-                                                <div class="quick_list_div_name">知乎</div>
-                                                <div class="quick_list_div_button">
-                                                    <button class="edit_quick" value="2"
-                                                        style="border-radius: 8px 0px 0px 8px;">
-                                                        <span class="iconfont iconbook-edit"></span>
-                                                    </button>
-                                                    <button class="delete_quick" value="2"
-                                                        style="border-radius: 0px 8px 8px 0px;">
-                                                        <span class="iconfont icondelete"></span>
-                                                    </button>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="se_add_preinstalls">
@@ -337,6 +252,8 @@
                         <div id="switchSetOn" class="a_switch" style="display: none;"></div>
                         <!-- 搜索建议辅助判段块 -->
                         <div id="suggestSetOn" class="" style="display: none;"></div>
+                        <!-- 搜索失焦辅助判段块 -->
+                        <div id="searchLoseSetOn" class="" style="display: none;"></div>
                         <!-- 设置 -->
                         <div class="mainConts" style="overflow-y: auto;">
                             <div class="set_blocks set_blocks_new" style="margin-top: 10px;">
@@ -532,7 +449,17 @@
                                     </div>
                                     <div>
                                         <div class="switch" id="toggleStart"></div>
-                                        <script src="./js/start.js" nonce="toggle-switch-start"></script>
+                                    </div>
+                                </div>
+                                <!-- 搜索失焦块 -->
+                                <div id="toggle_searchLose" class="set_tip set_tip_new text_right">
+                                    <div>
+                                        <span class="set_text"><big>搜索失焦&nbsp;</big><span class="desktop"></span></span>
+                                        <span class="set_text"
+                                            style="color: gray;"><small>搜索完成后是否停止聚焦搜索框</small></span>
+                                    </div>
+                                    <div>
+                                        <div class="switch" id="toggleSearchLose"></div>
                                     </div>
                                 </div>
                                 <!-- 搜索建议(选择)块 -->
@@ -739,11 +666,14 @@
                                     <div class="set_version">
                                         <span class="set_text"><big>版权信息</big></span>
                                         <span class="set_version-text">Copyright&nbsp;&copy;
-                                            <script type="text/javascript" src="./js/year.js"></script>&nbsp;<a
-                                                class="text_hover" href="https://nitai.us.kg/">Nitai</a>
+                                            <script type="text/javascript" src="./js/year.js"></script>&nbsp;<a class="text_hover" href="https://nitai.us.kg/">Nitai</a>
+                                        </span>
+                                        <span class="set_version-text2" 
+                                            style="color: rgb(180,180,180); font-size:0.5rem">
+                                            Released&nbsp;under&nbsp;the&nbsp;GPL-3.0&nbsp;License.&nbsp;All&nbsp;rights&nbsp;reserved.
                                         </span>
                                         <span class="set_version-text2"
-                                            style="padding-bottom: 1.35%;">Views&nbsp;code&nbsp;on&nbsp;<a
+                                            style="padding-bottom: 1.4%; padding-top: 0.4%">Views&nbsp;code&nbsp;on&nbsp;<a
                                                 class="text_hover" href="https://github.com/Nitai9h/nitaipage"
                                                 target="_blank"
                                                 style="color: rgb(180, 180, 180);">Github</a>&nbsp;or&nbsp;<a
@@ -751,10 +681,10 @@
                                                 target="_blank" style="color: rgb(180, 180, 180);">Gitee</a>
                                         </span>
                                         <span class="set_version-text2">Powered&nbsp;By&nbsp;<a target="_blank"
-                                                style="color: rgb(180, 180, 180);">Snavigation-v1.1</a></span>
-                                        <span class="set_version-text2">Open&nbsp;Source&nbsp;By&nbsp;<a
-                                                class="text_hover" href="https://www.imsyy.top/" target="_blank"
-                                                style="color: rgb(180, 180, 180);">imsyy</a>
+                                                style="color: rgb(180, 180, 180);">Snavigation-v1.1</a>&nbsp;
+                                                (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" 
+                                                href="https://www.imsyy.top/" target="_blank"
+                                                style="color: rgb(180, 180, 180);">imsyy)</a>
                                         </span>
                                     </div>
                                 </div>
@@ -765,7 +695,7 @@
                 <!-- 版本信息 -->
                 <div class="foot">
                     <div class="power">
-                        <small>拟态起始页 </small>
+                        <small>拟态起始页&nbsp;</small>
                         <small id="footer-version"></small></a>
                     </div>
                 </div>
