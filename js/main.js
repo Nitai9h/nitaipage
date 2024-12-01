@@ -121,7 +121,7 @@ function time() {
 
     if ($('#toggletimes').hasClass('on')) {
         $("#second").addClass('times_block');
-        sDisplay = '<span id="point">:</span>' + s;
+        sDisplay = '<span id="point">:</span>' + '<span class="clock_num clock">' + s + '</span>';
     }
 
     // 农历
@@ -131,9 +131,9 @@ function time() {
     var lunarMonth = lunarD.getMonthInChinese();
     var lunarDay = lunarD.getDayInChinese();
 
-    $("#time_text").html(h + '<span id="point">:</span>' + m + sDisplay);
+    $("#time_text").html('<span class="clock_num clock">' + h + '</span>' + '<span id="point">:</span>' + '<span class="clock_num clock">' + m + '</span>' + sDisplay);
 
-    $("#day").html(mm + "&nbsp;月&nbsp;" + d + "&nbsp;日&nbsp;" + weekday[day]);
+    $("#day").html('<span class="clock_num clock">' + mm + "</span>" + "&nbsp;月&nbsp;" + '<span class="clock_num clock">' + d + '</span>' + "&nbsp;日&nbsp;" + weekday[day]);
 
     $("#lunar_date").html(ganZhiYear + shengXiao + "年 " + lunarMonth + "月" + lunarDay);
 
@@ -193,20 +193,19 @@ $(function () {
     }
     //初始化搜索失焦开关状态
     const searchLoseState = getCookie('searchLose');
-        if (searchLoseState === 'on') {
-            document.getElementById('toggleSearchLose').classList.add('on');
-        }
-        if (searchLoseState === 'off') {
-            document.getElementById('toggleSearchLose').classList.remove('on');
-        }
-    //初始化搜索建议与主题
-    setTimeout(1)
-    const suggestSetOnDivCheck = document.getElementById("suggestSetOn");
-    const selectedSearchAPI = cookieManager.get('selectedSearchAPI');
-    if (suggestSetOnDivCheck) {
-        suggestSetOnDivCheck.className = ''; //重置搜索建议源
-        suggestSetOnDivCheck.classList.add(selectedSearchAPI);
+    if (searchLoseState === 'on') {
+        document.getElementById('toggleSearchLose').classList.add('on');
     }
+    if (searchLoseState === 'off') {
+        document.getElementById('toggleSearchLose').classList.remove('on');
+    }
+    //初始化搜索建议、主题、时钟字体
+    setTimeout(1)
+    const applyThemeState = cookieManager.get('applyTheme');
+    applyTheme(applyThemeState || 'dark');
+    updateSelectedOptionText(applyThemeState === 'light' ? '浅色模式' : '深色模式');
+
+    const selectedSearchAPI = cookieManager.get('selectedSearchAPI');
     if (selectedSearchAPI === 'bing') {
         selectOption('必应', document.getElementById('dropdown-suggest-bing'));
     } else if (selectedSearchAPI === 'google') {
@@ -214,10 +213,11 @@ $(function () {
     } else {
         selectOption('百度', document.getElementById('dropdown-suggest-baidu'));
     }
-    const applyThemeState = cookieManager.get('applyTheme');
-    applyTheme(applyThemeState || 'dark');
-    updateSelectedOptionText(applyThemeState === 'light' ? '浅色模式' : '深色模式');
 
+    const selectedFont = cookieManager.get('ClockFont');
+    if (selectedFont) {
+        applyClockFont(selectedFont);
+    }
 })
 
 

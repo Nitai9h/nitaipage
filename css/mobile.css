@@ -36,6 +36,10 @@
         display: none;
     }
 
+    .set_version-text-mobile {
+        font-size: small;
+    }
+
 }
 
 /*小于720px时*/
@@ -161,7 +165,8 @@
 
     #dropdown_theme,
     #toggle_time,
-    #dropdown_suggest {
+    #dropdown_suggest,
+    #dropdown_clock_font {
         width: 100% !important;
     }
 }
