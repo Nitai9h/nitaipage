@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!-- Copyright 2024 Nitai -->
+<!-- Released under the GPL-3.0 License. All rights reserved. -->
+<!-- Powered by Snavigation-v1.1 (Open Source by imsyy) -->
 <html lang="zh">
 
 <head>
@@ -19,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="./css/mobile.css">
     <link rel="stylesheet" type="text/css" href="./css/animation.css">
     <link rel="stylesheet" type="text/css" href="./css/desktop.css">
+    <link rel="stylesheet" type="text/css" href="./css/clock_font.css">
     <!-- Izitoast -->
     <link rel="stylesheet" href="./css/iziToast.min.css">
     <script type="text/javascript" src="./js/iziToast.min.js">
@@ -174,9 +178,9 @@
                                             <div class="from_items">
                                                 <div class="from_text">顺序</div>
                                                 <input type="hidden" name="key_inhere">
-                                                <input type="number" name="key" placeholder="请填入小于 20 的正整数" 
-                                                autocomplete="off" 
-                                                oninput="if(value>20)value=20;if(value<0)value=0">
+                                                <input type="number" name="key" placeholder="请填入小于 20 的正整数"
+                                                    autocomplete="off"
+                                                    oninput="if(value>20)value=20;if(value<0)value=0">
                                             </div>
                                             <div class="from_items">
                                                 <div class="from_text">名称</div>
@@ -419,6 +423,55 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- 时钟字体块 -->
+                                <div id="dropdown_clock_font" class="set_tip set_tip_new text_right">
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="set_text"><big>时钟字体&nbsp;</big><span class="desktop"></span></span>
+                                        <div class="set_text_info">
+                                            <span class="set_text" style="color: gray;"><small><span
+                                                        class="iconfont icon-act"
+                                                        style="font-size: 15px !important;"></span> monospace
+                                                    为浏览器默认等宽字体</small></span>
+                                            <span class="set_text" style="color: gray;"><small><span
+                                                        class="iconfont icon-act"
+                                                        style="font-size: 15px !important; opacity: 0;"></span> 默认使用
+                                                    MiSans</small></span>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown" id="dropdown-clock-font"
+                                        style="display: flex; justify-content: space-between;">
+                                        <span id="selected-option-clockFont">MiSans</span>
+                                        <span id="iconfont-folding-clockFont" class="iconfont icon-folding"></span>
+                                        <div class="dropdown-content" id="dropdownClockFont">
+                                            <div id="dropdown-clockFont-monospace" class="dropdown-item info-clockFont">
+                                                <span class="checked"></span> monospace
+                                            </div>
+                                            <div id="dropdown-clockFont-Misans"
+                                                class="dropdown-item info-clockFont dropdown-selected">
+                                                <span class="checked"></span> MiSans
+                                            </div>
+                                            <div id="dropdown-clockFont-ComfortaaLight"
+                                                class="dropdown-item info-clockFont">
+                                                <span class="checked"></span> Comfortaa-Light
+                                            </div>
+                                            <div id="dropdown-clockFont-ComfortaaBold"
+                                                class="dropdown-item info-clockFont">
+                                                <span class="checked"></span> Comfortaa-Bold
+                                            </div>
+                                            <div id="dropdown-clockFont-ComfortaaRegular"
+                                                class="dropdown-item info-clockFont">
+                                                <span class="checked"></span> Comfortaa-Regular
+                                            </div>
+                                            <div id="dropdown-clockFont-GilbertBold"
+                                                class="dropdown-item info-clockFont">
+                                                <span class="checked"></span> Gilbert-Bold
+                                            </div>
+                                            <div id="dropdown-clockFont-Hamurz" class="dropdown-item info-clockFont">
+                                                <span class="checked"></span> Hamurz
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <span class="set_text" style="color: white; margin-top: 10px;">&nbsp;<span
                                         id="iconfont-sec" class="iconfont icon-tab mobile"
                                         style="font-size: 20px !important;"></span><big>搜索设置</big></span>
@@ -455,8 +508,7 @@
                                 <div id="toggle_searchLose" class="set_tip set_tip_new text_right">
                                     <div>
                                         <span class="set_text"><big>搜索失焦&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text"
-                                            style="color: gray;"><small>搜索完成后是否停止聚焦搜索框</small></span>
+                                        <span class="set_text" style="color: gray;"><small>搜索完成后是否停止聚焦搜索框</small></span>
                                     </div>
                                     <div>
                                         <div class="switch" id="toggleSearchLose"></div>
@@ -653,24 +705,22 @@
                                     </div>
                                 </div>
                                 <div class="set_tip">
-                                    <span class="set_text"><big>计划更新</big></span>
-                                    <div class="update_logs" style="margin: 0px 10px;">
-                                        <ul type="circle">
-                                            <li>节日显示</li>
-                                            <li>动态背景</li>
-                                            <li>备忘录</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="set_tip">
                                     <div class="set_version">
                                         <span class="set_text"><big>版权信息</big></span>
-                                        <span class="set_version-text">Copyright&nbsp;&copy;
-                                            <script type="text/javascript" src="./js/year.js"></script>&nbsp;<a class="text_hover" href="https://nitai.us.kg/">Nitai</a>
+                                        <span class="set_version-text set_version-text-mobile">Copyright&nbsp;&copy;
+                                            <script type="text/javascript" src="./js/year.js"></script>&nbsp;<a
+                                                class="text_hover" href="https://nitai.us.kg/">Nitai</a>
                                         </span>
-                                        <span class="set_version-text2" 
-                                            style="color: rgb(180,180,180); font-size:0.5rem">
+                                        <span class="set_version-text2 mobile" style="color: rgb(180,180,180);">
                                             Released&nbsp;under&nbsp;the&nbsp;GPL-3.0&nbsp;License.&nbsp;All&nbsp;rights&nbsp;reserved.
+                                        </span>
+                                        <span class="set_version-text2 desktop"
+                                            style="color: rgb(180,180,180); font-size:0.6rem">
+                                            Released&nbsp;under&nbsp;the&nbsp;GPL-3.0&nbsp;License.
+                                        </span>
+                                        <span class="set_version-text2 desktop"
+                                            style="color: rgb(180,180,180); font-size:0.7rem">
+                                            All&nbsp;rights&nbsp;reserved.
                                         </span>
                                         <span class="set_version-text2"
                                             style="padding-bottom: 1.4%; padding-top: 0.4%">Views&nbsp;code&nbsp;on&nbsp;<a
@@ -680,9 +730,17 @@
                                                 class="text_hover" href="https://gitee.com/Nitai9h/nitaipage"
                                                 target="_blank" style="color: rgb(180, 180, 180);">Gitee</a>
                                         </span>
-                                        <span class="set_version-text2">Powered&nbsp;By&nbsp;<a target="_blank"
+                                        <span class="set_version-text2 mobile">Powered&nbsp;By&nbsp;<a target="_blank"
                                                 style="color: rgb(180, 180, 180);">Snavigation-v1.1</a>&nbsp;
-                                                (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" 
+                                            (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover"
+                                                href="https://www.imsyy.top/" target="_blank"
+                                                style="color: rgb(180, 180, 180);">imsyy)</a>
+                                        </span>
+                                        <span class="set_version-text2 desktop">Powered&nbsp;By&nbsp;<a target="_blank"
+                                                style="color: rgb(180, 180, 180); font-size: 0.8rem;">Snavigation-v1.1</a>
+                                        </span>
+                                        <span class="set_version-text2 desktop">
+                                            (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover"
                                                 href="https://www.imsyy.top/" target="_blank"
                                                 style="color: rgb(180, 180, 180);">imsyy)</a>
                                         </span>

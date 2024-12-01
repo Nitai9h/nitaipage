@@ -65,6 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('dropdownClockFont').addEventListener('click', (event) => {
+        const target = event.target.closest('.dropdown-item');
+        if (target) {
+            selectOption(target.innerText.trim(), target);
+        }
+    });
+
     document.getElementById('dropdown-suggest-bing').addEventListener('click', (event) => {
         selectOption('必应', this)
     });
@@ -80,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('dropdown-theme').addEventListener('click', (event) => {
         toggleDropdown()
+    });
+    document.getElementById('dropdown-clock-font').addEventListener('click', (event) => {
+        toggleDropdownClockFont()
     });
 });
 
@@ -102,6 +112,17 @@ function toggleDropdownSuggest() {
         closeDropdown(dropdownContent);
     } else {
         $("#iconfont-folding").attr("class", "iconfont icon-unfolding");
+        openDropdown(dropdownContent);
+    }
+}
+
+function toggleDropdownClockFont() {
+    const dropdownContent = document.getElementById("dropdownClockFont");
+    if (dropdownContent.classList.contains("show")) {
+        $("#iconfont-folding-clockFont").attr("class", "iconfont icon-folding");
+        closeDropdown(dropdownContent);
+    } else {
+        $("#iconfont-folding-clockFont").attr("class", "iconfont icon-unfolding");
         openDropdown(dropdownContent);
     }
 }
@@ -201,30 +222,59 @@ function applySearchAPI(api) {
         if (api && api.trim()) {
             suggestSetOnDiv.classList.add(api);
         } else {
-            console.error("Class name is empty or undefined:", api);
+            console.error("类名为空或未定义：", api);
         }
     }
+}
+
+function cleanFontName(font) {
+    return font.replace(/[\u2713\s"']/g, '');
+}
+
+const fontOptions = document.querySelectorAll('.info-clockFont');
+
+fontOptions.forEach(option => {
+    option.addEventListener('click', (event) => {
+        const selectedFont = event.target.textContent.trim();
+        selectFontOption(selectedFont, event.target);
+    });
+});
+
+function selectFontOption(font, element) {
+
+    const clFont = cleanFontName(font);
+    //console.log('[调试]当前选择:', clFont);
+
+    // 移除所有选中状态
+    fontOptions.forEach(option => {
+        option.querySelector('.checked').textContent = '';
+        option.classList.remove('dropdown-selected');
+    });
+
+    // 设置当前选项为选中状态
+    element.querySelector('.checked').textContent = '✔';
+    element.classList.add('dropdown-selected');
+
+    // 应用选中的字体
+    applyClockFont(clFont);
+
+    cookieManager.set('ClockFont', clFont, 365);
+
+    document.getElementById('selected-option-clockFont').textContent = clFont;
+}
+
+function applyClockFont(clFont) {
+    const style = document.createElement('style');
+    style.textContent = `.clock_num { font-family: ${clFont} !important; }`;
+
+    document.head.appendChild(style);
 }
 
 window.onclick = (event) => {
     if (!event.target.matches('.dropdown')) {
         closeDropdown(document.getElementById("dropdownTheme"));
         closeDropdown(document.getElementById("dropdownSuggest"));
-    }
-};
-
-window.onload = () => {
-    const applyThemeState = cookieManager.get('applyTheme');
-    applyTheme(applyThemeState || 'dark');
-    updateSelectedOptionText(applyThemeState === 'light' ? '浅色模式' : '深色模式');
-
-    const selectedSearchAPI = cookieManager.get('selectedSearchAPI');
-    if (selectedSearchAPI === 'bing') {
-        selectOption('必应', document.getElementById('dropdown-suggest-bing'));
-    } else if (selectedSearchAPI === 'google') {
-        selectOption('谷歌', document.getElementById('dropdown-suggest-google'));
-    } else {
-        selectOption('百度', document.getElementById('dropdown-suggest-baidu'));
+        closeDropdown(document.getElementById("dropdownClockFont"));
     }
 };
 

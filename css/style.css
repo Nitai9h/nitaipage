@@ -581,6 +581,7 @@ img.error {
     margin: 0px 20px 20px 20px;
     height: 316px;
     overflow: auto;
+    height: auto;
 }
 
 .quick,
@@ -1736,4 +1737,14 @@ input#newTodo[type="text"]::placeholder {
     border-radius: 15px;
     list-style: none;
     white-space: nowrap;
+}
+
+.clock {
+    font-variant-numeric: tabular-nums !important;
+    font-feature-settings: "tnum" !important;
+}
+
+.set_text_info {
+    display: flex;
+    flex-direction: column;
 }

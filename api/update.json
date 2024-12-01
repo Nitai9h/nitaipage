@@ -1,7 +1,17 @@
 {
-    "latestVersion": "Beta-V1.2.15.8",
-    "latestReleasVersion" :"V1.2.14.2",
+    "latestVersion": "Beta-V1.2.15.9",
+    "latestReleasVersion": "V1.2.14.2",
     "versions": [
+        {
+            "version": "Beta-V1.2.15.9",
+            "date": "2024.12.01",
+            "updates": [
+                "新增：时钟字体选择",
+                "优化：默认字体(MiSans)改等宽",
+                "优化：删除冗余代码",
+                "修改：删除内部未来计划展示"
+            ]
+        },
         {
             "version": "Beta-V1.2.15.8",
             "date": "2024.11.28",
