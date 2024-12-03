@@ -1,7 +1,14 @@
 {
-    "latestVersion": "Beta-V1.2.15.9",
+    "latestVersion": "Beta-V1.2.15.10",
     "latestReleasVersion": "V1.2.14.2",
     "versions": [
+        {
+            "version": "Beta-V1.2.15.10",
+            "date": "2024.12.02",
+            "updates": [
+                "修复：时钟字体cookie读取问题"
+            ]
+        },
         {
             "version": "Beta-V1.2.15.9",
             "date": "2024.12.01",
