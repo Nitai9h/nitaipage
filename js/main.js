@@ -28,14 +28,20 @@ window.addEventListener('load', function () {
         });
     }, 800);
 
-    //中文字体缓加载-此处写入字体源文件
-    //先行加载简体中文子集，后续补全字集
-    //由于压缩过后的中文字体仍旧过大，可转移至对象存储或 CDN 加载
+    // 中文字体缓加载-此处写入字体源文件
+    // 先行加载简体中文子集，后续补全字集
+    // 由于压缩过后的中文字体仍旧过大，可转移至对象存储或 CDN 加载
     const font = new FontFace(
         "MiSans",
         "url(" + "./font/MiSans-Regular.woff2" + ")"
     );
     document.fonts.add(font);
+    const selectedFont = cookieManager.get('ClockFont');
+    if (selectedFont) {
+        // console.log('[调试]开始加载字体:', selectedFont);
+        applyClockFont(selectedFont);
+        document.getElementById('selected-option-clockFont').textContent = selectedFont;
+    }
 
     // 初始化时间秒数状态
     const timesState = getCookie('times');
@@ -199,7 +205,7 @@ $(function () {
     if (searchLoseState === 'off') {
         document.getElementById('toggleSearchLose').classList.remove('on');
     }
-    //初始化搜索建议、主题、时钟字体
+    //初始化搜索建议、主题
     setTimeout(1)
     const applyThemeState = cookieManager.get('applyTheme');
     applyTheme(applyThemeState || 'dark');
@@ -214,10 +220,6 @@ $(function () {
         selectOption('百度', document.getElementById('dropdown-suggest-baidu'));
     }
 
-    const selectedFont = cookieManager.get('ClockFont');
-    if (selectedFont) {
-        applyClockFont(selectedFont);
-    }
 })
 
 
