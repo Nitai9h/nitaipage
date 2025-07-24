@@ -1,111 +1,86 @@
 <div align="center">
 
-<img src="./img/icon/favicon_128.png" width="150" height="150" />
+<img src="./favicon.ico" width="150" height="150" />
 
 # NitaiPage
 
-### An elegant start page
+### 一个优雅的起始页
 
 ![license](https://img.shields.io/github/license/nitai9h/nitaipage?color=FF5531)
 
-📢 Website: [Releases](https://www.nitai.us.kg/) / [Development](https://dev-www.nitai.us.kg/)
-
-📖 Readme: [English](./README.md)/[简体中文](./README_zh-cn.md)
+📢 网站: [发行版](https://www.nitai.us.kg/) / [开发版](https://dev-www.nitai.us.kg/)
 
 </div>
 
-![Nitaipage promotional image](https://nitai-images.pages.dev/nitaipage/%E5%A4%A7%E4%BF%83%E9%94%80%E8%B4%B4.png)
+![Nitaipage宣传图](https://nitai-images.pages.dev/nitaipage/%E5%A4%A7%E4%BF%83%E9%94%80%E8%B4%B4.png)
 
 *Powered Snavigation V1.1 ( Open Source by imsyy )*
 
 ---
 
-## Precautions
+## 注意事项
 
-The website may not be able to preview the latest results in time due to browser caching
+在线版可能因浏览器缓存原因，无法及时预览最新效果
 
-You can refresh the page by clearing your browser cache with `Ctrl + F5`
+可通过清除浏览器缓存与 `Ctrl + F5` 来刷新页面
 
-## On-premise
+## 本地部署
 
 ```shell
-# Install node.js
+# 安装 node（这里不再过多赘述）
 
 node -v
 
-# Install http-server
+# 安装 http-server
 
 npm install http-server -g
 
 http-server -v
 
-# Go to the folder (change the /nitaipage to your own path)
+# 进入文件夹（更换 /nitaipage 为你自己的路径）
 
 cd /nitaipage
 
-# Start the service
+# 启动服务
 
-# -p specifies the port -o open the browser
+# -p 指定端口 -o 立即打开浏览器
 http-server -p 11123 -o
 ```
 
-## One-click deployment to Netlify
+## 一键部署到 Netlify
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Nitai9h/nitaipage)
 
-## One-click deployment to Vercel
+## 一键部署到 Vercel
 
 [![Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Nitai9h/nitaipage)
 
-## Dev description
+## 开发版 (Dev) 说明
 
-After each stage of development is completed,
-it will be synchronized with the main branch,
-and the updates will be more frequent
+每一阶段开发完成后与 main 分支同步，更新将会比较频繁
 
-The most recently submitted changes can be accessed at [address](https://dev-www.nitai.us.kg).
+可通过[地址](https://dev-www.nitai.us.kg)访问最新提交的更改
 
-## API description
+# 鸣谢
 
-##### Local API
-
-    http://localhost:11123/api/update.json
-
-##### Online API
-
-    https://dev-www.nitai.us.kg/api/update.json
-
-## Plans
-
-### Website
-
-* Memo
-* Festive display
-* Dynamic backgrounds
-
-### Browser extensions
-
-* Click the extension icon to add a shortcut 
-
-# Thanks
-
-#### Individual, Group, Project, Plugin (in no particular order)
+#### 个人、团体、项目、插件（排名不分先后）
 
 ---
 
 * [imsyy](https://www.imsyy.top/)
-* [Lime start page](https://limestart.cn/)
+* [青柠起始页](https://limestart.cn/)
 * [sou2](https://github.com/yeetime/sou2/)
 
-###### Plug-ins
+###### 插件
 
 * [iziToast](https://izitoast.marcelodolza.com/)
 * [Iconfont](https://www.iconfont.cn/)
 * [jQuery](https://jquery.com/)
-* [Lunar](https://6tail.cn/calendar/api.html)
+* [jsCookie](https://github.com/js-cookie/js-cookie)
+* [sortable](https://github.com/SortableJS/Sortable)
 
 ###### API
 
 * [Bing : https://api.dujin.org/bing/1920.php](https://api.dujin.org/bing/1920.php)
-* [Random scenery : https://unsplash.it/1600/900?random](https://unsplash.it/1600/900?random)
-* [Random two-dimensional : https://api.lolimi.cn/API/dmt/api.php?type=image](https://api.lolimi.cn/API/dmt/api.php?type=image)
+* [随机风景 : https://tu.ltyuanfang.cn/api/fengjing.php](https://tu.ltyuanfang.cn/api/fengjing.php)
+* [随机二次元 : https://api.lolimi.cn/API/dmt/api.php?type=image](https://api.lolimi.cn/API/dmt/api.php?type=image)
