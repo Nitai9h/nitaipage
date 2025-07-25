@@ -82,6 +82,8 @@ section {
 }
 
 #bg {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
     transform: scale(1.10);
     filter: var(--main-box-gauss);
     position: fixed;

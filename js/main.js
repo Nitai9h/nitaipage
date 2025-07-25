@@ -7,7 +7,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'Beta-v2.0.0.250724',
+    VERSION: 'Beta-v2.0.0.250725',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -108,12 +108,11 @@ window.addEventListener('load', async function () {
         const remainingTime = Math.max(0, 300 - elapsedTime);
         setTimeout(() => {
             frameStyle.removeLoading();
-            //过渡动画
             $('.tool-all').css('transform', 'translateY(-120%)');
             $('.all-search').css('transform', 'translateY(0%)');
-            $('#bg').css("cssText", "transform: scale(1);filter: blur(0px);transition: ease 1.5s;");
             $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
             $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
+            bg.close();
             showWelcomeMessage();
         }, remainingTime);
     }, 1500);
@@ -125,12 +124,11 @@ window.addEventListener('load', async function () {
             const remainingTime = Math.max(0, 300 - elapsedTime);
             setTimeout(() => {
                 frameStyle.removeLoading();
-                //过渡动画
                 $('.tool-all').css('transform', 'translateY(-120%)');
                 $('.all-search').css('transform', 'translateY(0%)');
-                $('#bg').css("cssText", "transform: scale(1);filter: blur(0px);transition: ease 1.5s;");
                 $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
                 $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
+                bg.close();
                 showWelcomeMessage();
             }, remainingTime);
         }

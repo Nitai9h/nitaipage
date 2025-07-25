@@ -297,7 +297,6 @@ function foldInit() {
 
 // 设置-壁纸
 function setBgImgInit() {
-    $('#bg').css({ opacity: 0, transition: 'opacity 1s ease-in-out' })
     const bg = new BroadcastChannel("bgLoad");
 
     var bg_img = getBgImg();
@@ -348,15 +347,11 @@ function setBgImgInit() {
     bg.postMessage("bgImgLoadingStart");
     var img = new Image();
     img.onload = function () {
-        $('#bg').css('opacity', 1);
+        $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 1.5s;");
         bg.postMessage("bgImgLoadinged");
         bg.close();
     };
     img.src = pictureURL;
-    // 检查图片是否已缓存完成
-    if (img.complete) {
-        img.onload(); // 手动触发onload事件
-    }
 };
 
 // 搜索框高亮
