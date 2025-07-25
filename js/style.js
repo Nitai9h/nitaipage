@@ -33,7 +33,7 @@ function time() {
 
     let sDisplay = '';
     if ($('#timeSecond').hasClass('on')) {
-        $("#second").addclass('times_block');
+        $("#second").addClass('times_block');
         sDisplay = '<span id="point">:</span>' + wrapTimeDigits(s.toString());
     }
 

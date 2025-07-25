@@ -70,6 +70,63 @@ section {
         url('../font/MiSans-Regular.subset.ttf') format('truetype');
 }
 
+/*文字闪烁*/
+@-webkit-keyframes fadenum {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadenum {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes fadenum {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadenum {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 /*背景*/
 .bg-all {
     z-index: 0;
@@ -155,7 +212,7 @@ img.error {
 /*搜索框*/
 .onsearch .all-search {
     background-color: var(--main-text-form-hover-color);
-    transform: translateY(-140%);
+    transform: translateY(-140%) !important;
     transition: cubic-bezier(0.25, 0.05, 0.70, 1) 0.25s !important;
 }
 
@@ -1226,6 +1283,10 @@ input[type="radio"]:checked+label {
     flex-direction: row;
 }
 
+.set_tip_updateLog .set_text {
+    margin-left: 10px;
+}
+
 .set_text_wallpaper {
     font-size: medium;
 }
@@ -1409,18 +1470,19 @@ input[type="radio"]:checked+label {
 .dropdown {
     width: 150px;
     /* 下拉菜单宽度 */
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: rgba(0, 0, 0, 0.15);
     /* 修改背景色 */
-    color: #333;
+    color: var(--main-text-form-hover-color);
     padding: 10px;
     border-radius: 6px;
     /* Dropdown 整体圆角 */
     font-size: 14px;
     cursor: pointer;
     position: relative;
-    transition: box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     /* 添加过渡效果 */
-    border: 0.2px solid rgba(255, 255, 255, 0.5);
+    z-index: 10;
+    border: 0.2px solid rgba(255, 255, 255, 0.2);
     /* 添加白色边框 */
     display: flex;
     justify-content: space-between;
@@ -1434,38 +1496,31 @@ input[type="radio"]:checked+label {
 }
 
 .dropdown-content {
-    display: none;
+    display: block;
     position: absolute;
-    background-color: #4b4b4b;
+    background-color: rgb(255 255 255 / 10%);
     width: 100%;
-    /* 使下拉窗口宽度与下拉菜单一致 */
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 20;
+    box-shadow: 0px 8px 16px rgb(255 255 255 / 20%);
+    z-index: 50;
     border-radius: 6px;
-    /* 下拉菜单圆角 */
     opacity: 0;
-    /* 初始透明度 */
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    /* 过渡效果 */
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: all 0.3s ease;
     top: 100%;
-    /* 紧贴控件底部 */
     left: 0;
-    /* 左对齐 */
-    transform: translateY(-10px);
-    /* 向上偏移 */
+    backdrop-filter: var(--main-box-gauss);
+    overflow-y: auto;
+}
+
+.dropdown-content::before {
+    filter: var(--main-box-gauss);
 }
 
 .dropdown-content.show {
-    display: block;
-    /* 显示下拉内容 */
     opacity: 1;
     /* 全部可见 */
-    transform: translateY(0);
-    /* 还原偏移 */
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-    overflow-y: auto;
+    transform: scaleY(1);
 }
 
 .dropdown-content div {
@@ -1476,25 +1531,32 @@ input[type="radio"]:checked+label {
     align-items: center;
     cursor: pointer;
     border-radius: 6px;
-    background-color: #4b4b4b;
-    transition: background-color 0.3s;
+    background-color: rgb(255 255 255 / 0%);
+    transition: all 0.3s;
     justify-content: space-between;
     flex-direction: row-reverse;
+    font-size: 0.8em;
 }
 
 .dropdown-content div:hover {
-    background-color: #2e2e2e !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
     /* 鼠标悬停效果 */
 }
 
 .dropdown-selected {
-    background-color: #333 !important;
+    background-color: rgb(255 255 255 / 20%) !important;
     /* 选中项的背景颜色 */
 }
 
 .checked {
     margin-right: 8px;
     /* 调整对勾位置 */
+}
+
+.update_logs {
+    margin: 0px 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* 滑块 */

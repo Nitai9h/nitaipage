@@ -262,7 +262,7 @@ function loadUpdateLog() {
   getInfo().then(data => {
     const updateLogElement = document.getElementById('updateLog');
     const dropdownContent = document.getElementById('versionDropdownContent');
-    dropdownContent.style.height = '25vh';
+    dropdownContent.style.height = '15vh';
 
     if (!updateLogElement || !dropdownContent) return;
 
@@ -320,9 +320,11 @@ function loadUpdateLog() {
       // 切换图标
       const iconElement = this.querySelector('.iconfont');
       if (dropdownContent.classList.contains('show')) {
+        $('#update_logs').css('filter', 'var(--main-box-gauss)');
         iconElement.classList.remove('icon-unfolding');
         iconElement.classList.add('icon-folding');
       } else {
+        $('#update_logs').css('filter', 'blur(0px)');
         iconElement.classList.remove('icon-folding');
         iconElement.classList.add('icon-unfolding');
       }
@@ -332,6 +334,8 @@ function loadUpdateLog() {
 
     // 点击其他区域关闭下拉框
     document.addEventListener('click', function () {
+      $('#update_logs').css('filter', 'blur(0px)');
+      $('.icon-folding').attr('class', 'iconfont icon-unfolding');
       document.getElementById('versionDropdownContent').classList.remove('show');
     });
   }).catch(error => {
@@ -490,7 +494,7 @@ function createAboutContent() {
             <div class="dropdown-content" id="versionDropdownContent"></div>
           </div>
         </div>
-        <div class="update_logs" style="margin: 0px 10px; overflow-y: auto; overflow-x: hidden;">
+        <div class="update_logs" id="update_logs">
           <div id="updateLog"></div>
         </div>
       </div>
