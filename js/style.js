@@ -22,24 +22,16 @@ function time() {
     var day = dt.getDay();
     var h = dt.getHours();
     var m = dt.getMinutes();
-    var s = dt.getSeconds();
 
     // 格式化
     h = h < 10 ? "0" + h : h;
     m = m < 10 ? "0" + m : m;
-    s = s < 10 ? "0" + s : s;
     mm = mm < 10 ? "0" + mm : mm;
     d = d < 10 ? "0" + d : d;
 
-    let sDisplay = '';
-    if ($('#timeSecond').hasClass('on')) {
-        $("#second").addClass('times_block');
-        sDisplay = '<span id="point">:</span>' + wrapTimeDigits(s.toString());
-    }
-
     $("#time_text").html(
         wrapTimeDigits(h.toString())
-        + '<span id="point">:</span>' + wrapTimeDigits(m.toString()) + sDisplay
+        + '<span id="point">:</span>' + wrapTimeDigits(m.toString())
     );
     $("#day").html(wrapDayDigits(mm.toString()) + "&nbsp;月&nbsp;" + wrapDayDigits(d.toString()) + "&nbsp;日&nbsp;" + weekday[day]);
     t = setTimeout(time, 1000);

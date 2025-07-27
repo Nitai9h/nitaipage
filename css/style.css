@@ -420,7 +420,7 @@ img.error {
 #icon-se,
 #icon-sou {
     font-size: 1.5rem;
-    color: #efefef;
+    color: var(--main-text-color);
 }
 
 .sou form .se {
@@ -642,7 +642,7 @@ img.error {
 
 .set .tabs:hover::-webkit-scrollbar-thumb,
 .store .tabs:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--border-bottom-color-hover);
 }
 
 .set .tabs::-webkit-scrollbar-track,
@@ -1342,6 +1342,12 @@ input[type="radio"]:checked+label {
 /*弹窗样式*/
 .iziToast {
     backdrop-filter: var(--main-box-gauss) !important;
+    background-color: var(--main-background-color) !important;
+}
+
+.iziToast-title,
+.iziToast-message {
+    color: var(--main-text-color) !important;
 }
 
 .iziToast:after {
@@ -1365,7 +1371,7 @@ input[type="radio"]:checked+label {
 .iziToast>.iziToast-body .iziToast-buttons>button,
 .iziToast>.iziToast-body .iziToast-buttons>input:not([type=checkbox]):not([type=radio]) {
     margin: 2px 6px !important;
-    color: #efefef !important;
+    color: var(--main-text-color) !important;
 }
 
 .iziToast>.iziToast-body .iziToast-buttons>a:focus,
@@ -1450,8 +1456,7 @@ input[type="radio"]:checked+label {
 
 .text_hover:hover {
     text-decoration: none;
-    color: rgb(255, 255, 255);
-    text-shadow: 0px 0px 20px rgb(255, 255, 255);
+    text-shadow: 0px 0px 20px var(--main-text-color);
 }
 
 .set_version {
@@ -1463,14 +1468,14 @@ input[type="radio"]:checked+label {
 
 .set_version-text2 {
     font-size: small;
-    color: var(--main-background-active-color);
+    color: var(--border-bottom-color-hover);
 }
 
 /* 下拉菜单 */
 .dropdown {
     width: 150px;
     /* 下拉菜单宽度 */
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: var(--main-background-color);
     /* 修改背景色 */
     color: var(--main-text-form-hover-color);
     padding: 10px;
@@ -1482,25 +1487,25 @@ input[type="radio"]:checked+label {
     transition: all 0.3s ease;
     /* 添加过渡效果 */
     z-index: 10;
-    border: 0.2px solid rgba(255, 255, 255, 0.2);
+    border: 0.2px solid var(--border-bottom-color-hover);
     /* 添加白色边框 */
     display: flex;
     justify-content: space-between;
 }
 
 .dropdown:hover {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 10px var(--border-bottom-color-active);
     /* 添加发光效果，减弱发光强度 */
-    border: 0.2px solid rgba(255, 255, 255, 0.5);
+    border: 0.2px solid var(--border-bottom-color-active);
     /* 添加白色边框 */
 }
 
 .dropdown-content {
     display: block;
     position: absolute;
-    background-color: rgb(255 255 255 / 10%);
+    background-color: var(--main-button-active-color);
     width: 100%;
-    box-shadow: 0px 8px 16px rgb(255 255 255 / 20%);
+    box-shadow: 0px 8px 16px var(--border-bottom-color-hover);
     z-index: 50;
     border-radius: 6px;
     opacity: 0;
@@ -1524,7 +1529,7 @@ input[type="radio"]:checked+label {
 }
 
 .dropdown-content div {
-    color: white;
+    color: var(--main-text-color);
     padding: 12px 16px;
     text-decoration: none;
     display: flex;
@@ -1539,12 +1544,12 @@ input[type="radio"]:checked+label {
 }
 
 .dropdown-content div:hover {
-    background-color: rgba(255, 255, 255, 0.15) !important;
+    background-color: var(--main-background-hover-color) !important;
     /* 鼠标悬停效果 */
 }
 
 .dropdown-selected {
-    background-color: rgb(255 255 255 / 20%) !important;
+    background-color: var(--main-background-active-color) !important;
     /* 选中项的背景颜色 */
 }
 
@@ -1565,7 +1570,7 @@ input[type="radio"]:checked+label {
     width: 100%;
     height: 10px;
     /* 设置滑块的高度 */
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--main-background-active-color);
     /* 背景颜色 */
     border-radius: 10px;
     outline: none;
@@ -1580,7 +1585,7 @@ input[type="radio"]:checked+label {
     height: 10px;
     /* 设置滑块球的大小 */
     border-radius: 50%;
-    background: white;
+    background: var(--main-text-color);
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -1591,7 +1596,7 @@ input[type="radio"]:checked+label {
     height: 10px;
     /* 设置滑块球的大小 */
     border-radius: 50%;
-    background: white;
+    background: var(--main-text-color);
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -1599,8 +1604,14 @@ input[type="radio"]:checked+label {
 .slider_fill {
     position: relative;
     height: 8px;
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--main-text-color) !important;
     border-radius: 4px;
+}
+
+input[type=range]::-moz-range-progress,
+input[type=range]:focus::-ms-fill-lower,
+input[type=range]::-ms-fill-lower {
+    background: var(--main-text-color) !important;
 }
 
 .set_tip_new {
@@ -1626,4 +1637,36 @@ input[type="radio"]:checked+label {
 .panelContent {
     overflow-y: auto;
     margin: 0px 5px 0px 5px;
+}
+
+.switch {
+    width: 40px;
+    height: 20px;
+    background-color: var(--main-background-active-color);
+    border-radius: 4px;
+    /* 圆角 */
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.switch::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: var(--main-text-color);
+    border-radius: 4px;
+    /* 圆角 */
+    transition: transform 0.3s;
+}
+
+.switch.on {
+    background-color: var(--border-bottom-color-hover);
+}
+
+.switch.on::before {
+    transform: translateX(20px);
 }

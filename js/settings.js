@@ -120,65 +120,77 @@ function createPanelContent() {
   div.className = 'mainConts selected';
   div.innerHTML = `
     <div class="set_blocks">
-      <div class="panelContent"> 
-        <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
-          <div class="tip_new_both"> 
-            <div> 
-              <span class="set_text"><big>时间字体大小&nbsp;</big><span class="desktop"></span></span> 
-              <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
+      <div class="panelContent">
+        <div class="slider-container">
+          <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
+            <div class="tip_new_both"> 
+              <div> 
+                <span class="set_text"><big>时间字体大小&nbsp;</big><span class="desktop"></span></span> 
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
+              </div> 
+              <div> 
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider"> 
+              </div> 
             </div> 
-            <div> 
-              <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider"> 
+            <div class="tip_new_both"> 
+              <div> 
+                <span class="set_text"><big>时间字体粗细&nbsp;</big><span class="desktop"></span></span> 
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
+              </div> 
+              <div> 
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-slider"> 
+              </div> 
             </div> 
-          </div> 
-          <div class="tip_new_both"> 
-            <div> 
-              <span class="set_text"><big>时间字体粗细&nbsp;</big><span class="desktop"></span></span> 
-              <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
-            </div> 
-            <div> 
-              <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-slider"> 
-            </div> 
-          </div> 
-          <div class="tip_new_both"> 
-            <div> 
-              <span class="set_text"><big>时间字体透明度&nbsp;</big><span class="desktop"></span></span> 
-              <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span> 
-            </div> 
-            <div> 
-              <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-slider"> 
-            </div> 
-          </div> 
-        </div> 
-        <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
-          <div class="tip_new_both"> 
-            <div> 
-              <span class="set_text"><big>日期字体大小&nbsp;</big><span class="desktop"></span></span> 
-              <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
-            </div> 
-            <div> 
-              <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date"> 
+            <div class="tip_new_both"> 
+              <div> 
+                <span class="set_text"><big>时间字体透明度&nbsp;</big><span class="desktop"></span></span> 
+                <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span> 
+              </div> 
+              <div> 
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-slider"> 
+              </div> 
             </div> 
           </div> 
-          <div class="tip_new_both"> 
-            <div> 
-              <span class="set_text"><big>日期字体粗细&nbsp;</big><span class="desktop"></span></span> 
-              <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
+          <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
+            <div class="tip_new_both"> 
+              <div> 
+                <span class="set_text"><big>日期字体大小&nbsp;</big><span class="desktop"></span></span> 
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
+              </div> 
+              <div> 
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date"> 
+              </div> 
             </div> 
-            <div> 
-              <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-date"> 
+            <div class="tip_new_both"> 
+              <div> 
+                <span class="set_text"><big>日期字体粗细&nbsp;</big><span class="desktop"></span></span> 
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
+              </div> 
+              <div> 
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-date"> 
+              </div> 
             </div> 
-          </div> 
-          <div class="tip_new_both"> 
-            <div> 
-              <span class="set_text"><big>日期字体透明度&nbsp;</big><span class="desktop"></span></span> 
-              <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span> 
+            <div class="tip_new_both"> 
+              <div> 
+                <span class="set_text"><big>日期字体透明度&nbsp;</big><span class="desktop"></span></span> 
+                <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span> 
+              </div> 
+              <div> 
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-date"> 
+              </div> 
             </div> 
-            <div> 
-              <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-date"> 
-            </div> 
-          </div> 
-        </div> 
+          </div>
+        </div>
+        <div class="switch-container">
+          <div id="dytheme" class="set_tip set_tip_new text_right">
+            <div>
+              <span class="set_text"><big>动态主题(Beta)&nbsp;</big><span class="desktop"></span></span>
+              <span class="set_text" style="color: gray;"><small>根据壁纸切换主题</small></span>
+              </div>
+            <div>
+            <div class="switch" id="toggledytheme"></div>
+          </div>
+        </div>
       </div>
     </div>
   `;
@@ -460,7 +472,6 @@ function createBackupContent() {
       <div class="set_tip">
         <span class="set_text">点击导出会将本站文件导出至下载目录</span>
         <span class="set_text">点击导入可选择已备份文件进行恢复</span>
-        <span class="set_text">本功能尚未完善，若遇到问题可在备份进行重置</span>
       </div>
       <div class="set_button">
         ${backupOptions.map(option => `
@@ -504,24 +515,24 @@ function createAboutContent() {
           <span class="set_version-text set_version-text-mobile">Copyright&nbsp;©
             <script type="text/javascript" src="./js/year.js"></script>2025&nbsp;<a class="text_hover" href="https://nitai.us.kg/">Nitai</a>
           </span>
-          <span class="set_version-text2 mobile" style="color: rgb(180,180,180);">
+          <span class="set_version-text2 mobile">
             Released&nbsp;under&nbsp;the&nbsp;Apache-2.0&nbsp;License.&nbsp;All&nbsp;rights&nbsp;reserved.
           </span>
-          <span class="set_version-text2 desktop" style="color: rgb(180,180,180); font-size:0.7rem">
+          <span class="set_version-text2 desktop" style="font-size:0.7rem">
             Released&nbsp;under&nbsp;the&nbsp;Apache-2.0&nbsp;License.
           </span>
-          <span class="set_version-text2 desktop" style="color: rgb(180,180,180); font-size:0.7rem">
+          <span class="set_version-text2 desktop" style="font-size:0.7rem">
             All&nbsp;rights&nbsp;reserved.
           </span>
-          <span class="set_version-text2" style="padding-bottom: 1.4%; padding-top: 0.4%">Views&nbsp;code&nbsp;on&nbsp;<a class="text_hover" href="https://github.com/Nitai9h/nitaipage" target="_blank" style="color: rgb(180, 180, 180);">Github</a>
+          <span class="set_version-text2" style="padding-bottom: 1.4%; padding-top: 0.4%">Views&nbsp;code&nbsp;on&nbsp;<a class="text_hover" href="https://github.com/Nitai9h/nitaipage" target="_blank">Github</a>
           </span>
-          <span class="set_version-text2 mobile">Powered&nbsp;By&nbsp;<a target="_blank" style="color: rgb(180, 180, 180);">Snavigation-v1.1</a>&nbsp;
-            (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" href="https://www.imsyy.top/" target="_blank" style="color: rgb(180, 180, 180);">imsyy)</a>
+          <span class="set_version-text2 mobile">Powered&nbsp;By&nbsp;<a target="_blank">Snavigation-v1.1</a>&nbsp;
+            (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" href="https://www.imsyy.top/" target="_blank">imsyy)</a>
           </span>
-          <span class="set_version-text2 desktop">Powered&nbsp;By&nbsp;<a target="_blank" style="color: rgb(180, 180, 180); font-size: 0.8rem;">Snavigation-v1.1</a>
+          <span class="set_version-text2 desktop">Powered&nbsp;By&nbsp;<a target="_blank" style="font-size: 0.8rem;">Snavigation-v1.1</a>
           </span>
           <span class="set_version-text2 desktop">
-            (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" href="https://www.imsyy.top/" target="_blank" style="color: rgb(180, 180, 180);">imsyy)</a>
+            (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" href="https://www.imsyy.top/" target="_blank">imsyy)</a>
           </span>
         </div>
       </div>

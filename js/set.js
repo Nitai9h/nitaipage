@@ -639,7 +639,7 @@ $(document).ready(function () {
     // 自定义壁纸设置保存
     $(".wallpaper_save").click(function () {
         var url = $("#wallpaper-url").val();
-        var reg = /^http(s)?:\/\/(([\w-]+\.)+[\w-]|localhost)+(:[0-9]{1,5})?(\/[\w- ./?%&=]*)?$/g;
+        var reg = /^http(s)?:\/\/(?:([\w-]+\.)+[\w-]+|localhost|(\d{1,3}\.){3}\d{1,3}|\[[a-fA-F0-9:]+\])(:[0-9]{1,5})?(\/[\w ./?%&=-]*)?$/;
         if (!reg.test(url)) {
             iziToast.show({
                 timeout: 8000,

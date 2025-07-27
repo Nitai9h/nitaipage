@@ -12,7 +12,7 @@
 
 </div>
 
-![Nitaipage宣传图](https://nitai-images.pages.dev/nitaipage/%E5%A4%A7%E4%BF%83%E9%94%80%E8%B4%B4.png)
+![Nitaipage宣传图](https://nitai-images.pages.dev/nitaiPage/poseter_NitaiPage.webp)
 
 *Powered Snavigation V1.1 ( Open Source by imsyy )*
 
@@ -63,24 +63,23 @@ http-server -p 11123 -o
 
 # 鸣谢
 
-#### 个人、团体、项目、插件（排名不分先后）
-
 ---
 
 * [imsyy](https://www.imsyy.top/)
 * [青柠起始页](https://limestart.cn/)
 * [sou2](https://github.com/yeetime/sou2/)
 
-###### 插件
+###### 库
 
 * [iziToast](https://izitoast.marcelodolza.com/)
 * [Iconfont](https://www.iconfont.cn/)
 * [jQuery](https://jquery.com/)
 * [jsCookie](https://github.com/js-cookie/js-cookie)
 * [sortable](https://github.com/SortableJS/Sortable)
+* [chroma](https://github.com/gka/chroma.js)
 
 ###### API
 
 * [Bing : https://api.dujin.org/bing/1920.php](https://api.dujin.org/bing/1920.php)
 * [随机风景 : https://tu.ltyuanfang.cn/api/fengjing.php](https://tu.ltyuanfang.cn/api/fengjing.php)
-* [随机二次元 : https://api.lolimi.cn/API/dmt/api.php?type=image](https://api.lolimi.cn/API/dmt/api.php?type=image)
+* [随机二次元 : https://www.loliapi.com/acg](https://www.loliapi.com/acg)

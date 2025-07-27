@@ -7,7 +7,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'Beta-v2.0.0.250726',
+    VERSION: 'Beta-v2.0.0.250727',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -136,9 +136,6 @@ window.addEventListener('load', async function () {
 
     iziToast.settings({
         timeout: 3000,
-        backgroundColor: '#ffffff40',
-        titleColor: '#efefef',
-        messageColor: '#efefef',
         progressBar: false,
         close: false,
         closeOnEscape: true,

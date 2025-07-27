@@ -496,8 +496,8 @@ async function loadNpp() {
     });
 }
 
-// 加载 coreNpp
-async function loadCoreNpp() {
+// 初始化 coreNpp
+async function initCoreNpp() {
     // 指定目录
     const coreNppDir = './js/coreNpp/';
     // 指定文件

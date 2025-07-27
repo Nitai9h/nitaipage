@@ -336,7 +336,7 @@ function setBgImgInit() {
             $('#bg').attr('src', pictureURL) //随机风景
             break;
         case "4":
-            var pictureURL = 'https://api.lolimi.cn/API/dmt/api.php?type=image';
+            var pictureURL = 'https://www.loliapi.com/acg';
             $('#bg').attr('src', pictureURL) //随机二次元
             break;
         case "5":
@@ -885,7 +885,7 @@ async function init() {
     await quickData();
 
     // Npp插件加载
-    await loadCoreNpp();
+    await initCoreNpp();
     await loadNpp();
 
     // 应用管理加载
