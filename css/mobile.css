@@ -152,11 +152,6 @@
         margin: 0px 10px 0px 10px !important;
     }
 
-    .plugin-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
     .drag-handle {
         margin-bottom: 10px;
     }
@@ -212,6 +207,11 @@
 
     .plugin_management .plugin_list_table .plugin_item {
         flex-direction: column
+    }
+
+    .plugin-item {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 

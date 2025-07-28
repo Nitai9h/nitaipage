@@ -849,6 +849,10 @@ $(document).ready(function () {
 
     // 检查所有更新
     $(".store_check_update").click(function () {
+        iziToast.show({
+            id: 'checkUpdateToast',
+            message: '正在检查更新...'
+        });
         checkUpdates('all');
     });
 

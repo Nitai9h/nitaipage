@@ -33,7 +33,9 @@ function time() {
         wrapTimeDigits(h.toString())
         + '<span id="point">:</span>' + wrapTimeDigits(m.toString())
     );
-    $("#day").html(wrapDayDigits(mm.toString()) + "&nbsp;月&nbsp;" + wrapDayDigits(d.toString()) + "&nbsp;日&nbsp;" + weekday[day]);
+    $("#day").html(wrapDayDigits(mm.toString()) + "&nbsp;月&nbsp;" + '<span id="point"></span>'
+        + wrapDayDigits(d.toString()) + "&nbsp;日&nbsp;" + '<span id="point"></span>'
+        + weekday[day]);
     t = setTimeout(time, 1000);
 }
 

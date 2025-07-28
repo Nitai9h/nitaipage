@@ -367,7 +367,7 @@ async function checkUpdates(id) {
             // 获取本地插件信息
             const localData = await getNpp({ "id": pluginId });
             if (!localData || !localData.metadata) {
-                console.error(`插件 ${pluginId} 未下载`);
+                console.error(`未知的Npp: ${pluginId}`);
                 return;
             }
             const localMetadata = localData.metadata;
@@ -383,7 +383,7 @@ async function checkUpdates(id) {
             const versionComparison = compareVersions(localMetadata.version, remoteMetadata.version);
             if (versionComparison < 0) {
                 // 发现新版本
-                if (remoteMetadata.forceUpdate) {
+                if (remoteMetadata.forceUpdate == 'true') {
                     // 更新 JS 文件
                     await saveJSFile(remoteMetadata.id, remoteMetadata.updateUrl);
                     // 更新元数据
@@ -395,13 +395,14 @@ async function checkUpdates(id) {
                     iziToast.show({
                         timeout: 2000,
                         title: '自动更新',
-                        message: `${localMetadata.name} 已更新至版本 ${remoteMetadata.version}`
+                        message: `${localMetadata.name} 已更新至版本 ${remoteMetadata.version}`,
                     });
+                    iziToast.hide({}, '#checkUpdateToast');
                     showRefreshDialog();
-                } else if (!localMetadata.ignoreUpdatePrompt) {
+                } else {
                     await new Promise((resolve) => {
                         iziToast.show({
-                            timeout: 10000,
+                            timeout: 8000,
                             title: '更新',
                             message: `插件 ${localMetadata.name} 有新版本 ${remoteMetadata.version} 可用，是否更新？`,
                             buttons: [
@@ -442,11 +443,12 @@ async function checkUpdates(id) {
                                 resolve();
                             }
                         });
+                        iziToast.hide({}, '#checkUpdateToast');
                     });
                 }
             } else {
                 // 使用Promise确保逐个显示提示
-                if (!info === 'show') {
+                if (info !== 'show') {
                     await new Promise((toastResolve) => {
                         iziToast.show({
                             timeout: 2000,
@@ -455,6 +457,7 @@ async function checkUpdates(id) {
                                 toastResolve();
                             }
                         });
+                        iziToast.hide({}, '#checkUpdateToast');
                     });
                 }
             }
@@ -464,6 +467,7 @@ async function checkUpdates(id) {
                 timeout: 8000,
                 message: `检查插件 ${pluginId} 更新时发生错误`
             });
+            iziToast.hide({}, '#checkUpdateToast');
         }
     };
 
@@ -478,6 +482,7 @@ async function checkUpdates(id) {
             timeout: 2000,
             message: '所有 Npp 均已更新到最新版本或已提交更新申请'
         });
+        iziToast.hide({}, '#checkUpdateToast');
     } else {
         // 检查单个插件
         await checkSinglePluginUpdate(id);
@@ -733,6 +738,7 @@ function showRefreshDialog() {
 
 // 覆盖安装确认对话框
 function showUpdateDialog(metadata) {
+    iziToast.hide({}, '#installToast');
     iziToast.show({
         timeout: 8000,
         message: `确定要覆盖安装插件"${metadata.name}"吗?`,
@@ -751,8 +757,8 @@ function showUpdateDialog(metadata) {
                 } catch (error) {
                     console.error('覆盖失败:' + error.message);
                     iziToast.show({
-                        timeout: 8000,
-                        message: '覆盖失败: ' + error.message
+                        timeout: 3000,
+                        message: '覆盖失败'
                     });
                 }
             }, true],
@@ -774,6 +780,11 @@ async function installNpplication(url) {
         // 验证 URL
         if (!await verifyJSUrl(url)) {
             console.error('无效的JS文件URL:' + url);
+            iziToast.show({
+                timeout: 2000,
+                message: '安装失败'
+            });
+            iziToast.hide({}, '#installToast');
             return;
         }
         // 来源验证
@@ -781,6 +792,11 @@ async function installNpplication(url) {
             'https://nfdb.nitai.us.kg/'
         ]) {
             console.warn('核心应用只能从指定源安装');
+            iziToast.show({
+                timeout: 2000,
+                message: '安装失败'
+            });
+            iziToast.hide({}, '#installToast');
             return;
         }
 
@@ -790,6 +806,11 @@ async function installNpplication(url) {
         // 检查核心应用是否存在
         if (metadata.type === 'coreNpp' && !existing) {
             console.warn('核心应用禁止安装');
+            iziToast.show({
+                timeout: 2000,
+                message: '安装失败'
+            });
+            iziToast.hide({}, '#installToast');
             return;
         }
         // 覆盖弹窗
@@ -809,7 +830,13 @@ async function installNpplication(url) {
         await saveJSFile(metadata.id, url);
         // 显示刷新提示
         showRefreshDialog();
+        iziToast.hide({}, '#installToast');
     } catch (error) {
         console.error(`安装失败: ${error.message}`);
+        iziToast.show({
+            timeout: 2000,
+            message: '安装失败'
+        });
+        iziToast.hide({}, '#installToast');
     }
 }

@@ -39,8 +39,6 @@
     background: var(--main-background-color);
     border-radius: 8px;
     transition: all 0.2s ease;
-    cursor: grab;
-    touch-action: manipulation;
 }
 
 .plugin-item:hover {
@@ -52,6 +50,14 @@
     transform: scale(0.95);
     background: var(--main-background-active-color);
     transition: 0.3s;
+}
+
+.plugin-list .plugin-item {
+    cursor: grab;
+    touch-action: manipulation;
+}
+
+.plugin-list .plugin-item:active {
     cursor: grabbing;
 }
 
@@ -341,6 +347,14 @@
 .plugin_actions .uninstall_plugin {
     border-radius: 0 8px 8px 0;
     margin-left: 0;
+}
+
+.plugin_item.coreNpp .plugin_actions .uninstall_plugin {
+    background: var(--main-button-active-color);
+}
+
+.plugin_item.coreNpp .plugin_actions .uninstall_plugin .iconfont {
+    color: var(--border-bottom-color-hover)
 }
 
 /* 排序对话框 */

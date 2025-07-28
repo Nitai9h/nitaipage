@@ -303,6 +303,10 @@ img.error {
     -ms-animation: fadenum 2s linear infinite;
 }
 
+#day #point {
+    display: none !important;
+}
+
 #time_text {
     font-size: var(--time-font-size);
     font-weight: var(--time-font-weight);

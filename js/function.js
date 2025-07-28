@@ -1129,13 +1129,13 @@ function showWelcomeMessage() {
 async function loadPluginManagementPage() {
     try {
         const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
-        let html = `\n<div class='plugin_management'>
+        let html = `<div class='plugin_management'>
                     <h3>插件列表</h3>
-                    <div class='plugin_list_table'>\r`;
+                    <div class='plugin_list_table'>`;
 
         // 生成插件列表
         for (const plugin of plugins) {
-            html += `\n<div class='plugin_item'>
+            html += `<div class='plugin_item ${plugin.type === "coreNpp" ? "coreNpp" : ""}'>
                 <div class='plugin_info'>
                     <div class='plugin_icon'>
                         <img src='${plugin.icon}'>
@@ -1159,7 +1159,7 @@ async function loadPluginManagementPage() {
         `;
         }
 
-        html += `\n</div>\r</div>\n`;
+        html += `</div></div>`;
 
         // 插入到页面
         const manageContent = document.querySelector('#manageContent');
@@ -1176,18 +1176,22 @@ async function loadPluginManagementPage() {
                 const pluginId = button.dataset.id;
                 if (!pluginId) {
                     iziToast.show({
-                        timeout: 8000,
+                        timeout: 3000,
                         message: '未找到插件' + pluginId
                     });
                     return;
                 }
 
                 try {
+                    iziToast.show({
+                        id: 'checkUpdateToast',
+                        message: '正在检查更新...'
+                    });
                     // 调用更新检查函数
                     await checkUpdates(pluginId);
                 } catch (error) {
                     iziToast.show({
-                        timeout: 8000,
+                        timeout: 3000,
                         message: '检查更新时发生错误'
                     });
                     console.error('更新按钮点击事件错误:', error);
@@ -1199,41 +1203,59 @@ async function loadPluginManagementPage() {
         document.querySelectorAll('.uninstall_plugin').forEach(button => {
             button.addEventListener('click', async () => {
                 const pluginId = button.getAttribute('data-id');
+                // 获取本地插件信息
+                const localData = await getNpp({ "id": pluginId });
+                if (!localData || !localData.metadata) {
+                    console.error(`未知的Npp: ${pluginId}`);
+                    return;
+                }
+                const localMetadata = localData.metadata;
                 try {
-                    iziToast.show({
-                        timeout: 8000,
-                        message: '是否要卸载此插件吗?',
-                        buttons: [
-                            ['<button>确认</button>', async function (instance, toast) {
-                                instance.hide({
-                                    transitionOut: 'flipOutX',
-                                }, toast, 'buttonName');
-                                // 移除localStorage元数据
-                                let plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]'); plugins = plugins.filter(p => p.id !== pluginId);
-                                localStorage.setItem('npp_plugins', JSON.stringify(plugins));
-                                // 删除indexedDB文件
-                                const request = indexedDB.open('nppstore');
-                                request.onsuccess = (event) => {
-                                    const db = event.target.result;
-                                    const transaction = db.transaction('Npp', 'readwrite');
-                                    const store = transaction.objectStore('Npp');
-                                    const deleteRequest = store.delete(pluginId);
-                                    deleteRequest.onsuccess = () => {
-                                        db.close();
-                                        iziToast.show({ timeout: 8000, message: '插件已卸载' });
-                                        loadPluginManagementPage();
-                                    };
-                                    deleteRequest.onerror = () => { db.close(); throw new Error('删除插件文件失败'); };
-                                };
-                                request.onerror = () => { throw new Error('打开数据库失败'); };
-                            }, true],
-                            ['<button>取消</button>', function (instance, toast) {
-                                instance.hide({
-                                    transitionOut: 'flipOutX',
-                                }, toast, 'buttonName');
-                            }]
-                        ]
-                    });
+                    if (localMetadata.type !== 'coreNpp') {
+                        iziToast.show({
+                            timeout: 8000,
+                            message: '是否要卸载此插件吗?',
+                            buttons: [
+                                ['<button>确认</button>', async function (instance, toast) {
+                                    instance.hide({
+                                        transitionOut: 'flipOutX',
+                                    }, toast, 'buttonName');
+                                    // 核心插件禁止卸载
+                                    if (localMetadata.type === 'coreNpp') {
+                                        iziToast.show({
+                                            timeout: 2000,
+                                            message: `${localMetadata.name}不支持卸载`,
+                                        });
+                                        return;
+                                    } else {
+                                        // 移除localStorage元数据
+                                        let plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]'); plugins = plugins.filter(p => p.id !== pluginId);
+                                        localStorage.setItem('npp_plugins', JSON.stringify(plugins));
+                                        // 删除indexedDB文件
+                                        const request = indexedDB.open('nppstore');
+                                        request.onsuccess = (event) => {
+                                            const db = event.target.result;
+                                            const transaction = db.transaction('Npp', 'readwrite');
+                                            const store = transaction.objectStore('Npp');
+                                            const deleteRequest = store.delete(pluginId);
+                                            deleteRequest.onsuccess = () => {
+                                                db.close();
+                                                iziToast.show({ timeout: 3000, message: '插件已卸载' });
+                                                loadPluginManagementPage();
+                                            };
+                                            deleteRequest.onerror = () => { db.close(); throw new Error('删除插件文件失败'); };
+                                        };
+                                        request.onerror = () => { throw new Error('打开数据库失败'); };
+                                    }
+                                }, true],
+                                ['<button>取消</button>', function (instance, toast) {
+                                    instance.hide({
+                                        transitionOut: 'flipOutX',
+                                    }, toast, 'buttonName');
+                                }]
+                            ]
+                        });
+                    }
                 } catch (error) {
                     iziToast.show({ timeout: 8000, message: '卸载失败:' + error.message });
                 }
@@ -1420,9 +1442,19 @@ function showPluginDetails(plugin) {
     const btn = document.createElement('div');
     btn.className = 'dialog-btn';
     btn.innerHTML = `
-            <div class="dialog-cancel" onclick="showContain_plugin();">返回</div>
-            <div class="dialog-install" onclick="installNpplication('${cleanUrl(plugin.url)}')">安装</div>
+            <div class="dialog-cancel">返回</div>
+            <div class="dialog-install" data-plugin-url="${cleanUrl(plugin.url)}">安装</div>
         `;
+
+    // 添加事件监听器以符合CSP策略
+    btn.querySelector('.dialog-cancel').addEventListener('click', showContain_plugin);
+    btn.querySelector('.dialog-install').addEventListener('click', function () {
+        iziToast.show({
+            id: 'installToast',
+            message: '开始安装...'
+        });
+        installNpplication(this.dataset.pluginUrl);
+    });
 
     $('#storeTabs').css('display', 'none');
     $('.store-block').css('display', 'none');
