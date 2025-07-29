@@ -5,6 +5,7 @@ const tabs = [
   { name: '捷径', id: 'set-quick-menu', active: false },
   { name: '壁纸', id: '', active: false },
   { name: '备份', id: '', active: false },
+  { name: '更多', id: '', active: false },
   { name: '关于', id: 'set-about-menu', active: false }
 ];
 
@@ -40,24 +41,30 @@ const wallpaperOptions = [
   {
     id: 'radio2',
     value: '2',
-    label: '必应',
+    label: '必应 4K',
     className: ''
   },
   {
     id: 'radio3',
     value: '3',
-    label: '风景',
+    label: '必应 1080P',
     className: ''
   },
   {
     id: 'radio4',
     value: '4',
-    label: '二次元',
+    label: '风景',
     className: ''
   },
   {
     id: 'radio5',
     value: '5',
+    label: '二次元',
+    className: ''
+  },
+  {
+    id: 'radio6',
+    value: '6',
     label: '自定义',
     className: ''
   }
@@ -97,6 +104,7 @@ function generateSettings() {
   const shortcutContent = createShortcutContent();
   const wallpaperContent = createWallpaperContent();
   const backupContent = createBackupContent();
+  const moreContent = createMoreContent();
   const aboutContent = createAboutContent();
 
   contents.appendChild(panelContent);
@@ -104,6 +112,7 @@ function generateSettings() {
   contents.appendChild(shortcutContent);
   contents.appendChild(wallpaperContent);
   contents.appendChild(backupContent);
+  contents.appendChild(moreContent);
   contents.appendChild(aboutContent);
 
   // 初始化更新日志
@@ -478,6 +487,25 @@ function createBackupContent() {
           <div class="but-ordinary" id="${option.id}">${option.label}</div>
         `).join('')}
         <input type="file" id="my_data_file" name="file" style="display: none">
+      </div>
+    </div>
+  `;
+  return div;
+}
+
+// 创建更多设置
+function createMoreContent() {
+  const div = document.createElement('div');
+  div.className = 'mainConts';
+  div.innerHTML = `
+    <div class="set_blocks">
+      <div class="set_tip">
+        <div class="set_tip_more">
+          <div class="entry-pluginSetting">
+            <span class="set_text">进入 NPP 设置</span>
+            <span class="iconfont icon-link"></span>
+          </div>
+        </div>
       </div>
     </div>
   `;

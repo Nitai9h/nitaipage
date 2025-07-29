@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.1
+// @version    0.2.0
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -68,7 +68,8 @@ function checkLibrariesLoaded() {
                 Cookies.set('dynamicTheme', 'on', { expires: 365 });
                 // 应用主题
                 if (document.getElementById('bg') && document.getElementById('bg').src) {
-                    setThemeByImage(document.getElementById('bg').src);
+                    const imgUrl = sessionStorage.getItem('bgImageFinalURL');
+                    setThemeByImage(imgUrl);
                 }
             }
         });

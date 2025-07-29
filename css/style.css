@@ -127,6 +127,47 @@ section {
     }
 }
 
+/*渐入动画*/
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 /*背景*/
 .bg-all {
     z-index: 0;
@@ -1078,9 +1119,7 @@ img.error {
 .se_add_preinstall,
 .se_add_preinstalls,
 .quick_list,
-.add_content,
-.store-item,
-.dialog-content {
+.add_content {
     animation: fade;
     -webkit-animation: fade 0.5s;
     -moz-animation: fade 0.5s;

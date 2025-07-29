@@ -1,3 +1,14 @@
+#manageContent,
+.store-button,
+.store-item,
+.dialog-content {
+    animation: fade;
+    -webkit-animation: fade 0.3s;
+    -moz-animation: fade 0.3s;
+    -o-animation: fade 0.3s;
+    -ms-animation: fade 0.3s;
+}
+
 /* 对话框基础样式 */
 .order-config-dialog,
 .install-dialog {
@@ -69,6 +80,11 @@
     border-radius: 8px;
     margin-right: 15px;
     object-fit: cover;
+    animation: fade;
+    -webkit-animation: fade 0.8s;
+    -moz-animation: fade 0.8s;
+    -o-animation: fade 0.8s;
+    -ms-animation: fade 0.8s;
 }
 
 /* 详情区域 */
@@ -396,4 +412,9 @@
     opacity: 0.8;
     transform: scale(1.02);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.entry-pluginSetting {
+    display: flex;
+    justify-content: space-between;
 }

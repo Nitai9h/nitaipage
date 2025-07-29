@@ -14,6 +14,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-link:before {
+  content: "\e006";
+}
+
 .icon-nine-grids:before {
   content: "\e605";
 }

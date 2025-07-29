@@ -598,34 +598,87 @@ $(document).ready(function () {
             setBgImg(bg_img);
             iziToast.show({
                 message: '壁纸设置成功，刷新生效',
+                buttons: [
+                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
+                        window.location.reload(true);
+                    }, true],
+                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
+                    }]
+                ]
             });
         }
 
         if (type === "2") {
-            $('#wallpaper_text').html("必应每日一图，每天更新");
+            $('#wallpaper_text').html("必应每日一图 (4K UHD 超高清)，每天更新");
             setBgImg(bg_img);
             iziToast.show({
                 message: '壁纸设置成功，刷新生效',
+                buttons: [
+                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
+                        window.location.reload(true);
+                    }, true],
+                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
+                    }]
+                ]
             });
         }
 
         if (type === "3") {
-            $('#wallpaper_text').html("随机风景图，每次刷新后更换");
+            $('#wallpaper_text').html("必应每日一图 (1080P FHD 全高清)，每天更新");
             setBgImg(bg_img);
             iziToast.show({
                 message: '壁纸设置成功，刷新生效',
+                buttons: [
+                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
+                        window.location.reload(true);
+                    }, true],
+                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
+                    }]
+                ]
             });
         }
 
         if (type === "4") {
-            $('#wallpaper_text').html("随机二次元图，每次刷新后更换");
+            $('#wallpaper_text').html("随机风景图，每次刷新后更换");
             setBgImg(bg_img);
             iziToast.show({
                 message: '壁纸设置成功，刷新生效',
+                buttons: [
+                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
+                        window.location.reload(true);
+                    }, true],
+                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
+                    }]
+                ]
             });
         }
 
         if (type === "5") {
+            $('#wallpaper_text').html("随机二次元图，每次刷新后更换");
+            setBgImg(bg_img);
+            iziToast.show({
+                message: '壁纸设置成功，刷新生效',
+                buttons: [
+                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
+                        window.location.reload(true);
+                    }, true],
+                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
+                    }]
+                ]
+            });
+        }
+
+        if (type === "6") {
             $('#wallpaper_text').html("自定义壁纸地址");
             $("#wallpaper_url").fadeIn(100);
             $("#wallpaper-button").fadeIn(100);
@@ -652,11 +705,20 @@ $(document).ready(function () {
                             transitionOut: 'flipOutX',
                         }, toast, 'buttonName');
                         var bg_img = getBgImg();
-                        bg_img["type"] = "5";
+                        bg_img["type"] = "6";
                         bg_img["path"] = url;
                         setBgImg(bg_img);
                         iziToast.show({
                             message: '链接设置成功，刷新生效',
+                            buttons: [
+                                ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                                    instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
+                                    window.location.reload(true);
+                                }, true],
+                                ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                                    instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
+                                }]
+                            ]
                         });
                         // setTimeout(function () {
                         //     window.location.reload()
@@ -671,11 +733,20 @@ $(document).ready(function () {
             });
         } else {
             var bg_img = getBgImg();
-            bg_img["type"] = "5";
+            bg_img["type"] = "6";
             bg_img["path"] = url;
             setBgImg(bg_img);
             iziToast.show({
                 message: '链接设置成功，刷新生效',
+                buttons: [
+                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
+                        window.location.reload(true);
+                    }, true],
+                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
+                    }]
+                ]
             });
         }
     });

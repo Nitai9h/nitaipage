@@ -301,7 +301,7 @@ function setBgImgInit() {
 
     var bg_img = getBgImg();
     $(":input[name='wallpaper-type'][value='" + bg_img["type"] + "']").prop("checked", true);
-    if (bg_img["type"] === "5") {
+    if (bg_img["type"] === "6") {
         $("#wallpaper-url").val(bg_img["path"]);
         $("#wallpaper-button").fadeIn(100);
         $("#wallpaper_url").fadeIn(100);
@@ -324,34 +324,54 @@ function setBgImgInit() {
             pictures[8] = './img/background9.webp';
             pictures[9] = './img/background10.webp';
             var rd = Math.floor(Math.random() * 10);
-            var pictureURL = pictures[rd];
-            $('#bg').attr('src', pictureURL) //随机默认壁纸
+            var pictureURL = pictures[rd]; //随机默认壁纸
             break;
         case "2":
-            var pictureURL = 'https://api.dujin.org/bing/1920.php';
-            $('#bg').attr('src', pictureURL) //必应每日
+            var pictureURL = 'https://bing.biturl.top/?resolution=UHD&format=image'; //必应每日 4K
             break;
         case "3":
-            var pictureURL = 'https://tu.ltyuanfang.cn/api/fengjing.php';
-            $('#bg').attr('src', pictureURL) //随机风景
+            var pictureURL = 'https://bing.biturl.top/?resolution=1920&format=image'; //必应每日 1080P
             break;
         case "4":
-            var pictureURL = 'https://www.loliapi.com/acg';
-            $('#bg').attr('src', pictureURL) //随机二次元
+            var pictureURL = 'https://api.vvhan.com/api/wallpaper/views'; //随机风景
             break;
         case "5":
-            var pictureURL = bg_img["path"];
-            $('#bg').attr('src', pictureURL) //自定义
+            var pictureURL = 'https://www.loliapi.com/acg'; //随机二次元
             break;
+        case "6":
+            var pictureURL = bg_img["path"]; //自定义
+            break;
+        default:
+            var pictureURL = getCookie('bgImage'); // 插件接口
     }
     bg.postMessage("bgImgLoadingStart");
-    var img = new Image();
-    img.onload = function () {
-        $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 1.5s;");
-        bg.postMessage("bgImgLoadinged");
-        bg.close();
-    };
-    img.src = pictureURL;
+    // 跟踪API重定向
+    fetch(pictureURL)
+        .then(response => {
+            const finalUrl = response.url;
+            $('#bg').attr('src', finalUrl)
+            sessionStorage.setItem('bgImageFinalURL', finalUrl);
+            const img = new Image();
+            img.onload = function () {
+                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 1.2s;");
+                bg.postMessage("bgImgLoadinged");
+                bg.close();
+            };
+            img.src = finalUrl;
+        })
+        .catch(error => {
+            // 原始方法
+            $('#bg').attr('src', pictureURL)
+            console.error('Failed to track image redirect:', error);
+            const img = new Image();
+            img.onload = function () {
+                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 1.2s;");
+                sessionStorage.setItem('bgImageFinalURL', img.src);
+                bg.postMessage("bgImgLoadinged");
+                bg.close();
+            };
+            img.src = pictureURL;
+        });
 };
 
 // 搜索框高亮
@@ -727,7 +747,7 @@ function closeBox() {
     mark.css("display", "none");
     toolAll.css("transform", "translateY(-120%)");
     searchContainer.css("transform", "translateY(0%)");
-    bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.3s" });
+    bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 1.2s" });
     iconFold.css("display", "none");
 }
 
@@ -1123,348 +1143,6 @@ function showWelcomeMessage() {
             message: '欢迎使用 NitaiPage'
         });
     }, 800);
-}
-
-// 插件管理页面加载函数
-async function loadPluginManagementPage() {
-    try {
-        const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
-        let html = `<div class='plugin_management'>
-                    <h3>插件列表</h3>
-                    <div class='plugin_list_table'>`;
-
-        // 生成插件列表
-        for (const plugin of plugins) {
-            html += `<div class='plugin_item ${plugin.type === "coreNpp" ? "coreNpp" : ""}'>
-                <div class='plugin_info'>
-                    <div class='plugin_icon'>
-                        <img src='${plugin.icon}'>
-                    </div>
-                    <div class='plugin_text'>
-                        <div class='plugin_name'>${plugin.name}</div>
-                        <div class='plugin_details'>
-                            <span>版本: ${plugin.version}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class='plugin_actions' id='${plugin.id}'>
-                    <button class='update_plugin' data-id='${plugin.id}'>
-                    <i class="iconfont icon-refresh"></i>
-                    </button>
-                    <button class='uninstall_plugin' data-id='${plugin.id}'>
-                    <i class="iconfont icon-delete"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        }
-
-        html += `</div></div>`;
-
-        // 插入到页面
-        const manageContent = document.querySelector('#manageContent');
-        if (manageContent) {
-            manageContent.innerHTML = html;
-            requestAnimationFrame(() => {
-                checkStoreContent('manageContent', plugins.length === 0);
-            });
-        }
-
-        // 绑定更新按钮事件
-        document.querySelectorAll('.update_plugin').forEach(button => {
-            button.addEventListener('click', async () => {
-                const pluginId = button.dataset.id;
-                if (!pluginId) {
-                    iziToast.show({
-                        timeout: 3000,
-                        message: '未找到插件' + pluginId
-                    });
-                    return;
-                }
-
-                try {
-                    iziToast.show({
-                        id: 'checkUpdateToast',
-                        message: '正在检查更新...'
-                    });
-                    // 调用更新检查函数
-                    await checkUpdates(pluginId);
-                } catch (error) {
-                    iziToast.show({
-                        timeout: 3000,
-                        message: '检查更新时发生错误'
-                    });
-                    console.error('更新按钮点击事件错误:', error);
-                }
-            });
-        });
-
-        // 绑定卸载按钮事件
-        document.querySelectorAll('.uninstall_plugin').forEach(button => {
-            button.addEventListener('click', async () => {
-                const pluginId = button.getAttribute('data-id');
-                // 获取本地插件信息
-                const localData = await getNpp({ "id": pluginId });
-                if (!localData || !localData.metadata) {
-                    console.error(`未知的Npp: ${pluginId}`);
-                    return;
-                }
-                const localMetadata = localData.metadata;
-                try {
-                    if (localMetadata.type !== 'coreNpp') {
-                        iziToast.show({
-                            timeout: 8000,
-                            message: '是否要卸载此插件吗?',
-                            buttons: [
-                                ['<button>确认</button>', async function (instance, toast) {
-                                    instance.hide({
-                                        transitionOut: 'flipOutX',
-                                    }, toast, 'buttonName');
-                                    // 核心插件禁止卸载
-                                    if (localMetadata.type === 'coreNpp') {
-                                        iziToast.show({
-                                            timeout: 2000,
-                                            message: `${localMetadata.name}不支持卸载`,
-                                        });
-                                        return;
-                                    } else {
-                                        // 移除localStorage元数据
-                                        let plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]'); plugins = plugins.filter(p => p.id !== pluginId);
-                                        localStorage.setItem('npp_plugins', JSON.stringify(plugins));
-                                        // 删除indexedDB文件
-                                        const request = indexedDB.open('nppstore');
-                                        request.onsuccess = (event) => {
-                                            const db = event.target.result;
-                                            const transaction = db.transaction('Npp', 'readwrite');
-                                            const store = transaction.objectStore('Npp');
-                                            const deleteRequest = store.delete(pluginId);
-                                            deleteRequest.onsuccess = () => {
-                                                db.close();
-                                                iziToast.show({ timeout: 3000, message: '插件已卸载' });
-                                                loadPluginManagementPage();
-                                            };
-                                            deleteRequest.onerror = () => { db.close(); throw new Error('删除插件文件失败'); };
-                                        };
-                                        request.onerror = () => { throw new Error('打开数据库失败'); };
-                                    }
-                                }, true],
-                                ['<button>取消</button>', function (instance, toast) {
-                                    instance.hide({
-                                        transitionOut: 'flipOutX',
-                                    }, toast, 'buttonName');
-                                }]
-                            ]
-                        });
-                    }
-                } catch (error) {
-                    iziToast.show({ timeout: 8000, message: '卸载失败:' + error.message });
-                }
-            });
-        });
-    } catch (error) {
-        console.error('加载插件管理页面失败:' + error);
-        iziToast.show({ timeout: 8000, message: '加载插件管理页面失败' });
-    }
-}
-
-function checkStoreContent(containerId = 'storeContent', isEmpty = false) {
-    let div = document.getElementById(containerId);
-    if (!div) return;
-
-    // 移除已有提示
-    const existingEmpty = div.querySelector('.storeContentEmpty');
-    if (existingEmpty) {
-        existingEmpty.remove();
-    }
-
-    var emptyState = isEmpty
-
-    if (emptyState === true) {
-        const tabElement = document.createElement('div');
-        tabElement.className = 'tab-items storeContentEmpty';
-        tabElement.innerHTML = `
-            <div>
-                <p>还未安装插件</p>
-            </div>
-        `;
-        div.appendChild(tabElement);
-    } else {
-        const storeItem = div.querySelector('.storeContentEmpty');
-        if (storeItem) {
-            storeItem.remove();
-        }
-    }
-}
-
-// 商店页面功能
-const storeSources = [
-    'https://nfdb.nitai.us.kg/nitaiPage/store'
-];
-
-async function loadStoreData() {
-    try {
-        const responses = await Promise.all(storeSources.map(url =>
-            fetch(url)
-                .then(res => res.json().then(data => ({ url, data })))
-                .catch(err => {
-                    console.error(`加载商店源 ${url} 失败:`, err);
-                    return null;
-                })
-        ));
-
-        const validData = responses.filter(data => data !== null);
-        if (validData.length === 0) {
-            console.error('没有可用的商店源数据');
-            return;
-        }
-
-        const mergedData = mergeStoreData(validData);
-        window.storeData = mergedData;
-        renderStoreTabs(mergedData.category);
-    } catch (error) {
-        console.error('加载商店数据失败:', error);
-    }
-}
-
-function mergeStoreData(sources) {
-    const merged = { category: {} };
-
-    sources.forEach(({ url, data }) => {
-        // 合并分类
-        if (data.category && data.category[0]) {
-            Object.entries(data.category[0]).forEach(([key, name]) => {
-                if (!merged.category[key]) merged.category[key] = name;
-            });
-        }
-
-        // 合并插件
-        Object.entries(data).forEach(([key, value]) => {
-            if (key === 'category') return;
-            if (!merged[key]) merged[key] = [];
-            if (Array.isArray(value) && value[0] && typeof value[0] === 'object') {
-                const plugins = Object.values(value[0]).map(plugin => ({
-                    ...plugin,
-                    source: url
-                }));
-                merged[key].push(...plugins);
-            }
-        });
-    });
-
-    return merged;
-}
-
-function renderStoreTabs(categories) {
-    const tabsContainer = document.getElementById('storeTabs');
-    if (!tabsContainer) return;
-
-    Object.entries(categories).forEach(([key, name]) => {
-        const tab = document.createElement('div');
-        tab.className = `tab-items`;
-        tab.textContent = name;
-        tab.dataset.category = key;
-
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('#storeTabs .tab-items').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            renderPlugins(window.storeData[key] || []);
-
-            $('#storeContent').css('display', 'flex');
-            $('#manageContent').css('display', 'none');
-            $('.store-button').css('display', 'none');
-        });
-
-        tabsContainer.appendChild(tab);
-    });
-}
-
-function renderPlugins(pluginsArray) {
-    const contentContainer = document.getElementById('storeContent');
-    if (!contentContainer) return;
-    contentContainer.innerHTML = '';
-
-    pluginsArray.forEach(plugin => {
-        const cleanUrl = (url) => url.replace(/`/g, '').trim();
-
-        const pluginItem = document.createElement('div');
-        pluginItem.className = 'plugin-item';
-        // 动画样式
-        pluginItem.style.opacity = '0';
-        pluginItem.style.transition = '0.3s';
-        pluginItem.innerHTML = `
-                <img src="${cleanUrl(plugin.icon)}" alt="${plugin.name}" class="plugin-icon">
-                <div class="plugin-info">
-                    <strong>${plugin.name}</strong>
-                    <p>${plugin.description}</p>
-                </div>
-            `;
-
-        pluginItem.addEventListener('click', () => showPluginDetails(plugin));
-        contentContainer.appendChild(pluginItem);
-        // 淡入
-        pluginItem.offsetHeight;
-        pluginItem.style.opacity = '1';
-    });
-}
-
-function showPluginDetails(plugin) {
-    // 清理数据中的多余引号和空格
-    const cleanUrl = (url) => url.replace(/`/g, '').trim();
-
-    // 创建详情对话框
-    const page = document.getElementById('storePage');
-    const dialog = document.createElement('div');
-    dialog.className = 'details-dialog';
-    dialog.innerHTML = `
-            <div class="dialog-content">
-                <div class="plugin-detail-header">
-                    <img src="${cleanUrl(plugin.icon)}" alt="${plugin.name}" class="detail-icon">
-                    <div class="detail-title">
-                        <h2>${plugin.name}</h2>
-                        <p>版本: ${plugin.version} | 作者: ${plugin.author}</p>
-                        <p>NID: ${plugin.id}</p>
-                        <p>来源: ${plugin.source}</p>
-                    </div>
-                </div>
-                <div class="plugin-detail-body">
-                    <h3>描述</h3>
-                    <p>${plugin.description}</p>
-                    <h3>截图</h3>
-                    <div class="screenshots">
-                        ${plugin.screenshots.map(shot => `
-                            <a href="${cleanUrl(shot)}" target="_blank"><img src="${cleanUrl(shot)}" alt="截图" class="screenshot-img"></a>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-
-    const btn = document.createElement('div');
-    btn.className = 'dialog-btn';
-    btn.innerHTML = `
-            <div class="dialog-cancel">返回</div>
-            <div class="dialog-install" data-plugin-url="${cleanUrl(plugin.url)}">安装</div>
-        `;
-
-    // 添加事件监听器以符合CSP策略
-    btn.querySelector('.dialog-cancel').addEventListener('click', showContain_plugin);
-    btn.querySelector('.dialog-install').addEventListener('click', function () {
-        iziToast.show({
-            id: 'installToast',
-            message: '开始安装...'
-        });
-        installNpplication(this.dataset.pluginUrl);
-    });
-
-    $('#storeTabs').css('display', 'none');
-    $('.store-block').css('display', 'none');
-
-    const dialogContain = document.createElement('div');
-    dialogContain.className = 'dialog-container';
-
-    dialogContain.appendChild(dialog);
-    dialogContain.appendChild(btn);
-    page.appendChild(dialogContain);
 }
 
 function showContain_plugin() {

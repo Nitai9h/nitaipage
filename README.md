@@ -80,6 +80,6 @@ http-server -p 11123 -o
 
 ###### API
 
-* [Bing : https://api.dujin.org/bing/1920.php](https://api.dujin.org/bing/1920.php)
-* [随机风景 : https://tu.ltyuanfang.cn/api/fengjing.php](https://tu.ltyuanfang.cn/api/fengjing.php)
+* [Bing : https://bing.biturl.top](https://bing.biturl.top)
+* [随机风景 : https://api.vvhan.com/api/wallpaper/views](https://api.vvhan.com/api/wallpaper/views)
 * [随机二次元 : https://www.loliapi.com/acg](https://www.loliapi.com/acg)
