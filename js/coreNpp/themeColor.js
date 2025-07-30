@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.2.0
+// @version    0.2.1
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -9,6 +9,7 @@
 // @time    head
 // @icon    https://nitai-images.pages.dev/nitaiPage/themeColor.svg
 // @foreced    true
+// @setting    true
 // ==/Npplication==
 
 // 检查动态主题是否启用
@@ -37,6 +38,38 @@ function checkLibrariesLoaded() {
     }
 }
 
+// 创建设置
+function createDynamicThemeSetting() {
+    const pluginId = 'themeColor';
+    const mainConts = document.querySelector(`.mainConts[data-value="${pluginId}"]`);
+
+    if (mainConts) {
+        const dythemeDiv = document.createElement('div');
+        dythemeDiv.id = 'themeColor_dytheme';
+        dythemeDiv.className = 'set_tip';
+        dythemeDiv.style = 'width: 100%';
+        dythemeDiv.innerHTML = `
+                <style>
+                .themeColor_switch-container {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                </style>
+                <div class="themeColor_switch-container">
+                    <div>
+                        <span class="set_text"><big>动态主题(Beta)&nbsp;</big><span class="desktop"></span></span>
+                        <span class="set_text" style="color: gray;"><small>根据壁纸切换主题</small></span>
+                    </div>
+                    <div class="switch" id="toggledytheme"></div>
+                </div>
+            `;
+        mainConts.appendChild(dythemeDiv);
+    }
+}
+
 (function () {
     // 加载 color-thief
     const colorThiefScript = document.createElement('script');
@@ -46,8 +79,19 @@ function checkLibrariesLoaded() {
         checkLibrariesLoaded();
     };
 
-    // 初始化主题开关
+    // 加载 chroma.js
+    const chromaScript = document.createElement('script');
+    chromaScript.src = './js/modules/chroma.min.js';
+    chromaScript.onload = () => {
+        chromaLoaded = true;
+        checkLibrariesLoaded();
+    };
+    document.head.appendChild(chromaScript);
+
     $(document).ready(function () {
+        // 初始化主题开关
+        createDynamicThemeSetting();
+
         const toggleSwitch = $('#toggledytheme');
         const savedState = Cookies.get('dynamicTheme') || 'off';
 
@@ -75,15 +119,6 @@ function checkLibrariesLoaded() {
         });
     });
     document.head.appendChild(colorThiefScript);
-
-    // 加载 chroma.js
-    const chromaScript = document.createElement('script');
-    chromaScript.src = './js/modules/chroma.min.js';
-    chromaScript.onload = () => {
-        chromaLoaded = true;
-        checkLibrariesLoaded();
-    };
-    document.head.appendChild(chromaScript);
 })();
 
 function applyThemeColors(originalColors) {

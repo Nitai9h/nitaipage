@@ -171,8 +171,12 @@
 }
 
 /* 按钮组 */
-.buttons,
 .store-button {
+    display: flex;
+    justify-content: center;
+}
+
+.buttons {
     display: flex;
     justify-content: center;
     gap: 10px;
@@ -414,7 +418,43 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.entry-pluginSetting {
+.entry-pluginSettings {
     display: flex;
     justify-content: space-between;
+    margin: 10px;
+    flex-direction: row;
+    align-items: center;
+}
+
+#entryPluginSettings,
+.reloadPluginSettings-btn {
+    display: flex;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--main-background-color);
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+#entryPluginSettings:active,
+.reloadPluginSettings-btn:active {
+    transform: scale(0.90);
+    background: var(--main-background-active-color);
+    transition: 0.3s;
+}
+
+#entryPluginSettings:hover,
+.reloadPluginSettings-btn:hover {
+    cursor: pointer;
+    background: var(--main-background-hover-color);
+    transition: 0.3s;
+}
+
+#noPluginSetting {
+    font-size: 2vw;
+    height: 100%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }

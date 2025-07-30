@@ -133,6 +133,7 @@ async function extractMetadata(url) {
             icon: metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg',
             screen: metadata.screen || '',
             forceUpdate: metadata.force || 'false', //如果为 false 则以通知形式弹出
+            setting: metadata.setting || 'false',
         };
     } catch (error) {
         console.error(error);
@@ -510,9 +511,12 @@ async function loadNpp() {
 async function initCoreNpp() {
     // 指定目录
     const coreNppDir = './js/coreNpp/';
-    // 指定文件
+    // 指定文件(指定完请添加链接到HTML内，否则不加载)
+    // 只有在这里指定的文件才会加载元数据
+    // 否则不会出现在商店管理的列表内
     const coreNppFiles = [
-        'themeColor.js'
+        'themeColor.js',
+        'advancedSettings.js'
     ];
 
     for (const fileName of coreNppFiles) {

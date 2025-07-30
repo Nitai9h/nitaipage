@@ -434,15 +434,6 @@ async function searchData() {
     } catch (error) {
         console.error("加载搜索数据失败:", error);
     }
-
-    // 判断窗口大小，添加输入框自动完成
-    // var wid = $("body").width();
-    // if (wid < 640) {
-    //     $(".wd").attr('autocomplete', 'off');
-    // } else {
-    //     $(".wd").focus();
-    //     focusWd();
-    // }
 }
 
 // 搜索引擎列表加载
@@ -652,6 +643,11 @@ function hideTime() {
         "max-height": "480px",
         "height": "480px",
     });
+    $(".plugin_set").css({
+        "margin-top": "0px",
+        "max-height": "480px",
+        "height": "480px",
+    });
     $(".order-dialog .dialog-content").css({
         "height": "490px !important"
     });
@@ -668,6 +664,9 @@ function hideTime() {
         "height": "340px"
     });
     $(".set_blocks").css({
+        "height": "420px"
+    });
+    $(".plugin_set .contents").css({
         "height": "420px"
     });
 }
@@ -690,6 +689,11 @@ function showTime() {
         "max-height": "400px",
         "height": "400px",
     });
+    $(".plugin_set").css({
+        "margin-top": "180px",
+        "max-height": "400px",
+        "height": "400px",
+    });
     $(".order-dialog .dialog-content").css({
         "height": "390px !important"
     });
@@ -708,6 +712,9 @@ function showTime() {
     $(".set_blocks").css({
         "height": "340px"
     });
+    $(".plugin_set .contents").css({
+        "height": "340px"
+    });
 }
 
 // 书签显示
@@ -722,6 +729,7 @@ function openBox() {
     const bg = $('#bg');
     const iconFold = $("#fold");
     const searchContainer = $("#search-form-container");
+    const pluginSet = $(".plugin_set");
 
     content.addClass('box');
     mark.css("display", "flex");
@@ -729,6 +737,7 @@ function openBox() {
     searchContainer.css("transform", "translateY(90%)");
     bg.css({ transform: 'scale(1.08)', filter: "var(--main-box-gauss)", transition: "ease 0.3s" });
     iconFold.css("display", "flex");
+    pluginSet.css("display", "none");
 }
 
 // 书签关闭
@@ -742,6 +751,7 @@ function closeBox() {
     const bg = $('#bg');
     const iconFold = $("#fold");
     const searchContainer = $("#search-form-container");
+    const pluginSet = $(".plugin_set");
 
     content.removeClass('box');
     mark.css("display", "none");
@@ -749,6 +759,7 @@ function closeBox() {
     searchContainer.css("transform", "translateY(0%)");
     bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 1.2s" });
     iconFold.css("display", "none");
+    pluginSet.css("display", "none");
 }
 
 // 打开设置
@@ -781,6 +792,9 @@ function openSet() {
     $(".set").css({
         "display": "flex",
     });
+    $(".plugin_set").css({
+        "display": "none",
+    });
     $("#fold").css({
         "display": "flex",
         "transition": "all 0.3s"
@@ -801,6 +815,9 @@ function closeSet() {
     $("#icon-menu").attr("class", "iconfont icon-settings");
 
     $(".set").css({
+        "display": "none",
+    });
+    $(".plugin_set").css({
         "display": "none",
     });
     $("#fold").css({
@@ -838,6 +855,9 @@ function openStore() {
         "display": "flex",
     });
     $(".set").css({
+        "display": "none",
+    });
+    $(".plugin_set").css({
         "display": "none",
     });
     $("#fold").css({
@@ -1157,104 +1177,128 @@ function initSliderControls() {
     const timeFontSizeSlider = document.getElementById('font-size-slider');
     const timeFontWeightSlider = document.getElementById('font-thick-slider');
     const timeFontOpacitySlider = document.getElementById('font-opacity-slider');
+    const timeFontWidthSlider = document.getElementById('font-width-time');
     const dateFontSizeSlider = document.getElementById('font-size-date');
     const dateFontWeightSlider = document.getElementById('font-thick-date');
     const dateFontOpacitySlider = document.getElementById('font-opacity-date');
+    const dateFontWidthSlider = document.getElementById('font-width-date');
 
     // 从Cookie加载设置或使用默认值
     const timeSettings = {
         size: parseInt(Cookies.get('timeFontSize')) || 0,
         weight: parseInt(Cookies.get('timeFontWeight')) || 0,
-        opacity: parseInt(Cookies.get('timeFontOpacity')) || 100
+        opacity: parseInt(Cookies.get('timeFontOpacity')) || 100,
+        width: parseInt(Cookies.get('timeFontWidth')) || 0
     };
     const dateSettings = {
         size: parseInt(Cookies.get('dateFontSize')) || 0,
         weight: parseInt(Cookies.get('dateFontWeight')) || 0,
-        opacity: parseInt(Cookies.get('dateFontOpacity')) || 100
+        opacity: parseInt(Cookies.get('dateFontOpacity')) || 100,
+        width: parseInt(Cookies.get('dateFontWidth')) || 0
     };
 
     // 设置滑块初始值
     timeFontSizeSlider.value = timeSettings.size;
     timeFontWeightSlider.value = timeSettings.weight;
     timeFontOpacitySlider.value = timeSettings.opacity;
+    timeFontWidthSlider.value = timeSettings.width;
     dateFontSizeSlider.value = dateSettings.size;
     dateFontWeightSlider.value = dateSettings.weight;
     dateFontOpacitySlider.value = dateSettings.opacity;
+    dateFontWidthSlider.value = dateSettings.width;
 
     // 应用初始样式
-    updateTimeStyle(timeSettings.size, timeSettings.weight, timeSettings.opacity);
-    updateDateStyle(dateSettings.size, dateSettings.weight, dateSettings.opacity);
+    updateTimeStyle(timeSettings.size, timeSettings.weight, timeSettings.opacity, timeSettings.width);
+    updateDateStyle(dateSettings.size, dateSettings.weight, dateSettings.opacity, dateSettings.width);
 
     // 添加滑块事件监听器
     timeFontSizeSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
-        updateTimeStyle(value, timeSettings.weight, timeSettings.opacity);
+        updateTimeStyle(value, timeSettings.weight, timeSettings.opacity, timeSettings.width);
         Cookies.set('timeFontSize', value, { expires: 365 });
         timeSettings.size = value;
     });
 
     timeFontWeightSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
-        updateTimeStyle(timeSettings.size, value, timeSettings.opacity);
+        updateTimeStyle(timeSettings.size, value, timeSettings.opacity, timeSettings.width);
         Cookies.set('timeFontWeight', value, { expires: 365 });
         timeSettings.weight = value;
     });
 
     timeFontOpacitySlider.addEventListener('input', function () {
         const value = parseInt(this.value);
-        updateTimeStyle(timeSettings.size, timeSettings.weight, value);
+        updateTimeStyle(timeSettings.size, timeSettings.weight, value, timeSettings.width);
         Cookies.set('timeFontOpacity', value, { expires: 365 });
         timeSettings.opacity = value;
     });
 
+    timeFontWidthSlider.addEventListener('input', function () {
+        const value = parseInt(this.value);
+        updateTimeStyle(timeSettings.size, timeSettings.weight, timeSettings.opacity, value);
+        Cookies.set('timeFontWidth', value, { expires: 365 });
+        timeSettings.width = value;
+    });
+
     dateFontSizeSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
-        updateDateStyle(value, dateSettings.weight, dateSettings.opacity);
+        updateDateStyle(value, dateSettings.weight, dateSettings.opacity, dateSettings.width);
         Cookies.set('dateFontSize', value, { expires: 365 });
         dateSettings.size = value;
     });
 
     dateFontWeightSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
-        updateDateStyle(dateSettings.size, value, dateSettings.opacity);
+        updateDateStyle(dateSettings.size, value, dateSettings.opacity, dateSettings.width);
         Cookies.set('dateFontWeight', value, { expires: 365 });
         dateSettings.weight = value;
     });
 
     dateFontOpacitySlider.addEventListener('input', function () {
         const value = parseInt(this.value);
-        updateDateStyle(dateSettings.size, dateSettings.weight, value);
+        updateDateStyle(dateSettings.size, dateSettings.weight, value, dateSettings.width);
         Cookies.set('dateFontOpacity', value, { expires: 365 });
         dateSettings.opacity = value;
+    });
+
+    dateFontWidthSlider.addEventListener('input', function () {
+        const value = parseInt(this.value);
+        updateDateStyle(dateSettings.size, dateSettings.weight, dateSettings.opacity, value);
+        Cookies.set('dateFontWidth', value, { expires: 365 });
+        dateSettings.width = value;
     });
 }
 
 // 更新时间样式
-function updateTimeStyle(size, weight, opacity) {
+function updateTimeStyle(size, weight, opacity, width) {
     // 转换滑块值
     const baseFontSize = 2.75; // 基础字体大小
     const maxIncrease = 5; // 最大增加 5rem
     const fontSize = baseFontSize + (size / 100) * maxIncrease; // 计算字体大小
     const fontWeight = 100 + (weight / 100) * 800; // 100-900
     const opacityValue = opacity / 100; // 0-1
+    const fontWidth = 29.5 + (width / 100) * 50; // 29.5-79.5
 
     // 更新 CSS
     document.documentElement.style.setProperty('--time-font-size', `${fontSize}rem`);
     document.documentElement.style.setProperty('--time-font-weight', fontWeight);
     document.documentElement.style.setProperty('--time-opacity', opacityValue);
+    document.documentElement.style.setProperty('--time-width', `${fontWidth}px`);
 }
 
 // 更新日期样式
-function updateDateStyle(size, weight, opacity) {
+function updateDateStyle(size, weight, opacity, width) {
     // 转换滑块值
     const baseFontSize = 1.05; // 基础字体大小
     const maxIncrease = 5; // 最大增加 5rem
     const fontSize = baseFontSize + (size / 100) * maxIncrease; // 计算字体大小
     const fontWeight = 100 + (weight / 100) * 800; // 100-900
     const opacityValue = opacity / 100; // 0-1
+    const fontWidth = 12.5 + (width / 100) * 50; // 12.5-62.5
 
     // 更新 CSS
     document.documentElement.style.setProperty('--date-font-size', `${fontSize}rem`);
     document.documentElement.style.setProperty('--date-font-weight', fontWeight);
     document.documentElement.style.setProperty('--date-opacity', opacityValue);
+    document.documentElement.style.setProperty('--date-width', `${fontWidth}px`);
 }

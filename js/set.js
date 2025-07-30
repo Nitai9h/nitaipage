@@ -55,6 +55,23 @@ $(document).ready(function () {
         }
     });
 
+    // Npp 设置打开
+    $(function () {
+        $("#entryPluginSettings").click(function () {
+            $(".set").css("display", "none");
+            $(".plugin_set").css("display", "flex");
+        })
+    })
+
+    // Npp 设置关闭
+    $(function () {
+        $("#close-pluginSettings").click(function () {
+            $(".set").css("display", "flex");
+            $(".plugin_set").css("display", "none");
+        })
+    })
+
+
     // 搜索引擎列表点击
     $(".search-engine-list").on("click", ".se-li", function () {
         var url = $(this).attr('data-url');
@@ -204,14 +221,14 @@ $(document).ready(function () {
     // 修改默认搜索引擎
     $(".se_list_table").on("click", ".set_se_default", function () {
         var name = $(this).val();
-        Cookies.set('se_default', name, {
-            expires: 36500
-        });
         iziToast.show({
             timeout: 8000,
             message: '是否设置为默认搜索引擎？',
             buttons: [
                 ['<button>确认</button>', async function (instance, toast) {
+                    Cookies.set('se_default', name, {
+                        expires: 36500
+                    });
                     setSeInit();
                     instance.hide({
                         transitionOut: 'flipOutX',
@@ -796,7 +813,7 @@ $(document).ready(function () {
     $("#my_data_file").change(function () {
         var selectedFile = document.getElementById('my_data_file').files[0];
         var name = selectedFile.name; // 读取选中文件的文件名
-        var size = selectedFile.size; // 读取选中文件的大小
+        var size = (selectedFile.size / 1024).toFixed(2);
         // console.log("文件名:"+name+" 大小:"+size);
 
         var reader = new FileReader(); //这是核心,读取操作就是由它完成.

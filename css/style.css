@@ -26,10 +26,12 @@
     --time-font-size: 2.75rem;
     --time-font-weight: 400;
     --time-opacity: 1;
+    --time-width: 29.5px;
     /* 日期样式变量 */
     --date-font-size: 1.05rem;
     --date-font-weight: 400;
     --date-opacity: 1;
+    --date-width: 12.5px;
 }
 
 html,
@@ -318,8 +320,8 @@ img.error {
     opacity: var(--time-opacity);
     color: var(--main-text-color);
     text-shadow: var(--main-text-shadow);
-    min-width: 29.5px;
-    max-width: 29.5px;
+    min-width: var(--time-width);
+    max-width: var(--time-width);
 }
 
 .dayNum {
@@ -331,8 +333,8 @@ img.error {
     text-align: center;
     color: var(--main-text-color);
     text-shadow: var(--main-text-shadow);
-    min-width: 12.5px;
-    max-width: 12.5px;
+    min-width: var(--date-width);
+    max-width: var(--date-width);
 }
 
 #point {
@@ -624,7 +626,8 @@ img.error {
 /*书签及设置*/
 .mark,
 .set,
-.store {
+.store,
+.plugin_set {
     flex-direction: column;
     align-items: center;
     background: var(--main-background-color);
@@ -646,7 +649,8 @@ img.error {
 
 .mark .tab,
 .set .tabs,
-.store .tabs {
+.store .tabs,
+.plugin_set .tabs {
     height: 40px;
     min-height: 40px;
     width: 100%;
@@ -657,7 +661,8 @@ img.error {
 }
 
 .set .tabs,
-.store .tabs {
+.store .tabs,
+.plugin_set .tabs {
     display: flex;
     justify-content: space-between;
     position: relative;
@@ -671,14 +676,16 @@ img.error {
 }
 
 .set .tabs::-webkit-scrollbar,
-.store .tabs::-webkit-scrollbar {
+.store .tabs::-webkit-scrollbar,
+.plugin_set .tabs::-webkit-scrollbar {
     height: 2px;
     position: absolute;
     top: 0;
 }
 
 .set .tabs::-webkit-scrollbar-thumb,
-.store .tabs::-webkit-scrollbar-thumb {
+.store .tabs::-webkit-scrollbar-thumb,
+.plugin_set .tabs::-webkit-scrollbar-thumb {
     background-color: transparent;
     border-radius: 2px;
     transition: background-color 0.3s;
@@ -686,12 +693,14 @@ img.error {
 }
 
 .set .tabs:hover::-webkit-scrollbar-thumb,
-.store .tabs:hover::-webkit-scrollbar-thumb {
+.store .tabs:hover::-webkit-scrollbar-thumb,
+.plugin_set .tabs:hover::-webkit-scrollbar-thumb {
     background-color: var(--border-bottom-color-hover);
 }
 
 .set .tabs::-webkit-scrollbar-track,
-.store .tabs::-webkit-scrollbar-track {
+.store .tabs::-webkit-scrollbar-track,
+.plugin_set .tabs::-webkit-scrollbar-track {
     display: none;
 }
 
@@ -700,7 +709,10 @@ img.error {
 .set .tabs::-webkit-scrollbar-corner,
 .store .tabs::-webkit-scrollbar-button,
 .store .tabs::-webkit-scrollbar-track-piece,
-.store .tabs::-webkit-scrollbar-corner {
+.store .tabs::-webkit-scrollbar-corner,
+.plugin_set .tabs::-webkit-scrollbar-button,
+.plugin_set .tabs::-webkit-scrollbar-track-piece,
+.plugin_set .tabs::-webkit-scrollbar-corner {
     display: none;
 }
 
@@ -708,30 +720,36 @@ img.error {
 @-moz-document url-prefix() {
 
     .set .tabs,
-    .store .tabs {
+    .store .tabs,
+    .plugin_set .tabs {
         scrollbar-width: thin;
         scrollbar-color: transparent transparent;
     }
 
     .set .tabs::-moz-scrollbar-button,
-    .store .tabs::-moz-scrollbar-button {
+    .store .tabs::-moz-scrollbar-button,
+    .plugin_set .tabs::-moz-scrollbar-button {
         display: none;
     }
 
     .set .tabs:hover,
-    .store .tabs:hover {
+    .store .tabs:hover,
+    .plugin_set .tabs:hover {
         scrollbar-color: var(--main-background-hover-color) transparent;
     }
 }
 
 .set .tabs.scrollbar-hidden::-webkit-scrollbar-thumb,
-.store .tabs.scrollbar-hidden::-webkit-scrollbar-thumb {
+.store .tabs.scrollbar-hidden::-webkit-scrollbar-thumb,
+.plugin_set .tabs.scrollbar-hidden::-webkit-scrollbar-thumb {
     opacity: 0;
     transition: opacity 0.3s;
 }
 
 .mark .tab .tab-item,
-.store .tabs .tab-items {
+.store .tabs .tab-items,
+.plugin_set .tabs .tab-items {
+    overflow: hidden;
     cursor: pointer;
     width: 100%;
     height: 100%;
@@ -752,7 +770,8 @@ img.error {
 }
 
 .set .tabs .tab-items,
-.store .tabs .tab-items {
+.store .tabs .tab-items,
+.plugin_set .tabs .tab-items {
     height: 100%;
     width: 100%;
     display: flex;
@@ -783,21 +802,24 @@ img.error {
     height: 310px;
 }
 
-.store .store-item .content {
+.store .store-item .content,
+.plugin_set .store-item .content {
     margin: 20px 20px 0px 20px;
     width: -webkit-fill-available;
 }
 
 .mark .tab .tab-item:hover,
 .set .tabs .tab-items:hover,
-.store .tab .tab-item:hover {
+.store .tabs .tab-items:hover,
+.plugin_set .tabs .tab-items:hover {
     transition: 0.3s;
     cursor: pointer;
 }
 
 .mark .tab .tab-item:hover::after,
 .set .tabs .tab-items:hover::after,
-.store .tabs .tab-items:hover::after {
+.store .tabs .tab-items:hover::after,
+.plugin_set .tabs .tab-items:hover::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -810,12 +832,14 @@ img.error {
 
 .mark .tab .tab-item.active,
 .set .tabs .tab-items.actives,
-.store .tabs .tab-items.active {
+.store .tabs .tab-items.active,
+.plugin_set .tabs .tab-items.active {
     position: relative;
 }
 
 .mark .tab .tab-item.active::after,
-.store .tabs .tab-items.active::after {
+.store .tabs .tab-items.active::after,
+.plugin_set .tabs .tab-items.active::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -826,7 +850,8 @@ img.error {
     transition: all 0.3s ease;
 }
 
-.set .tabs .tab-items.actives::after {
+.set .tabs .tab-items.actives::after,
+.plugin_set .tabs .tab-items.actives::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -937,17 +962,15 @@ img.error {
     white-space: nowrap;
 }
 
-/*设置区域统一样式*/
+/* 入口区域统一样式 */
 .entry {
     display: flex;
     width: 100%;
-    height: 7%;
     position: absolute;
-    top: 2px;
+    top: 6px;
     z-index: 1000000;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-content: center;
     justify-content: space-between;
     align-items: center;
 }
@@ -959,6 +982,7 @@ img.error {
     align-content: center;
     justify-content: flex-start;
     align-items: center;
+    margin-left: 0.3vw;
 }
 
 .entry-right {
@@ -968,6 +992,7 @@ img.error {
     align-content: center;
     justify-content: flex-start;
     align-items: center;
+    margin-right: 0.3vw;
 }
 
 .entry-items {
@@ -1020,7 +1045,7 @@ img.error {
 
 .set_blocks_content {
     display: flex;
-    margin: 10px 10px 0px 10px;
+    margin: 10px 10px 10px 10px;
     height: 430px;
     flex-direction: column;
     justify-content: space-between;
@@ -1334,19 +1359,12 @@ input[type="radio"]:checked+label {
     font-size: medium;
 }
 
-.set_button {
-    margin: 20px;
-    display: flex;
-    justify-content: center;
-}
-
 .but-ordinary {
-    width: 25%;
     display: flex;
     height: 40px;
     border-radius: 8px;
     background: var(--main-background-color);
-    margin: 0 20px;
+    margin: 10px 20px 0px 20px;
     justify-content: center;
     align-items: center;
     transition: 0.3s;
@@ -1712,4 +1730,23 @@ input[type=range]::-ms-fill-lower {
 
 .switch.on::before {
     transform: translateX(20px);
+}
+
+.set_blocks_more {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.data_backup_tip {
+    width: calc(50% - 60px);
+    margin: 10px;
+    padding: 20px;
+}
+
+.data_backup {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
 }

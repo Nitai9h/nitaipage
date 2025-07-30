@@ -1,4 +1,35 @@
-$(function () {
+const entry = [{
+  left: [
+    {
+      id: 'fold',
+      style: 'display: none;',
+      icon: [{
+        id: 'icon-fold',
+        class: 'iconfont icon-fold'
+      }]
+    }
+  ],
+  right: [
+    {
+      id: 'menu',
+      style: '',
+      icon: [{
+        id: 'icon-menu',
+        class: 'iconfont icon-settings'
+      }]
+    },
+    {
+      id: 'store',
+      style: '',
+      icon: [{
+        id: 'icon-store',
+        class: 'iconfont icon-store'
+      }]
+    }
+  ]
+}];
+
+function createSearchForm() {
   const $container = $('#search-form-container');
   if (!$container.length) return;
 
@@ -44,4 +75,64 @@ $(function () {
   // 组装整个表单
   $form.append($allSearchDiv, $submitInput);
   $container.append($form, $keywordsDiv, $searchEngineDiv);
+};
+
+function createEntry() {
+  const $entryLeft = $('.entry-left');
+  const $entryRight = $('.entry-right');
+
+  $entryLeft.empty();
+  $entryRight.empty();
+
+  entry[0].left.forEach(item => {
+    const $div = $(`<div class="entry-items" id="${item.id}" style="${item.style}"></div>`);
+    item.icon.forEach(icon => {
+      $div.append(`<i id="${icon.id}" class="${icon.class}"></i>`);
+    });
+    $entryLeft.append($div);
+  });
+
+  entry[0].right.forEach(item => {
+    const $div = $(`<div class="entry-items" id="${item.id}" style="${item.style}"></div>`);
+    item.icon.forEach(icon => {
+      $div.append(`<i id="${icon.id}" class="${icon.class}"></i>`);
+    });
+    $entryRight.append($div);
+  });
+}
+
+function createStore() {
+  const $store = $('.store');
+  if (!$store.length) return;
+
+  // 构建商店页面HTML
+  const storeHtml = `
+    <div id="storePage">
+      <div class="tabs" id="storeTabs">
+        <div class="tab-items active" id="storeManage">管理</div>
+      </div>
+      <div class="store-block">
+        <div class="store-item">
+          <div class="productss" id="manageContent"></div>
+          <div class="content products" id="storeContent"></div>
+        </div>
+        <div class="store-button">
+          <div class="store_check_update">
+            <span class="set_quick_text">更新</span>
+          </div>
+          <div class="store_order_set">
+            <span class="set_quick_text">调序</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  $store.html(storeHtml);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  createSearchForm();
+  createEntry();
+  createStore();
 });

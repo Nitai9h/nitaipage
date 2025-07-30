@@ -4,7 +4,6 @@ const tabs = [
   { name: '搜取', id: '', active: false },
   { name: '捷径', id: 'set-quick-menu', active: false },
   { name: '壁纸', id: '', active: false },
-  { name: '备份', id: '', active: false },
   { name: '更多', id: '', active: false },
   { name: '关于', id: 'set-about-menu', active: false }
 ];
@@ -71,9 +70,24 @@ const wallpaperOptions = [
 ];
 
 const backupOptions = [
-  { id: 'my_data_in', label: '导入' },
-  { id: 'my_data_out', label: '导出' },
-  { id: 'my_data_reset', label: '重置' }
+  {
+    title: '导入',
+    description: '点击可选择配置文件进行恢复',
+    buttonId: 'my_data_in',
+    buttonText: '导入'
+  },
+  {
+    title: '导出',
+    description: '点击将本站配置导出至下载目录',
+    buttonId: 'my_data_out',
+    buttonText: '导出'
+  },
+  {
+    title: '重置',
+    description: '遇到问题可在此处进行重置',
+    buttonId: 'my_data_reset',
+    buttonText: '重置'
+  }
 ];
 
 // 生成设置页面 HTML
@@ -103,7 +117,6 @@ function generateSettings() {
   const searchEngineContent = createSearchEngineContent();
   const shortcutContent = createShortcutContent();
   const wallpaperContent = createWallpaperContent();
-  const backupContent = createBackupContent();
   const moreContent = createMoreContent();
   const aboutContent = createAboutContent();
 
@@ -111,7 +124,6 @@ function generateSettings() {
   contents.appendChild(searchEngineContent);
   contents.appendChild(shortcutContent);
   contents.appendChild(wallpaperContent);
-  contents.appendChild(backupContent);
   contents.appendChild(moreContent);
   contents.appendChild(aboutContent);
 
@@ -132,73 +144,83 @@ function createPanelContent() {
       <div class="panelContent">
         <div class="slider-container">
           <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
-            <div class="tip_new_both"> 
-              <div> 
-                <span class="set_text"><big>时间字体大小&nbsp;</big><span class="desktop"></span></span> 
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
-              </div> 
-              <div> 
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider"> 
-              </div> 
-            </div> 
-            <div class="tip_new_both"> 
-              <div> 
-                <span class="set_text"><big>时间字体粗细&nbsp;</big><span class="desktop"></span></span> 
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
-              </div> 
-              <div> 
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-slider"> 
-              </div> 
-            </div> 
-            <div class="tip_new_both"> 
-              <div> 
-                <span class="set_text"><big>时间字体透明度&nbsp;</big><span class="desktop"></span></span> 
-                <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span> 
-              </div> 
-              <div> 
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-slider"> 
-              </div> 
-            </div> 
-          </div> 
+            <div class="tip_new_both advancedSetting">
+              <div>
+                <span class="set_text"><big>时间字体大小&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+              </div>
+              <div>
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider">
+              </div>
+            </div>
+            <div class="tip_new_both advancedSetting">
+              <div>
+                <span class="set_text"><big>时间字体宽度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+              </div>
+              <div>
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-width-time">
+              </div>
+            </div>
+            <div class="tip_new_both">
+              <div>
+                <span class="set_text"><big>时间字体粗细&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+              </div>
+              <div>
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-slider">
+              </div>
+            </div>
+            <div class="tip_new_both">
+              <div>
+                <span class="set_text"><big>时间字体透明度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
+              </div>
+              <div>
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-slider">
+              </div>
+            </div>
+          </div>
           <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
-            <div class="tip_new_both"> 
-              <div> 
-                <span class="set_text"><big>日期字体大小&nbsp;</big><span class="desktop"></span></span> 
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
-              </div> 
-              <div> 
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date"> 
-              </div> 
-            </div> 
-            <div class="tip_new_both"> 
-              <div> 
-                <span class="set_text"><big>日期字体粗细&nbsp;</big><span class="desktop"></span></span> 
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span> 
-              </div> 
-              <div> 
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-date"> 
-              </div> 
-            </div> 
-            <div class="tip_new_both"> 
-              <div> 
-                <span class="set_text"><big>日期字体透明度&nbsp;</big><span class="desktop"></span></span> 
-                <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span> 
-              </div> 
-              <div> 
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-date"> 
-              </div> 
-            </div> 
+            <div class="tip_new_both advancedSetting">
+              <div>
+                <span class="set_text"><big>日期字体大小&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+              </div>
+              <div>
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date">
+              </div>
+            </div>
+            <div class="tip_new_both advancedSetting">
+              <div>
+                <span class="set_text"><big>日期字体宽度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小 (12.5px)</small></span>
+              </div>
+              <div>
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-width-date">
+              </div>
+            </div>
+            <div class="tip_new_both">
+              <div>
+                <span class="set_text"><big>日期字体粗细&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+              </div>
+              <div>
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-date">
+              </div>
+            </div>
+            <div class="tip_new_both">
+              <div>
+                <span class="set_text"><big>日期字体透明度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
+              </div>
+              <div>
+                <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-date">
+              </div>
+            </div>
           </div>
         </div>
         <div class="switch-container">
-          <div id="dytheme" class="set_tip set_tip_new text_right">
-            <div>
-              <span class="set_text"><big>动态主题(Beta)&nbsp;</big><span class="desktop"></span></span>
-              <span class="set_text" style="color: gray;"><small>根据壁纸切换主题</small></span>
-              </div>
-            <div>
-            <div class="switch" id="toggledytheme"></div>
-          </div>
         </div>
       </div>
     </div>
@@ -472,40 +494,26 @@ function createWallpaperContent() {
   return div;
 }
 
-// 创建数据备份设置
-function createBackupContent() {
-  const div = document.createElement('div');
-  div.className = 'mainConts';
-  div.innerHTML = `
-    <div class="set_blocks">
-      <div class="set_tip">
-        <span class="set_text">点击导出会将本站文件导出至下载目录</span>
-        <span class="set_text">点击导入可选择已备份文件进行恢复</span>
-      </div>
-      <div class="set_button">
-        ${backupOptions.map(option => `
-          <div class="but-ordinary" id="${option.id}">${option.label}</div>
-        `).join('')}
-        <input type="file" id="my_data_file" name="file" style="display: none">
-      </div>
-    </div>
-  `;
-  return div;
-}
-
 // 创建更多设置
 function createMoreContent() {
   const div = document.createElement('div');
   div.className = 'mainConts';
   div.innerHTML = `
-    <div class="set_blocks">
-      <div class="set_tip">
-        <div class="set_tip_more">
-          <div class="entry-pluginSetting">
-            <span class="set_text">进入 NPP 设置</span>
-            <span class="iconfont icon-link"></span>
+    <div class="set_blocks set_blocks_content set_blocks_more">
+      <div class="entry-pluginSettings set_tip">
+        <span class="set_text">Npplication</span>
+        <div id="entryPluginSettings">设置</div>
+      </div>
+      <div class="data_backup">
+        ${backupOptions.map(option => `
+          <div class="data_backup_tip set_tip">
+            <div>
+              <span class="set_text"><big>${option.title}&nbsp;</big><span class="desktop"></span></span>
+              <span class="set_text" style="color: gray;"><small>${option.description}</small></span>
+            </div>
+            <div class="but-ordinary" id="${option.buttonId}">${option.buttonText}</div>
           </div>
-        </div>
+        `).join('')}
       </div>
     </div>
   `;

@@ -6,7 +6,8 @@
     /*书签及设置高度*/
     .mark,
     .set,
-    .store {
+    .store,
+    .plugin_set {
         margin-top: 180px;
     }
 }
@@ -63,6 +64,15 @@
     }
 }
 
+/* 大于512px时*/
+@media (min-width: 512px) {
+
+    #entryPluginSettings,
+    .reloadPluginSettings-btn {
+        width: 14vw;
+    }
+}
+
 /*小于512px时*/
 @media (max-width: 512px) {
 
@@ -78,11 +88,6 @@
     .dayNum {
         min-width: 10.5px;
         max-width: 10.5px;
-    }
-
-    .wd::-webkit-input-placeholder {
-        letter-spacing: 1px;
-        font-size: 0.95rem;
     }
 
     /*搜索引擎*/
@@ -132,12 +137,14 @@
         font-size: x-small;
     }
 
-    .set_blocks_content,
-    .set_blocks_content,
     .aboutContainer,
     .quick-all,
     .quick-alls {
         margin: 5px 5px 0px 5px !important;
+    }
+
+    .set_blocks_content {
+        margin: 5px 5px 5px 5px !important;
     }
 
     .wallpapers_content {
@@ -155,6 +162,21 @@
     .drag-handle {
         margin-bottom: 10px;
     }
+
+    .data_backup_tip {
+        width: 100%;
+    }
+
+    .entry-pluginSettings {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: center !important;
+    }
+
+    #entryPluginSettings,
+    .reloadPluginSettings-btn {
+        margin: 10px 20px 0px 20px;
+    }
 }
 
 /*小于260px时*/
@@ -166,7 +188,8 @@
 
     .set,
     .mark,
-    .store {
+    .store,
+    .plugin_set {
         margin-top: 0px !important;
         max-height: 500px !important;
         height: 500px !important;

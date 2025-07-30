@@ -28,6 +28,7 @@
     <script type="text/javascript" src="./js/main.js"></script>
     <script type="text/javascript" src="./js/set.js"></script>
     <script type="text/javascript" src="./js/settings.js"></script>
+    <script type="text/javascript" src="./js/plugin_settings.js"></script>
     <!-- CoreNpp -->
     <script type="text/javascript" src="./js/coreNpp/themeColor.js"></script>
 </head>
@@ -70,45 +71,17 @@
                 </div>
                 <!-- 入口 -->
                 <div class="entry">
-                    <div class="entry-left">
-                        <div class="entry-items" id="fold" style="display: none;">
-                            <i id="icon-fold" class="iconfont icon-fold"></i>
-                        </div>
-                    </div>
-                    <div class="entry-right">
-                        <div class="entry-items" id="menu">
-                            <i id="icon-menu" class="iconfont icon-settings"></i>
-                        </div>
-                        <div class="entry-items" id="store">
-                            <i id="icon-store" class="iconfont icon-store"></i>
-                        </div>
-                    </div>
+                    <div class="entry-left"></div>
+                    <div class="entry-right"></div>
                 </div>
                 <!-- 商店 -->
                 <div class="store animate__animated animate__zoomIn" style="display: none;">
-                    <div id="storePage">
-                        <div class="tabs" id="storeTabs">
-                            <div class="tab-items active" id="storeManage">管理</div>
-                        </div>
-                        <div class="store-block">
-                            <div class="store-item">
-                                <div class="productss" id="manageContent"></div>
-                                <div class="content products" id="storeContent">
-                                </div>
-                            </div>
-                            <div class="store-button">
-                                <div class="store_check_update">
-                                    <span class="set_quick_text">更新</span>
-                                </div>
-                                <div class="store_order_set">
-                                    <span class="set_quick_text">调序</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!-- 设置 -->
                 <div class="set animate__animated animate__zoomIn" style="display: none;">
+                </div>
+                <!-- NPP 设置 -->
+                <div class="plugin_set animate__animated animate__zoomIn" style="display: none;">
                 </div>
             </div>
         </div>
@@ -119,6 +92,7 @@
             </div>
         </div>
     </section>
+    <script type="text/javascript" src="./js/coreNpp/advancedSettings.js"></script>
 </body>
 
 </html>
