@@ -72,13 +72,13 @@ const wallpaperOptions = [
 const backupOptions = [
   {
     title: '导入',
-    description: '点击可选择配置文件进行恢复',
+    description: '点击选择配置文件进行恢复',
     buttonId: 'my_data_in',
     buttonText: '导入'
   },
   {
     title: '导出',
-    description: '点击将本站配置导出至下载目录',
+    description: '点击下载本站点的配置文件',
     buttonId: 'my_data_out',
     buttonText: '导出'
   },
@@ -165,10 +165,10 @@ function createPanelContent() {
             <div class="tip_new_both">
               <div>
                 <span class="set_text"><big>时间字体粗细&nbsp;</big><span class="desktop"></span></span>
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
               <div>
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-slider">
+                <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-slider">
               </div>
             </div>
             <div class="tip_new_both">
@@ -203,10 +203,10 @@ function createPanelContent() {
             <div class="tip_new_both">
               <div>
                 <span class="set_text"><big>日期字体粗细&nbsp;</big><span class="desktop"></span></span>
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
               <div>
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-thick-date">
+                <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-date">
               </div>
             </div>
             <div class="tip_new_both">
@@ -560,7 +560,7 @@ function createAboutContent() {
           <span class="set_version-text2 desktop" style="font-size:0.7rem">
             All&nbsp;rights&nbsp;reserved.
           </span>
-          <span class="set_version-text2" style="padding-bottom: 1.4%; padding-top: 0.4%">Views&nbsp;code&nbsp;on&nbsp;<a class="text_hover" href="https://github.com/Nitai9h/nitaipage" target="_blank">Github</a>
+          <span class="set_version-text2" style="padding-bottom: 1.4%; padding-top: 0.4%">View&nbsp;code&nbsp;on&nbsp;<a class="text_hover" href="https://github.com/Nitai9h/nitaipage" target="_blank">Github</a>
           </span>
           <span class="set_version-text2 mobile">Powered&nbsp;By&nbsp;<a target="_blank">Snavigation-v1.1</a>&nbsp;
             (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" href="https://www.imsyy.top/" target="_blank">imsyy)</a>

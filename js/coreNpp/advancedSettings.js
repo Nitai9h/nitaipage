@@ -1,15 +1,16 @@
 // ==Npplication==
 // @name    高级设置
 // @id    advancedSettings
-// @version    1.0.0
+// @version    1.0.2
 // @updateUrl    https://nfdb.nitai.us.kg/advancedSettings.js
 // @description    用于开关高级设置
 // @author    Nitai
 // @type    coreNpp
-// @time    body
+// @time    head
 // @icon    https://nitai-images.pages.dev/nitaiPage/advancedSettings.svg
-// @foreced    true
+// @forced    true
 // @setting    true
+// @screen    [`https://nitai-images.pages.dev/nitaiPage/store/advancedSettings_screen.webp`]
 // ==/Npplication==
 
 // 检查高级设置是否启用
@@ -17,7 +18,7 @@ function isAdvancedSettingEnabled() {
     return Cookies.get('advancedSettingEnabled') === 'on';
 }
 
-// 创建设置
+// 创建设置开关
 function createAdvancedSettingSwitch() {
     const pluginId = 'advancedSettings';
     const mainConts = document.querySelector(`.mainConts[data-value="${pluginId}"]`);

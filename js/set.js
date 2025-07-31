@@ -780,19 +780,19 @@ $(document).ready(function () {
             localStorageData[key] = localStorage.getItem(key);
         }
 
-        // indexDB
-        var indexDBData = {};
+        // indexedDB
+        var indexedDBData = {};
         try {
-            indexDBData = await getAllIndexDBData();
+            indexedDBData = await getAllIndexedDBData();
         } catch (e) {
-            console.error('导出 indexDB 数据时出错 (已跳过):', e);
+            console.error('导出 indexedDB 数据时出错 (已跳过):', e);
         }
 
         // 合并数据
         var backupData = {
             cookies: cookies,
             localStorage: localStorageData,
-            indexDB: indexDBData,
+            indexedDB: indexedDBData,
             backupTime: new Date().toISOString()
         };
 
@@ -863,12 +863,12 @@ $(document).ready(function () {
                             }
                         }
 
-                        // 导入indexDB数据
-                        if (mydata.indexDB) {
+                        // 导入indexedDB数据
+                        if (mydata.indexedDB) {
                             try {
-                                await importIndexDBData(mydata.indexDB);
+                                await importIndexedDBData(mydata.indexedDB);
                             } catch (e) {
-                                console.error('导入 indexDB 数据时出错 (已跳过):', e);
+                                console.error('导入 indexedDB 数据时出错 (已跳过):', e);
                             }
                         }
                         instance.hide({

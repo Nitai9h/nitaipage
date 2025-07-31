@@ -132,7 +132,7 @@ async function extractMetadata(url) {
             time: metadata.time.toLowerCase(),
             icon: metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg',
             screen: metadata.screen || '',
-            forceUpdate: metadata.force || 'false', //如果为 false 则以通知形式弹出
+            forceUpdate: metadata.forced || 'false',
             setting: metadata.setting || 'false',
         };
     } catch (error) {
@@ -269,7 +269,7 @@ function getNpp(option) {
             const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
             const metadata = plugins.find(p => p.id === option.id);
             if (!metadata) { return; }
-            // 从 indexDB 获取文件 URL
+            // 从 indexedDB 获取文件 URL
             const request = indexedDB.open(DB_NAME, 1);
             request.onsuccess = (event) => {
                 const db = event.target.result;
@@ -283,7 +283,7 @@ function getNpp(option) {
                         const url = URL.createObjectURL(blob);
                         resolve({ metadata, url });
                     } else {
-                        // indexDB 不存在则只返回 metadata
+                        // indexedDB 不存在则只返回 metadata
                         resolve({ metadata });
                     }
                 };
@@ -385,7 +385,7 @@ async function checkUpdates(id, info = 'show') {
             const versionComparison = compareVersions(localMetadata.version, remoteMetadata.version);
             if (versionComparison < 0) {
                 // 发现新版本
-                if (remoteMetadata.forceUpdate == 'true') {
+                if (localMetadata.forceUpdate == 'true') {
                     // 更新 JS 文件
                     await saveJSFile(remoteMetadata.id, remoteMetadata.updateUrl);
                     // 更新元数据
@@ -537,7 +537,11 @@ async function initCoreNpp() {
                 // localStorage 版本 > 文件版本
                 if (compareVersions(existingPlugin.version, metadata.version) > 0) {
                     // 使用 localStorage 的版本 (更新的版本)
-                    loadTime(metadata.id, metadata.time);
+                    const scriptTag = document.querySelector(`script[src*="${fileName}"]`);
+                    if (scriptTag) {
+                        const { url } = await getNpp({ id: metadata.id });
+                        scriptTag.src = url;
+                    }
                 }
                 // localStorage 没有记录插件
             } else {

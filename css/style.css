@@ -43,7 +43,8 @@ body {
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
-    font-family: 'MiSans', sans-serif;
+    font-family: var(--font-family), sans-serif;
+    font-weight: 400;
 }
 
 *,
@@ -64,12 +65,6 @@ section {
     opacity: 0;
     transition: ease 1.5s;
     top: 0px;
-}
-
-@font-face {
-    font-family: "MiSans";
-    src: url('../font/MiSans-Regular.woff2') format('woff2'),
-        url('../font/MiSans-Regular.subset.ttf') format('truetype');
 }
 
 /*文字闪烁*/

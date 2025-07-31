@@ -10,6 +10,7 @@
 // @icon    https://nitai-images.pages.dev/nitaiPage/themeColor.svg
 // @foreced    true
 // @setting    true
+// @screen    [`https://nitai-images.pages.dev/nitaiPage/store/themeColor_screen.webp`]
 // ==/Npplication==
 
 // 检查动态主题是否启用

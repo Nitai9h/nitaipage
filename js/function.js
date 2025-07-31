@@ -939,6 +939,9 @@ async function init() {
 
     // 加载商店数据
     loadStoreData();
+
+    // 检查更新
+    checkUpdates('all', 'hide');
 }
 
 // 或取信息 JSON
@@ -955,8 +958,8 @@ async function getInfo() {
     }
 }
 
-// indexDB 导出
-function getAllIndexDBData() {
+// indexedDB 导出
+function getAllIndexedDBData() {
     return new Promise((resolve, reject) => {
         if (!window.indexedDB) {
             resolve({});
@@ -1029,23 +1032,23 @@ function getAllIndexDBData() {
     });
 }
 
-// indexDB 导入
-function importIndexDBData(indexDBData) {
+// indexedDB 导入
+function importIndexedDBData(indexedDBData) {
     return new Promise((resolve, reject) => {
-        if (!window.indexedDB || !indexDBData.databases) {
+        if (!window.indexedDB || !indexedDBData.databases) {
             resolve();
             return;
         }
 
         let completed = 0;
-        const totalDatabases = indexDBData.databases.length;
+        const totalDatabases = indexedDBData.databases.length;
 
         if (totalDatabases === 0) {
             resolve();
             return;
         }
 
-        indexDBData.databases.forEach(dbInfo => {
+        indexedDBData.databases.forEach(dbInfo => {
             const dbName = dbInfo.name;
             const dbData = dbInfo.data;
 
@@ -1186,13 +1189,13 @@ function initSliderControls() {
     // 从Cookie加载设置或使用默认值
     const timeSettings = {
         size: parseInt(Cookies.get('timeFontSize')) || 0,
-        weight: parseInt(Cookies.get('timeFontWeight')) || 0,
+        weight: parseInt(Cookies.get('timeFontWeight')) || 50,
         opacity: parseInt(Cookies.get('timeFontOpacity')) || 100,
         width: parseInt(Cookies.get('timeFontWidth')) || 0
     };
     const dateSettings = {
         size: parseInt(Cookies.get('dateFontSize')) || 0,
-        weight: parseInt(Cookies.get('dateFontWeight')) || 0,
+        weight: parseInt(Cookies.get('dateFontWeight')) || 50,
         opacity: parseInt(Cookies.get('dateFontOpacity')) || 100,
         width: parseInt(Cookies.get('dateFontWidth')) || 0
     };
