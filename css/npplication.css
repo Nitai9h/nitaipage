@@ -72,6 +72,60 @@
     cursor: grabbing;
 }
 
+#storeContent .plugin-item {
+    cursor: pointer;
+}
+
+/* 依赖项 */
+.dependencies-list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.plugin-item.dependency-item {
+    padding: 10px;
+    background-color: var(--main-background-color);
+    cursor: pointer;
+}
+
+.plugin-item.dependency-item:hover {
+    background-color: var(--main-background-hover-color);
+}
+
+.dependency-item.satisfied .status {
+    color: #4CAF50;
+}
+
+.dependency-item.warning .status {
+    color: #FF9800;
+}
+
+.dependency-item.error .status {
+    color: #F44336;
+}
+
+.dependency-item.failed .status {
+    color: #FFC107;
+}
+
+.plugin-item.dependency-item.satisfied {
+    border: 1px solid #4CAF50;
+}
+
+.plugin-item.dependency-item.warning {
+    border: 1px solid #FF9800;
+}
+
+.plugin-item.dependency-item.error {
+    border: 1px solid #F44336;
+}
+
+.plugin-item.dependency-item.failed {
+    border: 1px solid #FFC107;
+}
+
 /* 插件图标 */
 .plugin-icon,
 .plugin_icon img {
@@ -376,24 +430,6 @@
 
 .plugin_item.coreNpp .plugin_actions .uninstall_plugin .iconfont {
     color: var(--border-bottom-color-hover)
-}
-
-/* 排序对话框 */
-.order-dialog {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    margin: 0 10px;
-}
-
-.order-dialog .dialog-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: auto;
-    height: 100%;
-    margin: 10px 0;
 }
 
 /* 页面布局 */

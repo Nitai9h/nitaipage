@@ -134,10 +134,210 @@ async function extractMetadata(url) {
             screen: metadata.screen || '',
             forceUpdate: metadata.forced || 'false',
             setting: metadata.setting || 'false',
+            dependencies: metadata.dependencies || '',
         };
     } catch (error) {
         console.error(error);
         return;
+    }
+}
+
+/**
+ * 解析依赖项字符串为对象
+ * @param {string} dependenciesStr - 依赖项字符串
+ * @returns {Object} 依赖项对象; 键为 URL,值为版本要求
+ */
+function parseDependencies(dependenciesStr) {
+    try {
+        // 移除前后的括号和空格
+        const cleanStr = dependenciesStr.trim().replace(/^\[|\]$/g, '');
+        if (!cleanStr) {
+            return {};
+        }
+
+        // 分割多个依赖项
+        const depEntries = cleanStr.split(',').map(entry => entry.trim());
+        const dependencies = {};
+
+        // 解析每个依赖项
+        depEntries.forEach(entry => {
+            // 标准格式 [`url`:`version`]
+            let match = entry.match(/`\s*([^`]+?)\s*`\s*:\s*`\s*([^`]+?)\s*`/);
+            let depUrl = null;
+            let version = 'Latest'; // 默认Latest
+
+            // 标准格式
+            if (match && match.length >= 3) {
+                depUrl = match[1].trim().replace(/`/g, '');
+                version = match[2].trim().replace(/`/g, '');
+            } else {
+                // [`URL`]
+                match = entry.match(/`\s*([^`]+?)\s*`/);
+                if (match && match.length >= 2) {
+                    depUrl = match[1].trim().replace(/`/g, '');
+                } else {
+                    console.warn('无法解析的依赖项:' + entry);
+                    return;
+                }
+            }
+
+            dependencies[depUrl] = version;
+        });
+        return dependencies;
+    } catch (error) {
+        console.error('依赖项解析失败:' + error);
+        return {};
+    }
+}
+
+/**
+ * 检查依赖项状态
+ * @param {Object} dependencies - 依赖项对象; 键为 URL,值为版本要求
+ * @returns {Promise<{status: boolean, details: Object}>} - 对象; 包含整体状态和每个依赖项状态
+ */
+async function checkDependencies(dependencies) {
+
+    // 无依赖项
+    if (!dependencies || Object.keys(dependencies).length === 0) {
+        return { status: true, details: {} };
+    }
+
+    try {
+        const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+
+        const details = {};
+        let allDependenciesMet = true;
+
+        // 检查每个依赖项
+        for (const [depUrl, requiredVersion] of Object.entries(dependencies)) {
+
+            try {
+                // 获取依赖项的元数据
+                const depMetadata = await extractMetadata(depUrl);
+                if (!depMetadata || !depMetadata.id) {
+                    console.error('无法获取依赖项有效元数据:' + depUrl);
+                    details[depUrl] = { status: 'failed', message: '获取依赖项信息失败' };
+                    allDependenciesMet = false;
+                    continue;
+                }
+
+                // 检查依赖项是否已安装
+                const installedPlugin = plugins.find(p => p.id === depMetadata.id);
+                if (!installedPlugin) {
+                    details[depUrl] = {
+                        status: 'not_installed',
+                        message: '未安装',
+                        requiredVersion: requiredVersion,
+                        metadata: depMetadata
+                    };
+                    allDependenciesMet = false;
+                    continue;
+                }
+
+                // 检查版本
+                const versionCompare = compareVersions(installedPlugin.version, requiredVersion);
+
+                if (versionCompare < 0) {
+                    details[depUrl] = {
+                        status: 'version_mismatch',
+                        message: '需安装更新版本',
+                        installedVersion: installedPlugin.version,
+                        requiredVersion: requiredVersion,
+                        metadata: depMetadata
+                    };
+                    allDependenciesMet = false;
+                } else {
+                    details[depUrl] = {
+                        status: 'satisfied',
+                        message: '已安装',
+                        installedVersion: installedPlugin.version,
+                        requiredVersion: requiredVersion,
+                        metadata: depMetadata
+                    };
+                }
+            } catch (error) {
+                console.error('检查依赖项失败:' + depUrl, error);
+                details[depUrl] = { status: 'failed', message: '检查依赖项时出错' };
+                allDependenciesMet = false;
+            }
+        }
+
+        return { status: allDependenciesMet, details: details };
+    } catch (error) {
+        console.error('依赖项检查过程中发生错误:', error);
+        return { status: false, details: {} };
+    }
+}
+
+/**
+ * 加载依赖项
+ * @param {HTMLElement} container - 需要依赖项的插件容器
+ * @param {Object} dependencies - 依赖项对象
+ * @param {string} source - 插件来源
+ */
+async function renderDependencies(container, dependencies, source = '') {
+
+    if (!dependencies || Object.keys(dependencies).length === 0) {
+        container.innerHTML = '<p>无需依赖项</p>';
+        return { status: true };
+    }
+
+    try {
+        const dependencyCheckResult = await checkDependencies(dependencies);
+        const details = dependencyCheckResult.details;
+
+        let html = '<div class="dependencies-list">';
+        if (Object.keys(details).length === 0) {
+            html += '<p>无需依赖项</p>';
+        } else {
+            for (const [depUrl, depDetails] of Object.entries(details)) {
+                const metadata = depDetails.metadata || {};
+                const statusClass =
+                    depDetails.status === 'satisfied' ? 'satisfied' :
+                        depDetails.status === 'version_mismatch' ? 'warning' :
+                            depDetails.status === 'not_installed' ? 'error' : 'failed';
+
+                html += `
+                    <div class="plugin-item dependency-item ${statusClass}" data-url="${depUrl}">
+                        <img src="${metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg'}" alt="${metadata.name || '依赖项'}" class="plugin-icon">
+                        <div class="plugin-info">
+                            <strong>${metadata.name || depUrl}</strong>
+                            <p>${metadata.description || '无描述'}</p>
+                            <p>所需版本: ${depDetails.requiredVersion || 'Latest'}
+                            ${depDetails.installedVersion ? `| 已安装版本: ${depDetails.installedVersion}` : ''}</p>
+                            <p class="status">${depDetails.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        html += '</div>';
+        container.innerHTML = html;
+
+        // 依赖点击
+        container.querySelectorAll('.dependency-item').forEach(item => {
+            item.addEventListener('click', async () => {
+                const depUrl = item.dataset.url;
+                try {
+                    const metadata = await extractMetadata(depUrl);
+                    if (metadata) {
+                        showPluginDetails({ url: depUrl, ...metadata, source: source });
+                    }
+                } catch (error) {
+                    console.error('打开依赖项详情失败:' + error);
+                    iziToast.show({
+                        timeout: 3000,
+                        message: '读取依赖项时出错'
+                    });
+                }
+            });
+        });
+
+        return dependencyCheckResult;
+    } catch (error) {
+        console.error('渲染依赖项失败:', error);
+        container.innerHTML = '<p>加载失败,请尝试重载</p>';
+        return { status: false, details: {} };
     }
 }
 
@@ -799,6 +999,15 @@ async function installNpplication(url) {
             if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
             return;
         }
+
+        // 检查依赖项
+        const dependencies = parseDependencies(metadata.dependencies || '');
+        const dependencyCheckResult = await checkDependencies(dependencies);
+
+        if (!dependencyCheckResult.status) {
+            if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
+            return;
+        }
         // 来源验证
         if (metadata.type === 'coreNpp' && !url.startsWith(
             'https://nfdb.nitai.us.kg'
@@ -1135,7 +1344,11 @@ async function renderPlugins(pluginsArray) {
     pluginsArray.forEach(async (plugin) => {
         try {
             const metadata = await extractMetadata(plugin.url);
-            const pluginWithMetadata = { ...plugin, ...metadata };
+            const pluginWithMetadata = {
+                ...plugin,
+                ...(metadata || {}),
+                dependencies: (metadata && metadata.dependencies) || ''
+            };
             const cleanUrl = (url) => url.replace(/`/g, '').trim();
 
             const pluginItem = document.createElement('div');
@@ -1157,6 +1370,8 @@ async function renderPlugins(pluginsArray) {
 }
 
 function showPluginDetails(pluginWithMetadata) {
+    showContain_plugin();
+
     // 清理数据中的多余引号和空格
     const cleanUrl = (url) => url.replace(/`/g, '').trim();
 
@@ -1178,6 +1393,8 @@ function showPluginDetails(pluginWithMetadata) {
                 <div class="plugin-detail-body">
                     <h3>描述</h3>
                     <p>${pluginWithMetadata.description}</p>
+                    <h3>依赖</h3>
+                    <div id="dependencies-container"></div>
                     <h3>截图</h3>
                     <div class="screenshots">
                         ${(() => {
@@ -1203,24 +1420,55 @@ function showPluginDetails(pluginWithMetadata) {
             <div class="dialog-install" data-plugin-url="${cleanUrl(pluginWithMetadata.url)}">安装</div>
         `;
 
-    btn.querySelector('.dialog-cancel').addEventListener('click', showContain_plugin);
-    btn.querySelector('.dialog-install').addEventListener('click', function () {
-        iziToast.show({
-            id: 'installToast',
-            message: '开始安装...'
-        });
-        installNpplication(this.dataset.pluginUrl);
-    });
+    // 依赖项详细页
+    async function showDependencyDetailsDialog() {
+        const dependencies = parseDependencies(pluginWithMetadata.dependencies || '');
+        const dependenciesContainer = dialog.querySelector('#dependencies-container');
+        const dependencyCheckResult = await renderDependencies(dependenciesContainer, dependencies, pluginWithMetadata.source || '');
 
-    $('#storeTabs').css('display', 'none');
-    $('.store-block').css('display', 'none');
+        // 按钮
+        const btn = document.createElement('div');
+        btn.className = 'dialog-btn';
+
+        // 检查插件状态
+        const canInstall = dependencyCheckResult.status;
+
+        btn.innerHTML = `
+                <div class="dialog-cancel">返回</div>
+                ${canInstall ? `<div class="dialog-install" data-plugin-url="${cleanUrl(pluginWithMetadata.url)}">安装</div>` : ''}
+            `;
+
+        btn.querySelector('.dialog-cancel').addEventListener('click', showContain_plugin);
+
+        if (canInstall) {
+            btn.querySelector('.dialog-install').addEventListener('click', function () {
+                iziToast.show({
+                    id: 'installToast',
+                    message: '开始安装...'
+                });
+                installNpplication(this.dataset.pluginUrl);
+            });
+        }
+
+        dialogContain.appendChild(dialog);
+        dialogContain.appendChild(btn);
+        page.appendChild(dialogContain);
+    }
 
     const dialogContain = document.createElement('div');
     dialogContain.className = 'dialog-container';
 
-    dialogContain.appendChild(dialog);
-    dialogContain.appendChild(btn);
-    page.appendChild(dialogContain);
+    // 加载依赖项详细页
+    showDependencyDetailsDialog().catch(error => {
+        iziToast.show({
+            timeout: 3000,
+            message: '加载插件时出错'
+        });
+        showContain_plugin();
+    });
+
+    $('#storeTabs').css('display', 'none');
+    $('.store-block').css('display', 'none');
 }
 
 var npp = npp || {}; // 定义一个命名空间
