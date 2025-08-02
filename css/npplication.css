@@ -495,3 +495,137 @@
     flex-direction: column;
     align-items: center;
 }
+
+.store .store-item .content {
+    display: none;
+}
+
+/* 源管理样式 */
+.store_sources_management {
+    border-radius: 8px;
+    background: var(--main-background-color);
+    padding: 10px;
+    --border-color: rgba(255, 255, 255, 0.1);
+    margin-right: 5px;
+}
+
+.store_sources_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.store_sources_header h3 {
+    color: var(--main-text-color);
+    margin: 0;
+}
+
+.toggle_store_sources {
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    border: none;
+    border-radius: 4px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.toggle_store_sources:hover {
+    background: var(--main-button-hover-color);
+    transform: scale(1.05);
+}
+
+.toggle_store_sources:active {
+    transform: scale(0.95);
+}
+
+.store_sources_content {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    margin-top: 5px;
+}
+
+.store_source_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: var(--main-background-color);
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.store_source_item:hover {
+    background: var(--main-background-hover-color);
+}
+
+.store_source_url {
+    flex: 1;
+    overflow-x: auto;
+    word-break: break-all;
+    color: var(--main-text-color);
+    padding: 5px;
+}
+
+.delete_store_source {
+    border: none;
+    border-radius: 4px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    border-radius: 8px;
+}
+
+.delete_store_source:hover {
+    background: var(--main-button-hover-color);
+    transform: scale(1.05);
+}
+
+.delete_store_source:active {
+    transform: scale(0.95);
+}
+
+.add_store_source {
+    display: flex;
+    margin-top: 15px;
+}
+
+#new_store_source {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--main-border-color);
+    border-radius: 8px 0 0 8px;
+    background: var(--main-background-color);
+    color: var(--main-text-color);
+}
+
+#add_store_source_btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#add_store_source_btn:hover {
+    background: var(--main-button-hover-color);
+}
+
+#add_store_source_btn:active {
+    background: var(--main-button-active-color);
+}

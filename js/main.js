@@ -7,7 +7,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'Beta-v2.0.0.250801',
+    VERSION: 'Beta-v2.0.0.250802',
 
     // 格式化 版本 信息
     formatUpdates(updates) {

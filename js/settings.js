@@ -146,7 +146,7 @@ function createPanelContent() {
           <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
             <div class="tip_new_both advancedSetting">
               <div>
-                <span class="set_text"><big>时间字体大小&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时间大小&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
               <div>
@@ -155,7 +155,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both advancedSetting">
               <div>
-                <span class="set_text"><big>时间字体宽度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时间宽度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
               <div>
@@ -164,7 +164,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both">
               <div>
-                <span class="set_text"><big>时间字体粗细&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时间粗细&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
               <div>
@@ -173,7 +173,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both">
               <div>
-                <span class="set_text"><big>时间字体透明度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时间透明度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
               </div>
               <div>
@@ -184,7 +184,7 @@ function createPanelContent() {
           <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
             <div class="tip_new_both advancedSetting">
               <div>
-                <span class="set_text"><big>日期字体大小&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>日期大小&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
               <div>
@@ -193,7 +193,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both advancedSetting">
               <div>
-                <span class="set_text"><big>日期字体宽度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>日期宽度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小 (12.5px)</small></span>
               </div>
               <div>
@@ -202,7 +202,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both">
               <div>
-                <span class="set_text"><big>日期字体粗细&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>日期粗细&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
               <div>
@@ -211,7 +211,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both">
               <div>
-                <span class="set_text"><big>日期字体透明度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>日期透明度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
               </div>
               <div>
@@ -560,8 +560,6 @@ function createAboutContent() {
           <span class="set_version-text2 desktop" style="font-size:0.7rem">
             All&nbsp;rights&nbsp;reserved.
           </span>
-          <span class="set_version-text2" style="padding-bottom: 1.4%; padding-top: 0.4%">View&nbsp;code&nbsp;on&nbsp;<a class="text_hover" href="https://github.com/Nitai9h/nitaipage" target="_blank">Github</a>
-          </span>
           <span class="set_version-text2 mobile">Powered&nbsp;By&nbsp;<a target="_blank">Snavigation-v1.1</a>&nbsp;
             (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" href="https://www.imsyy.top/" target="_blank">imsyy)</a>
           </span>
@@ -571,6 +569,12 @@ function createAboutContent() {
             (Open&nbsp;Source&nbsp;By&nbsp;<a class="text_hover" href="https://www.imsyy.top/" target="_blank">imsyy)</a>
           </span>
         </div>
+      </div>
+      <div class="set_tip_about">
+        <a class="text_hover about-link" href="https://github.com/Nitai9h/nitaipage" target="_blank" class="about-link">
+          <span class="set_text">Github</span>
+          <span class="iconfont icon-link"></span>
+        </a>
       </div>
     </div>
   </div>

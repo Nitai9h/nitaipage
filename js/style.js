@@ -146,12 +146,12 @@ frameStyle.zTop = function (id) {
 // 普通遮罩
 // 创建一个默认隐藏的遮罩
 frameStyle.blackCover = function (id, opacityParam, colorParam) {
-    frameStyle.zTop(id);
-
     let cover = document.getElementById('blackCover');
     if (cover) {
         console.warn('There is already a mask, wait for it to be destroyed before creating it again');
         return;
+    } else {
+        frameStyle.zTop(id);
     }
 
     // 透明度
@@ -194,12 +194,12 @@ frameStyle.blackCover = function (id, opacityParam, colorParam) {
 // 高斯模糊遮罩
 // 创建一个默认隐藏的遮罩
 frameStyle.guassianCover = function (id, blurParam, opacityParam) {
-    frameStyle.zTop(id);
-
     let cover = document.getElementById('guassianCover');
     if (cover) {
         console.warn('There is already a Gaussian mask, wait for it to be destroyed before creating it again');
         return;
+    } else {
+        frameStyle.zTop(id);
     }
 
     // 创建遮罩

@@ -1074,8 +1074,37 @@ async function installNpplication(url) {
 async function loadPluginManagementPage() {
     try {
         const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
-        let html = `<div class='plugin_management'>
-                    <h3>Npplication 列表</h3>
+        // 获取商店源
+        let storeSources = JSON.parse(localStorage.getItem('storeSources')) || storeSourcesDefault;
+
+        let html = `<div class='store_sources_management'>
+                    <div class='store_sources_header'>
+                        <h3>商店源管理</h3>
+                        <button class='toggle_store_sources'>
+                            <i class='iconfont icon-folding'></i>
+                        </button>
+                    </div>
+                    <div class='store_sources_content'>
+                        <div class='store_sources_list'>
+                            ${storeSources.map(source => `
+                                <div class='store_source_item' data-url='${source}'>
+                                    <div class='store_source_url'>${source}</div>
+                                    <div class='store_source_buttons'>
+                                        <button class='delete_store_source' data-url='${source}'>
+                                            <i class='iconfont icon-delete'></i>
+                                        </button>
+                                    </div>
+                                </div>`).join('')}
+                        </div>
+                        <div class='add_store_source'>
+                            <input type='text' id='new_store_source' placeholder='添加新的商店源 URL'>
+                            <button id='add_store_source_btn'>添加</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='plugin_management'>
+                    <h3>Npplication 列表</h3> 
                     <div class='plugin_list_table'>`;
 
         // 生成插件列表
@@ -1100,8 +1129,7 @@ async function loadPluginManagementPage() {
                     <i class="iconfont icon-delete"></i>
                     </button>
                 </div>
-            </div>
-        `;
+            </div>`;
         }
 
         html += `</div></div>`;
@@ -1114,6 +1142,95 @@ async function loadPluginManagementPage() {
                 checkStoreContent('manageContent', plugins.length === 0);
             });
         }
+
+        // 折叠/展开
+        const toggleBtn = document.querySelector('.toggle_store_sources');
+        const content = document.querySelector('.store_sources_content');
+        if (toggleBtn && content) {
+            // 默认折叠
+            content.style.maxHeight = null;
+            toggleBtn.innerHTML = '<i class="iconfont icon-folding"></i>';
+            toggleBtn.addEventListener('click', () => {
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    toggleBtn.innerHTML = '<i class="iconfont icon-folding"></i>';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    toggleBtn.innerHTML = '<i class="iconfont icon-unfolding"></i>';
+                }
+            });
+        }
+
+        // 添加源
+        const addBtn = document.getElementById('add_store_source_btn');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                const newSourceInput = document.getElementById('new_store_source');
+                if (newSourceInput && newSourceInput.value.trim()) {
+                    const newSource = newSourceInput.value.trim();
+                    // 验证 URL
+                    const urlRegex = /^https?:\/\/[^\s/$.?#].[^\s]*$/;
+                    if (!urlRegex.test(newSource)) {
+                        iziToast.show({
+                            timeout: 2000,
+                            message: 'URL 无效'
+                        });
+                        return;
+                    }
+                    // 获取当前商店源
+                    let storeSources = JSON.parse(localStorage.getItem('storeSources')) || storeSourcesDefault;
+                    // 检查是否重复
+                    if (!storeSources.includes(newSource)) {
+                        storeSources.push(newSource);
+                        // 更新存储
+                        localStorage.setItem('storeSources', JSON.stringify(storeSources));
+                        // 重载
+                        loadPluginManagementPage();
+                        iziToast.show({
+                            timeout: 2000,
+                            message: '添加成功'
+                        });
+                    } else {
+                        iziToast.show({
+                            timeout: 2000,
+                            message: '源已存在'
+                        });
+                    }
+                    // 清空输入框
+                    newSourceInput.value = '';
+                } else {
+                    iziToast.show({
+                        timeout: 2000,
+                        message: 'URL 无效'
+                    });
+                }
+            });
+        }
+
+        // 删除
+        document.querySelectorAll('.delete_store_source').forEach(button => {
+            button.addEventListener('click', () => {
+                const url = button.getAttribute('data-url');
+                // 获取当前商店源
+                let storeSources = JSON.parse(localStorage.getItem('storeSources')) || storeSourcesDefault;
+                const newStoreSources = storeSources.filter(source => source !== url);
+                if (newStoreSources.length === 0) {
+                    iziToast.show({
+                        timeout: 2000,
+                        message: '至少保留一个商店源'
+                    });
+                    return;
+                }
+                // 更新存储
+                localStorage.setItem('storeSources', JSON.stringify(newStoreSources));
+                // 重载
+                loadPluginManagementPage();
+                iziToast.show({
+                    timeout: 2000,
+                    message: '删除成功'
+                });
+            });
+        });
 
         // 绑定更新按钮事件
         document.querySelectorAll('.update_plugin').forEach(button => {
@@ -1253,10 +1370,17 @@ function checkStoreContent(containerId = 'storeContent', isEmpty = false) {
     }
 }
 
-// 商店页面功能
-const storeSources = [
+// 商店源
+const storeSourcesDefault = [
     'https://nfdb.nitai.us.kg/nitaiPage/store'
 ];
+
+// 加载源
+let storeSources = JSON.parse(localStorage.getItem('storeSources'));
+if (!storeSources || !Array.isArray(storeSources) || storeSources.length === 0) {
+    storeSources = storeSourcesDefault;
+    localStorage.setItem('storeSources', JSON.stringify(storeSources));
+}
 
 async function loadStoreData() {
     try {

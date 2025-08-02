@@ -1305,3 +1305,57 @@ function updateDateStyle(size, weight, opacity, width) {
     document.documentElement.style.setProperty('--date-opacity', opacityValue);
     document.documentElement.style.setProperty('--date-width', `${fontWidth}px`);
 }
+
+// 显示通知弹窗
+// 计数器
+let announcementCounter = 0;
+function showAnnouncement(title, content, buttonText = '关闭') {
+    // 唯一 ID
+    announcementCounter++;
+    const uniqueId = 'announcement_container_' + announcementCounter;
+
+    // 创建弹窗容器
+    const announcementContainer = document.createElement('div');
+    announcementContainer.className = 'announcement_container';
+    announcementContainer.id = uniqueId;
+
+    // 标题
+    const announcementTitle = document.createElement('h2');
+    announcementTitle.textContent = title || '通知';
+    announcementContainer.appendChild(announcementTitle);
+
+    // 内容
+    const announcementContent = document.createElement('div');
+    announcementContent.className = 'announcement_content';
+    announcementContent.textContent = content || '暂无内容';
+    announcementContainer.appendChild(announcementContent);
+
+    // 关闭
+    const closeButton = document.createElement('button');
+    closeButton.textContent = buttonText || '关闭';
+    closeButton.addEventListener('click', function () {
+        announcementCounter--;
+        $('#' + uniqueId).remove();
+        setTimeout(() => {
+            $('#' + uniqueId).remove();
+        }, 300);
+        if (announcementCounter == '0') {
+            frameStyle.fadeOut('guassianCover', 300, 0);
+            frameStyle.fadeOut('blackCover', 300, 0);
+            $('#bg').css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 1.2s" });
+            setTimeout(() => {
+                $('#guassianCover').remove();
+                $('#blackCover').remove();
+            }, 300);
+        }
+    });
+    announcementContainer.appendChild(closeButton);
+
+    document.body.appendChild(announcementContainer);
+
+    frameStyle.guassianCover(uniqueId, 10, 0);
+    frameStyle.blackCover(uniqueId);
+    frameStyle.fadeIn('guassianCover', 300, 0);
+    frameStyle.fadeIn('blackCover', 300, 0);
+    $('#bg').css({ transform: 'scale(1.08)', filter: "var(--main-box-gauss)", transition: "ease 0.3s" });
+}
