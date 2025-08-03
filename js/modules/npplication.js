@@ -407,6 +407,7 @@ function saveJSFile(id, url) {
         if (!id || !url) {
             console.error('缺少必要参数: ' + (id ? '' : 'id ') + (url ? '' : 'url'));
             reject();
+            return;
         }
 
         fetch(url, { cache: 'no-store' })
@@ -414,40 +415,37 @@ function saveJSFile(id, url) {
                 if (!response.ok) {
                     console.error(`HTTP错误: ${response.status} ${response.statusText}`);
                     reject();
+                    return;
                 }
-                return response.blob();
+                return response.text();
             })
-            .then(blob => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    // 数据库
-                    const request = indexedDB.open(DB_NAME, 1);
+            .then(content => {
+                // 数据库
+                const request = indexedDB.open(DB_NAME, 1);
 
-                    request.onsuccess = (event) => {
-                        const db = event.target.result;
-                        const transaction = db.transaction(NPP_STORE, 'readwrite');
-                        const store = transaction.objectStore(NPP_STORE);
+                request.onsuccess = (event) => {
+                    const db = event.target.result;
+                    const transaction = db.transaction(NPP_STORE, 'readwrite');
+                    const store = transaction.objectStore(NPP_STORE);
 
-                        // 存储文件
-                        const putRequest = store.put({ id, content: reader.result });
+                    // 存储文件
+                    const putRequest = store.put({ id, content });
 
-                        putRequest.onsuccess = () => {
-                            console.log('下载成功');
-                            resolve();
-                        };
+                    putRequest.onsuccess = () => {
+                        console.log('下载成功');
+                        resolve();
+                    };
 
-                        putRequest.onerror = () => {
-                            console.error('下载失败');
-                            reject();
-                        };
+                    putRequest.onerror = () => {
+                        console.error('下载失败');
+                        reject();
                     };
                 };
 
-                reader.onerror = () => {
-                    console.error('文件读取失败');
+                request.onerror = () => {
+                    console.error('文件读取失败失败');
                     reject();
-                }
-                reader.readAsArrayBuffer(blob);
+                };
             })
             .catch(error => {
                 console.error('下载失败:', error);
@@ -468,8 +466,12 @@ function getNpp(option) {
             // 从 localStorage 获取元数据
             const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
             const metadata = plugins.find(p => p.id === option.id);
-            if (!metadata) { return; }
-            // 从 indexedDB 获取文件 URL
+            if (!metadata) {
+                console.error('未找到元数据: ' + option.id);
+                reject('未找到元数据');
+                return;
+            }
+            // 从 indexedDB 获取文件内容
             const request = indexedDB.open(DB_NAME, 1);
             request.onsuccess = (event) => {
                 const db = event.target.result;
@@ -484,13 +486,15 @@ function getNpp(option) {
                         resolve({ metadata, url });
                     } else {
                         // indexedDB 不存在则只返回 metadata
+                        // coreNpp 可忽略此提示
+                        console.warn('在 indexedDB 内未找到内容' + option.id);
                         resolve({ metadata });
                     }
                 };
             };
             request.onerror = (event) => {
                 console.error('数据库打开失败: ' + event.target.error.message);
-                reject();
+                reject('数据库打开失败');
             };
         } else if (option.url) {
             try {
@@ -714,6 +718,7 @@ async function initCoreNpp() {
     // 指定文件(指定完请添加链接到HTML内，否则不加载)
     // 只有在这里指定的文件才会加载元数据
     // 否则不会出现在商店管理的列表内
+    // coreNpp 会触发 (npplication.js:490) 在 indexedDB 内未找到内容的提示，可以忽略
     const coreNppFiles = [
         'themeColor.js',
         'advancedSettings.js'
@@ -1097,8 +1102,10 @@ async function loadPluginManagementPage() {
                                 </div>`).join('')}
                         </div>
                         <div class='add_store_source'>
-                            <input type='text' id='new_store_source' placeholder='添加新的商店源 URL'>
-                            <button id='add_store_source_btn'>添加</button>
+                            <input type='text' id='new_store_source' placeholder='输入商店源...'>
+                            <button id='add_store_source_btn'>
+                                <i class='iconfont icon-add'></i>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -390,34 +390,7 @@ function blurWd() {
 
 // 搜索建议提示
 function keywordReminder() {
-    var keyword = $(".wd").val();
-    if (keyword != "") {
-        $.ajax({
-            url: 'https://suggestion.baidu.com/su?wd=' + keyword,
-            dataType: 'jsonp',
-            jsonp: 'cb', //回调函数的参数名(键值)key
-            success: function (data) {
-                //获取宽度
-                $("#keywords").css("width", $('.sou').width());
-                $("#keywords").empty().show();
-                $.each(data.s, function (i, val) {
-                    $('#keywords').append(`<div class="keyword" data-id="${i + 1}"><i class='iconfont icon-sousuo'></i>${val}</div>`);
-                });
-                $("#keywords").attr("data-length", data.s["length"]);
-                $(".keyword").click(function () {
-                    $(".wd").val($(this).text());
-                    $("#search-submit").click();
-                });
-            },
-            error: function () {
-                $("#keywords").empty().show();
-                $("#keywords").hide();
-            }
-        })
-    } else {
-        $("#keywords").empty().show();
-        $("#keywords").hide();
-    }
+    return;
 }
 
 // 搜索框数据加载

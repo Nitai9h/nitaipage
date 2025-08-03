@@ -413,6 +413,10 @@ img.error {
     -ms-animation: fade 0.5s;
 }
 
+#search-form-container {
+    transform: translateY(0%);
+}
+
 .wd::-webkit-input-placeholder {
     letter-spacing: 2px;
     font-size: 1.05rem;
@@ -572,9 +576,9 @@ img.error {
 
 /*搜索建议*/
 #keywords {
-    position: absolute;
+    position: fixed;
     width: 100%;
-    top: 44.5%;
+    top: -30%;
     font-size: small;
     color: var(--main-text-color);
     background-color: var(--main-background-color);
@@ -1725,6 +1729,14 @@ input[type=range]::-ms-fill-lower {
 
 .switch.on::before {
     transform: translateX(20px);
+}
+
+.switch.disabled {
+    background-color: var(--main-background-color);
+}
+
+.switch.disabled::before {
+    background-color: var(--main-button-color);
 }
 
 .set_blocks_more {

@@ -25,6 +25,8 @@ $(document).ready(function () {
         // 选择搜索引擎点击
         if ($(".search-engine").is(":hidden") && $(".se").is(e.target) || $(".search-engine").is(":hidden") && $("#icon-se").is(e.target)) {
             if ($(".se").is(e.target) || $("#icon-se").is(e.target)) {
+                // 隐藏搜索建议
+                $("#keywords").hide();
                 //获取宽度
                 $(".search-engine").css("width", $('.sou').width() - 30);
                 //出现动画

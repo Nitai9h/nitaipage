@@ -378,7 +378,7 @@ function loadUpdateLog() {
     // 点击其他区域关闭下拉框
     document.addEventListener('click', function () {
       $('#update_logs').css('filter', 'blur(0px)');
-      $('.icon-folding').attr('class', 'iconfont icon-unfolding');
+      $('#versionDropdownBtn .icon-folding').attr('class', 'iconfont icon-unfolding');
       document.getElementById('versionDropdownContent').classList.remove('show');
     });
   }).catch(error => {
@@ -514,6 +514,7 @@ function createMoreContent() {
             <div class="but-ordinary" id="${option.buttonId}">${option.buttonText}</div>
           </div>
         `).join('')}
+        <input type="file" id="my_data_file" style="display: none;" accept=".zip">
       </div>
     </div>
   `;
