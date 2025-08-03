@@ -242,7 +242,7 @@ function createSearchEngineContent() {
                 <div class="se_list_num">
                   ${engine.isDefault ? '<i class="iconfont icon-home"></i>' : engine.index}
                 </div>
-                <div class="se_list_name">${engine.name}</div>
+                <div class="se_list_name" translate="none">${engine.name}</div>
                 <div class="se_list_button">
                   <button class="set_se_default" value="${engine.id}" ${engine.isDefault ? 'style="border-radius: 8px 0px 0px 8px;"' : ''}>
                     <span class="iconfont icon-home"></span>
@@ -283,7 +283,7 @@ function createSearchEngineContent() {
             </div>
             <div class="from_items">
               <div class="from_text">字段名</div>
-              <input type="text" name="name" placeholder="URL 中 ? 后面的字段" autocomplete="off">
+              <input type="text" name="name" placeholder="URL 中 问号 后面的字段" autocomplete="off">
             </div>
             <div class="from_items" style="display: none;">
               <input type="text" name="icon" placeholder="iconfont icon-internet" value="iconfont icon-internet" disabled="disabled">
@@ -401,8 +401,8 @@ function createShortcutContent() {
           <div class="quick_list_table">
             ${shortcuts.map(shortcut => `
               <div class="quick_list_div">
-                <div class="quick_list_div_num">${shortcut.id}</div>
-                <div class="quick_list_div_name">${shortcut.name}</div>
+                <div class="quick_list_div_num" translate="none">${shortcut.id}</div>
+                <div class="quick_list_div_name" translate="none">${shortcut.name}</div>
                 <div class="quick_list_div_button">
                   <button class="edit_quick" value="${shortcut.id}" style="border-radius: 8px 0px 0px 8px;">
                     <span class="iconfont ${shortcut.icon}"></span>

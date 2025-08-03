@@ -301,11 +301,11 @@ async function renderDependencies(container, dependencies, source = '') {
                     <div class="plugin-item dependency-item ${statusClass}" data-url="${depUrl}">
                         <img src="${metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg'}" alt="${metadata.name || '依赖项'}" class="plugin-icon">
                         <div class="plugin-info">
-                            <strong>${metadata.name || depUrl}</strong>
-                            <p>${metadata.description || '无描述'}</p>
-                            <p>所需版本: ${depDetails.requiredVersion || 'Latest'}
-                            ${depDetails.installedVersion ? `| 已安装版本: ${depDetails.installedVersion}` : ''}</p>
-                            <p class="status">${depDetails.message}</p>
+                            <strong translate="none">${metadata.name || depUrl}</strong>
+                            <p translate="none">${metadata.description || 'Unknown'}</p>
+                            <p>所需版本: <span translate="none">${depDetails.requiredVersion || 'Latest'}</span>
+                            <span translate="none">${depDetails.installedVersion ? `| 已安装版本: <span translate="none">${depDetails.installedVersion}</span>` : ''}</p>
+                            <p class="status" translate="none">${depDetails.message}</p>
                         </div>
                     </div>
                 `;
@@ -612,7 +612,7 @@ async function checkUpdates(id, info = 'show') {
                         iziToast.show({
                             timeout: 8000,
                             title: '更新',
-                            message: `插件 ${localMetadata.name} 有新版本 ${remoteMetadata.version} 可用，是否更新？`,
+                            message: `${localMetadata.name} 有新版本 ${remoteMetadata.version} 可用，是否更新？`,
                             buttons: [
                                 ['<button>更新</button>', async function (instance, toast) {
                                     instance.hide({ transitionOut: 'flipOutX' }, toast, 'update');
@@ -660,7 +660,7 @@ async function checkUpdates(id, info = 'show') {
                     await new Promise((toastResolve) => {
                         iziToast.show({
                             timeout: 2000,
-                            message: `插件 ${localMetadata.name} 已是最新版本 ${localMetadata.version}`,
+                            message: `${localMetadata.name} 已是最新版本 ${localMetadata.version}`,
                             onClosed: function () {
                                 toastResolve();
                             }
@@ -848,9 +848,9 @@ function showOrderConfigDialog() {
         item.innerHTML = `
                 <div class="drag-handle"></div>
                 <div class="plugin-info">
-                    <strong>${plugin.name}</strong>
-                    <p>ID: ${plugin.id}</p>
-                    <p>版本: ${plugin.version}</p>
+                    <strong translate="none">${plugin.name}</strong>
+                    <p>NID: <span translate="none">${plugin.id}</span></p>
+                    <p>版本: <span translate="none">${plugin.version}</span></p>
                 </div>
                 `;
         return item;
@@ -958,7 +958,7 @@ function showUpdateDialog(metadata) {
     if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
     iziToast.show({
         timeout: 8000,
-        message: `确定要覆盖安装插件"${metadata.name}"吗?`,
+        message: `确定要覆盖安装插件"${metadata.name}"?`,
         buttons: [
             ['<button class="confirm-btn">覆盖</button>', async function (instance, toast) {
                 instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
@@ -1093,7 +1093,7 @@ async function loadPluginManagementPage() {
                         <div class='store_sources_list'>
                             ${storeSources.map(source => `
                                 <div class='store_source_item' data-url='${source}'>
-                                    <div class='store_source_url'>${source}</div>
+                                    <div class='store_source_url' translate='none'>${source}</div>
                                     <div class='store_source_buttons'>
                                         <button class='delete_store_source' data-url='${source}'>
                                             <i class='iconfont icon-delete'></i>
@@ -1122,9 +1122,9 @@ async function loadPluginManagementPage() {
                         <img src='${plugin.icon}'>
                     </div>
                     <div class='plugin_text'>
-                        <div class='plugin_name'>${plugin.name}</div>
+                        <div class='plugin_name' translate='none'>${plugin.name}</div>
                         <div class='plugin_details'>
-                            <span>版本: ${plugin.version}</span>
+                            <span>版本: <span translate='none'>${plugin.version}</span></span>
                         </div>
                     </div>
                 </div>
@@ -1487,8 +1487,8 @@ async function renderPlugins(pluginsArray) {
             pluginItem.innerHTML = `
                     <img src="${cleanUrl(pluginWithMetadata.icon || '')}" alt="${pluginWithMetadata.name || '插件'}" class="plugin-icon">
                     <div class="plugin-info">
-                        <strong>${pluginWithMetadata.name || '未知名称'}</strong>
-                        <p>${pluginWithMetadata.description || '无描述'}</p>
+                        <strong translate="none">${pluginWithMetadata.name || 'Unknown'}</strong>
+                        <p translate="none">${pluginWithMetadata.description || 'Unknown'}</p>
                     </div>
                 `;
 
@@ -1515,15 +1515,15 @@ function showPluginDetails(pluginWithMetadata) {
                 <div class="plugin-detail-header">
                     <img src="${cleanUrl(pluginWithMetadata.icon)}" alt="${pluginWithMetadata.name}" class="detail-icon">
                         <div class="detail-title">
-                            <h2>${pluginWithMetadata.name || '未知名称'}</h2>
-                            <p>版本: ${pluginWithMetadata.version || '未知版本'} | 作者: ${pluginWithMetadata.author || '未知作者'}</p>
-                            <p>NID: ${pluginWithMetadata.id || '未知 NID'}</p>
-                            <p>来源: ${pluginWithMetadata.source}</p>
+                            <h2 translate="none">${pluginWithMetadata.name || 'Unknown'}</h2>
+                            <p>版本: <span translate="none">${pluginWithMetadata.version || 'Unknown'}</span> | 作者: <span translate="none">${pluginWithMetadata.author || 'Unknown'}</span></p>
+                            <p translate="none">NID: ${pluginWithMetadata.id || 'Unknown'}</p>
+                            <p>来源:<span translate="none"> ${pluginWithMetadata.source}</span></p>
                     </div>
                 </div>
                 <div class="plugin-detail-body">
                     <h3>描述</h3>
-                    <p>${pluginWithMetadata.description}</p>
+                    <p translate="none">${pluginWithMetadata.description}</p>
                     <h3>依赖</h3>
                     <div id="dependencies-container"></div>
                     <h3>截图</h3>

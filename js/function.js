@@ -333,7 +333,7 @@ function setBgImgInit() {
             var pictureURL = 'https://bing.biturl.top/?resolution=1920&format=image'; //必应每日 1080P
             break;
         case "4":
-            var pictureURL = 'https://api.vvhan.com/api/wallpaper/views'; //随机风景
+            var pictureURL = 'https://v.api.aa1.cn/api/api-fj-2/index.php'; //随机风景
             break;
         case "5":
             var pictureURL = 'https://www.loliapi.com/acg'; //随机二次元
@@ -416,7 +416,8 @@ async function seList() {
         var se_list = await getSeList();
         for (var i in se_list) {
             html += `<div class='se-li' data-url='${se_list[i]["url"]}' data-name='${se_list[i]["name"]}' data-icon='${se_list[i]["icon"]}'>
-            <a class='se-li-text'><i id='icon-sou-list' class='${se_list[i]["icon"]}'></i><span>${se_list[i]["title"]}</span></a></div>`;
+            <a class='se-li-text'><i id='icon-sou-list' class='${se_list[i]["icon"]}'></i><span translate='none'>${se_list[i]["title"]}</span></a></div>`;
+
         }
         $(".search-engine-list").html(html);
     } catch (error) {
@@ -436,7 +437,7 @@ async function setSeInit() {
                 tr = `<div class='se_list_div'><div class='se_list_num'>
                 <i class='iconfont icon-home'></i></div>`;
             }
-            tr += `<div class='se_list_name'>${se_list[i]["title"]}</div>
+            tr += `<div class='se_list_name' translate='none'>${se_list[i]["title"]}</div>
             <div class='se_list_button'>
             <button class='set_se_default' value='${i}' style='border-radius: 8px 0px 0px 8px;'>
             <i class='iconfont icon-home'></i></button>
@@ -546,7 +547,7 @@ async function quickData() {
         var quick_list = await getQuickList();
         for (var i in quick_list) {
             html += `<div class="quick">
-                        <a href="${quick_list[i]['url']}" target="_blank">${quick_list[i]['title']}</a>
+                        <a translate="none" href="${quick_list[i]['url']}" target="_blank">${quick_list[i]['title']}</a>
                     </div>`;
         }
         $(".quick-all").html(html);
@@ -563,8 +564,8 @@ async function setQuickInit() {
         for (var i in quick_list) {
             tr = `
             <div class='quick_list_div'>
-                <div class='quick_list_div_num'>${i}</div>
-                <div class='quick_list_div_name'>${quick_list[i]['title']}</div>
+                <div class='quick_list_div_num' translate='none'>${i}</div>
+                <div class='quick_list_div_name' translate='none'>${quick_list[i]['title']}</div>
                 <div class='quick_list_div_button'>
                     <button class='edit_quick' value='${i}' style='border-radius: 8px 0px 0px 8px;'>
                     <i class='iconfont icon-edit'></i></button>
@@ -1136,7 +1137,7 @@ function showWelcomeMessage() {
     setTimeout(function () {
         iziToast.show({
             title: hello,
-            message: '欢迎使用 NitaiPage'
+            message: '欢迎使用 拟态起始页'
         });
     }, 800);
 }

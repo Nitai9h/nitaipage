@@ -42,6 +42,7 @@ function generatePluginSettings() {
     tabElement.id = tab.id;
     tabElement.textContent = tab.name;
     tabElement.dataset.value = tab.value; // 设置 value (NID)
+    tabElement.setAttribute('translate', 'none');
     tabsContainer.appendChild(tabElement);
   });
   container.appendChild(tabsContainer);

@@ -630,7 +630,7 @@ $(document).ready(function () {
         }
 
         if (type === "2") {
-            $('#wallpaper_text').html("必应每日一图 (4K UHD 超高清)，每天更新");
+            $('#wallpaper_text').html("必应每日一图 4K UHD 超高清，每天更新");
             setBgImg(bg_img);
             iziToast.show({
                 message: '壁纸设置成功，刷新生效',
@@ -647,7 +647,7 @@ $(document).ready(function () {
         }
 
         if (type === "3") {
-            $('#wallpaper_text').html("必应每日一图 (1080P FHD 全高清)，每天更新");
+            $('#wallpaper_text').html("必应每日一图 1080P FHD 全高清，每天更新");
             setBgImg(bg_img);
             iziToast.show({
                 message: '壁纸设置成功，刷新生效',
@@ -878,7 +878,7 @@ $(document).ready(function () {
                         }, toast, 'buttonName');
                         iziToast.show({
                             timeout: 2000,
-                            message: size + ' Byte 数据被导入'
+                            message: size + ' KB 数据被导入'
                         });
                         setTimeout(function () {
                             window.location.reload()
