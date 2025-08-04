@@ -74,7 +74,6 @@ http-server -p 11123 -o
 * [iziToast](https://izitoast.marcelodolza.com/)
 * [Iconfont](https://www.iconfont.cn/)
 * [jQuery](https://jquery.com/)
-* [jsCookie](https://github.com/js-cookie/js-cookie)
 * [sortable](https://github.com/SortableJS/Sortable)
 * [chroma](https://github.com/gka/chroma.js)
 

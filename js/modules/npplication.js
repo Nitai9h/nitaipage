@@ -1470,9 +1470,20 @@ function renderStoreTabs(categories) {
 async function renderPlugins(pluginsArray) {
     const contentContainer = document.getElementById('storeContent');
     if (!contentContainer) return;
+
+    // 渲染状态
+    if (window._renderingStorePlugins) return;
+    window._renderingStorePlugins = true;
+
     contentContainer.innerHTML = '';
 
+    // 创建中止控制
+    const controller = new AbortController();
+    window._lastStoreController?.abort();
+    window._lastStoreController = controller;
+
     pluginsArray.forEach(async (plugin) => {
+        if (controller.signal.aborted) return;
         try {
             const metadata = await extractMetadata(plugin.url);
             const pluginWithMetadata = {
@@ -1492,12 +1503,18 @@ async function renderPlugins(pluginsArray) {
                     </div>
                 `;
 
-            contentContainer.appendChild(pluginItem);
+            if (!controller.signal.aborted) {
+                contentContainer.appendChild(pluginItem);
+            }
             pluginItem.addEventListener('click', () => showPluginDetails(pluginWithMetadata));
         } catch (error) {
-            console.error(`加载插件失败: ${plugin.url}`, error);
+            if (error.name !== 'AbortError') {
+                console.error(`加载插件失败: ${plugin.url}`, error);
+            }
         }
     });
+
+    window._renderingStorePlugins = false;
 }
 
 function showPluginDetails(pluginWithMetadata) {

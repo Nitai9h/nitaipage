@@ -185,13 +185,13 @@ $(document).ready(function () {
             if ($(this).attr("class") === "entry-items on") {
                 $("#icon-fold").attr("class", "iconfont icon-fold");
                 $(this).removeClass('on');
-                Cookies.set('foldTime', 'on');
+                localStorage.setItem('foldTime', 'on');
 
                 showTime();
             } else {
                 $("#icon-fold").attr("class", "iconfont icon-unfold");
                 $(this).addClass('on');
-                Cookies.set('foldTime', 'off');
+                localStorage.setItem('foldTime', 'off');
 
                 hideTime();
             }
@@ -228,9 +228,7 @@ $(document).ready(function () {
             message: '是否设置为默认搜索引擎？',
             buttons: [
                 ['<button>确认</button>', async function (instance, toast) {
-                    Cookies.set('se_default', name, {
-                        expires: 36500
-                    });
+                    localStorage.setItem('se_default', name);
                     setSeInit();
                     instance.hide({
                         transitionOut: 'flipOutX',
@@ -413,9 +411,7 @@ $(document).ready(function () {
             buttons: [
                 ['<button>确认</button>', function (instance, toast) {
                     setSeList(se_list_preinstall);
-                    Cookies.set('se_default', 1, {
-                        expires: 36500
-                    });
+                    localStorage.setItem('se_default', 1);
                     setSeInit();
                     instance.hide({
                         transitionOut: 'flipOutX',

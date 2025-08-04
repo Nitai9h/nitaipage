@@ -15,7 +15,7 @@
 
 // 检查高级设置是否启用
 function isAdvancedSettingEnabled() {
-    return Cookies.get('advancedSettingEnabled') === 'on';
+    return localStorage.getItem('advancedSettingEnabled') === 'on';
 }
 
 // 创建设置开关
@@ -55,7 +55,7 @@ function createAdvancedSettingSwitch() {
         createAdvancedSettingSwitch();
 
         const toggleSwitch = $('#toggleAdvancedSetting');
-        const savedState = Cookies.get('advancedSettingEnabled') || 'off';
+        const savedState = localStorage.getItem('advancedSettingEnabled') || 'off';
 
         // 设置初始状态
         if (savedState === 'on') {
@@ -67,7 +67,7 @@ function createAdvancedSettingSwitch() {
             const isOn = $(this).hasClass('on');
             if (isOn) {
                 $(this).removeClass('on');
-                Cookies.set('advancedSettingEnabled', 'off', { expires: 365 });
+                localStorage.setItem('advancedSettingEnabled', 'off');
                 iziToast.show({
                     timeout: 4000,
                     message: '设置成功，刷新生效',
@@ -83,7 +83,7 @@ function createAdvancedSettingSwitch() {
                 });
             } else {
                 $(this).addClass('on');
-                Cookies.set('advancedSettingEnabled', 'on', { expires: 365 });
+                localStorage.setItem('advancedSettingEnabled', 'on');
                 iziToast.show({
                     timeout: 4000,
                     message: '设置成功，刷新生效',

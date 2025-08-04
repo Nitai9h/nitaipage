@@ -253,7 +253,7 @@ function setSeList(se_list) {
 
 // 获得默认搜索引擎
 function getSeDefault() {
-    var se_default = Cookies.get('se_default');
+    var se_default = localStorage.getItem('se_default');
     return se_default ? se_default : "1";
 }
 
@@ -265,7 +265,7 @@ var bg_img_preinstall = {
 
 // 获取背景图片
 function getBgImg() {
-    var bg_img_local = Cookies.get('bg_img');
+    var bg_img_local = localStorage.getItem('bg_img');
     if (bg_img_local && bg_img_local !== "{}") {
         return JSON.parse(bg_img_local);
     } else {
@@ -277,9 +277,7 @@ function getBgImg() {
 // 设置背景图片
 function setBgImg(bg_img) {
     if (bg_img) {
-        Cookies.set('bg_img', bg_img, {
-            expires: 36500
-        });
+        localStorage.setItem('bg_img', JSON.stringify(bg_img));
         return true;
     }
     return false;
@@ -287,7 +285,7 @@ function setBgImg(bg_img) {
 
 // 初始化折叠状态
 function foldInit() {
-    var foldValue = Cookies.get('foldTime');
+    var foldValue = localStorage.getItem('foldTime');
     if (foldValue == "true") {
         $("#icon-fold").attr("class", "iconfont icon-unfold");
     } else {
@@ -342,7 +340,7 @@ function setBgImgInit() {
             var pictureURL = bg_img["path"]; //自定义
             break;
         default:
-            var pictureURL = getCookie('bgImage'); // 插件接口
+            var pictureURL = localStorage.getItem('bgImage'); // 插件接口
     }
     bg.postMessage("bgImgLoadingStart");
     // 跟踪API重定向
@@ -1148,7 +1146,7 @@ function showContain_plugin() {
     $('.store-block').css('display', 'flex');
 }
 
-// 初始化滑块控件并加载Cookie设置
+// 初始化滑块控件并加载 localStorage 设置
 function initSliderControls() {
     // 获取滑块元素
     const timeFontSizeSlider = document.getElementById('font-size-slider');
@@ -1160,18 +1158,18 @@ function initSliderControls() {
     const dateFontOpacitySlider = document.getElementById('font-opacity-date');
     const dateFontWidthSlider = document.getElementById('font-width-date');
 
-    // 从Cookie加载设置或使用默认值
+    // 从 localStorage 加载设置或使用默认值
     const timeSettings = {
-        size: parseInt(Cookies.get('timeFontSize')) || 0,
-        weight: parseInt(Cookies.get('timeFontWeight')) || 50,
-        opacity: parseInt(Cookies.get('timeFontOpacity')) || 100,
-        width: parseInt(Cookies.get('timeFontWidth')) || 0
+        size: parseInt(localStorage.getItem('timeFontSize')) || 0,
+        weight: parseInt(localStorage.getItem('timeFontWeight')) || 50,
+        opacity: parseInt(localStorage.getItem('timeFontOpacity')) || 100,
+        width: parseInt(localStorage.getItem('timeFontWidth')) || 0
     };
     const dateSettings = {
-        size: parseInt(Cookies.get('dateFontSize')) || 0,
-        weight: parseInt(Cookies.get('dateFontWeight')) || 50,
-        opacity: parseInt(Cookies.get('dateFontOpacity')) || 100,
-        width: parseInt(Cookies.get('dateFontWidth')) || 0
+        size: parseInt(localStorage.getItem('dateFontSize')) || 0,
+        weight: parseInt(localStorage.getItem('dateFontWeight')) || 50,
+        opacity: parseInt(localStorage.getItem('dateFontOpacity')) || 100,
+        width: parseInt(localStorage.getItem('dateFontWidth')) || 0
     };
 
     // 设置滑块初始值
@@ -1192,56 +1190,56 @@ function initSliderControls() {
     timeFontSizeSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateTimeStyle(value, timeSettings.weight, timeSettings.opacity, timeSettings.width);
-        Cookies.set('timeFontSize', value, { expires: 365 });
+        localStorage.setItem('timeFontSize', value);
         timeSettings.size = value;
     });
 
     timeFontWeightSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateTimeStyle(timeSettings.size, value, timeSettings.opacity, timeSettings.width);
-        Cookies.set('timeFontWeight', value, { expires: 365 });
+        localStorage.setItem('timeFontWeight', value);
         timeSettings.weight = value;
     });
 
     timeFontOpacitySlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateTimeStyle(timeSettings.size, timeSettings.weight, value, timeSettings.width);
-        Cookies.set('timeFontOpacity', value, { expires: 365 });
+        localStorage.setItem('timeFontOpacity', value);
         timeSettings.opacity = value;
     });
 
     timeFontWidthSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateTimeStyle(timeSettings.size, timeSettings.weight, timeSettings.opacity, value);
-        Cookies.set('timeFontWidth', value, { expires: 365 });
+        localStorage.setItem('timeFontWidth', value);
         timeSettings.width = value;
     });
 
     dateFontSizeSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateDateStyle(value, dateSettings.weight, dateSettings.opacity, dateSettings.width);
-        Cookies.set('dateFontSize', value, { expires: 365 });
+        localStorage.setItem('dateFontSize', value);
         dateSettings.size = value;
     });
 
     dateFontWeightSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateDateStyle(dateSettings.size, value, dateSettings.opacity, dateSettings.width);
-        Cookies.set('dateFontWeight', value, { expires: 365 });
+        localStorage.setItem('dateFontWeight', value);
         dateSettings.weight = value;
     });
 
     dateFontOpacitySlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateDateStyle(dateSettings.size, dateSettings.weight, value, dateSettings.width);
-        Cookies.set('dateFontOpacity', value, { expires: 365 });
+        localStorage.setItem('dateFontOpacity', value);
         dateSettings.opacity = value;
     });
 
     dateFontWidthSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateDateStyle(dateSettings.size, dateSettings.weight, dateSettings.opacity, value);
-        Cookies.set('dateFontWidth', value, { expires: 365 });
+        localStorage.setItem('dateFontWidth', value);
         dateSettings.width = value;
     });
 }

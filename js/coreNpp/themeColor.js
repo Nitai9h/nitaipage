@@ -15,7 +15,7 @@
 
 // 检查动态主题是否启用
 function isDynamicThemeEnabled() {
-    return Cookies.get('dynamicTheme') === 'on';
+    return localStorage.getItem('dynamicTheme') === 'on';
 }
 
 // 对比度计算
@@ -94,7 +94,7 @@ function createDynamicThemeSetting() {
         createDynamicThemeSetting();
 
         const toggleSwitch = $('#toggledytheme');
-        const savedState = Cookies.get('dynamicTheme') || 'off';
+        const savedState = localStorage.getItem('dynamicTheme') || 'off';
 
         // 设置初始状态
         if (savedState === 'on') {
@@ -106,11 +106,11 @@ function createDynamicThemeSetting() {
             const isOn = $(this).hasClass('on');
             if (isOn) {
                 $(this).removeClass('on');
-                Cookies.set('dynamicTheme', 'off', { expires: 365 });
+                localStorage.setItem('dynamicTheme', 'off');
                 resetThemeColors();
             } else {
                 $(this).addClass('on');
-                Cookies.set('dynamicTheme', 'on', { expires: 365 });
+                localStorage.setItem('dynamicTheme', 'on');
                 // 应用主题
                 if (document.getElementById('bg') && document.getElementById('bg').src) {
                     const imgUrl = sessionStorage.getItem('bgImageFinalURL');

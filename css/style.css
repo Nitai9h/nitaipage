@@ -1211,8 +1211,8 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
-input[type="number"] {
-    -moz-appearance: textfield;
+input::-webkit-input-placeholder {
+    color: var(--main-text-color);
 }
 
 /*快捷方式和搜索引擎设置*/
@@ -1700,7 +1700,8 @@ input[type=range]::-ms-fill-lower {
 }
 
 .switch {
-    width: 40px;
+    max-width: 40px;
+    min-width: 40px;
     height: 20px;
     background-color: var(--main-background-active-color);
     border-radius: 4px;

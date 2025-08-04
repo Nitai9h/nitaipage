@@ -39,7 +39,7 @@ function time() {
     t = setTimeout(time, 1000);
 }
 
-const blurValue = Cookies.get('gaussianBlur') || '10px';
+const blurValue = localStorage.getItem('gaussianBlur') || '10px';
 document.documentElement.style.setProperty('--main-box-gauss', `blur(${blurValue})`);
 
 var frameStyle = frameStyle || {}; // 定义一个命名空间
@@ -159,7 +159,7 @@ frameStyle.blackCover = function (id, opacityParam, colorParam) {
     if (typeof opacityParam === 'number' && opacityParam >= 0 && opacityParam <= 100) {
         opacity = opacityParam / 100;
     } else {
-        const blackCover = Cookies.get('blackCover');
+        const blackCover = localStorage.getItem('blackCover');
         opacity = blackCover ? parseInt(blackCover) / 100 : 0.5;
     }
 
@@ -168,7 +168,7 @@ frameStyle.blackCover = function (id, opacityParam, colorParam) {
     if (colorParam === 'white' || colorParam === 'black') {
         isWhite = (colorParam === 'white');
     } else {
-        const colorCover = Cookies.get('colorCover');
+        const colorCover = localStorage.getItem('colorCover');
         isWhite = colorCover ? colorCover.toLowerCase() === 'white' : false;
     }
 
@@ -213,7 +213,7 @@ frameStyle.guassianCover = function (id, blurParam, opacityParam) {
     if (typeof blurParam === 'number' && blurParam >= 0) {
         blur = `${blurParam}px`;
     } else {
-        blur = Cookies.get('gaussianBlur') || '5px';
+        blur = localStorage.getItem('gaussianBlur') || '5px';
     }
 
     // 透明度
@@ -221,7 +221,7 @@ frameStyle.guassianCover = function (id, blurParam, opacityParam) {
     if (typeof opacityParam === 'number' && opacityParam >= 0 && opacityParam <= 1) {
         opacity = opacityParam;
     } else {
-        opacity = Cookies.get('gaussianOpacity') || '0.5';
+        opacity = localStorage.getItem('gaussianOpacity') || '0.5';
     }
 
     // 设置样式

@@ -600,8 +600,9 @@
 }
 
 /* 输入框样式 */
-input[type="number"] {
+input[type="text"] {
     -moz-appearance: textfield;
+    color: var(--main-text-color);
 }
 
 .add_store_source {
