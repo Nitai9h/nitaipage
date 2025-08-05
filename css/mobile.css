@@ -5,37 +5,11 @@
 
     /*书签及设置高度*/
     .mark,
-    .set {
+    .set,
+    .store,
+    .plugin_set {
         margin-top: 180px;
     }
-
-    /*NewUI*/
-    .set_blocks_new {
-        flex-wrap: nowrap;
-        display: flex;
-        justify-content: flex-start;
-        align-content: stretch;
-        flex-direction: column;
-    }
-
-    .set_tip_new {
-        width: 82%;
-        margin-left: 2.5%;
-        margin-right: 2.5%;
-    }
-
-    .set_blocks_thi_new {
-        margin-left: 8%;
-    }
-
-    .set_font_new {
-        display: none;
-    }
-
-    .mobile {
-        display: none;
-    }
-
 }
 
 /*小于720px时*/
@@ -49,46 +23,71 @@
         max-width: 23%;
     }
 
-    /*NewUI*/
-    .set_blocks_new {
-        flex-wrap: nowrap;
-        display: flex;
-        justify-content: flex-start;
-        align-content: stretch;
-        flex-direction: column
+    .plugin-detail-header {
+        flex-direction: column;
     }
 
-    .set_tip_new {
-        width: 82%;
-        margin-left: 2.5%;
-        margin-right: 2.5%;
+    .screenshots a {
+        width: 100% !important;
     }
 
+    .drag-handle .iconfont {
+        display: none;
+    }
+
+    .desktop {
+        display: block !important;
+    }
+
+    .mobile {
+        display: none !important;
+    }
+
+    #storePage .order-dialog {
+        height: 380px !important;
+    }
+
+    .order-content .plugin-list {
+        height: 310px !important;
+    }
+
+}
+
+/* 大于720px时*/
+@media (min-width: 720px) {
+    .desktop {
+        display: none !important;
+    }
+
+    .mobile {
+        display: block !important;
+    }
+}
+
+/* 大于512px时*/
+@media (min-width: 512px) {
+
+    #entryPluginSettings,
+    .reloadPluginSettings-btn {
+        width: 14vw;
+    }
 }
 
 /*小于512px时*/
 @media (max-width: 512px) {
 
-    /*文字大小*/
-    #time_text {
-        font-size: 2.75rem;
+    .screenshot-img {
+        width: 100%;
     }
 
-    #day {
-        font-size: 1.05rem;
+    .timeNum {
+        min-width: 27.5px;
+        max-width: 27.5px;
     }
 
-    #lunar_date {
-        font-size: 0.8rem;
-    }
-
-    .weather {
-        font-size: 1rem;
-    }
-
-    .wd::-webkit-input-placeholder {
-        letter-spacing: 1px;
-        font-size: 0.95rem;
+    .dayNum {
+        min-width: 10.5px;
+        max-width: 10.5px;
     }
 
     /*搜索引擎*/
@@ -99,8 +98,8 @@
     }
 
     /*设置按钮*/
-    #menu i {
-        font-size: 1.45rem;
+    .entry-items i {
+        font-size: 1.65rem;
     }
 
     /*书签*/
@@ -120,28 +119,129 @@
         margin-top: 0px;
     }
 
-    .form-radio {
-        margin: 10px 10px 30px 10px;
-    }
-
-    /*隐藏*/
-    .mobile {
-        display: none;
-    }
-
-    /*NewUI*/
-    .set_blocks_new {
-        flex-wrap: nowrap;
-        display: flex;
-        justify-content: flex-start;
-        align-content: stretch;
-        flex-direction: column;
+    .plugin_list_table .plugin_item .plugin_info {
+        align-items: flex-start !important;
+        flex-direction: column !important;
     }
 
     .set_tip_new {
-        width: 82%;
         margin-left: 2.5%;
         margin-right: 2.5%;
+    }
+
+    .set_tip_updateLog {
+        flex-direction: column
+    }
+
+    .set_text_wallpaper {
+        font-size: x-small;
+    }
+
+    .aboutContainer,
+    .quick-all,
+    .quick-alls {
+        margin: 5px 5px 0px 5px !important;
+    }
+
+    .set_blocks_content {
+        margin: 5px 5px 5px 5px !important;
+    }
+
+    .wallpapers_content {
+        margin: 0px 5px 0px 5px !important;
+    }
+
+    .panelContent {
+        margin: 0px 5px 0px 5px !important;
+    }
+
+    .store-block {
+        margin: 0px 10px 0px 10px !important;
+    }
+
+    .drag-handle {
+        margin-bottom: 10px;
+    }
+
+    .data_backup_tip {
+        width: 100%;
+    }
+
+    .entry-pluginSettings {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: center !important;
+    }
+
+    #entryPluginSettings,
+    .reloadPluginSettings-btn {
+        margin: 10px 20px 0px 20px;
+    }
+
+    .announcement_container {
+        min-width: 80%;
+        max-width: 80%;
+        min-height: 80%;
+        max-height: 80%;
+    }
+}
+
+/*小于260px时*/
+@media (max-width: 260px) {
+
+    #fold {
+        display: none !important;
+    }
+
+    .set,
+    .mark,
+    .store,
+    .plugin_set {
+        margin-top: 0px !important;
+        max-height: 500px !important;
+        height: 500px !important;
+        width: 100% !important;
+        bottom: 40px !important;
+    }
+
+    .set_blocks {
+        height: 390px !important;
+    }
+
+    .quick-all {
+        height: 380px !important;
+    }
+
+    .quick_list,
+    .se_list {
+        height: 335px !important;
+    }
+
+    .store-item .content {
+        margin: 5px 5px 0px 5px !important;
+    }
+
+    .order-dialog {
+        margin: 0px 5px 0px 5px !important;
+    }
+
+    .order-dialog .dialog-content,
+    .order-dialog {
+        margin: 5px 0px 5px 0px !important;
+        height: 480px !important;
+    }
+
+    .plugin-list {
+        height: 100% !important;
+    }
+
+    .plugin_management .plugin_list_table .plugin_item {
+        flex-direction: column
+    }
+
+    .plugin-item {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 
@@ -153,15 +253,5 @@
 
     .iziToast-wrapper {
         padding: 10px 0px !important;
-    }
-}
-
-/* 大于1200px时 */
-@media (min-width: 1201px) {
-
-    #dropdown_theme,
-    #toggle_time,
-    #dropdown_suggest {
-        width: 100% !important;
     }
 }

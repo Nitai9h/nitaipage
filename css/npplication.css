@@ -1,0 +1,640 @@
+#manageContent,
+.store-button,
+.store-item,
+.dialog-content {
+    animation: fade;
+    -webkit-animation: fade 0.3s;
+    -moz-animation: fade 0.3s;
+    -o-animation: fade 0.3s;
+    -ms-animation: fade 0.3s;
+}
+
+/* 对话框基础样式 */
+.order-config-dialog,
+.install-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* 布局样式 */
+.mainCont.selected,
+.store-item.productss {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+/* 插件列表 */
+.plugin-list {
+    list-style: none;
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.plugin-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: var(--main-background-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.plugin-item:hover {
+    background: var(--main-background-hover-color);
+    transition: 0.3s;
+}
+
+.plugin-item:active {
+    transform: scale(0.95);
+    background: var(--main-background-active-color);
+    transition: 0.3s;
+}
+
+.plugin-list .plugin-item {
+    cursor: grab;
+    touch-action: manipulation;
+}
+
+.plugin-list .plugin-item:active {
+    cursor: grabbing;
+}
+
+#storeContent .plugin-item {
+    cursor: pointer;
+}
+
+/* 依赖项 */
+.dependencies-list {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.plugin-item.dependency-item {
+    padding: 10px;
+    background-color: var(--main-background-color);
+    cursor: pointer;
+}
+
+.plugin-item.dependency-item:hover {
+    background-color: var(--main-background-hover-color);
+}
+
+.dependency-item.satisfied .status {
+    color: #4CAF50;
+}
+
+.dependency-item.warning .status {
+    color: #FF9800;
+}
+
+.dependency-item.error .status {
+    color: #F44336;
+}
+
+.dependency-item.failed .status {
+    color: #FFC107;
+}
+
+.plugin-item.dependency-item.satisfied {
+    border: 1px solid #4CAF50;
+}
+
+.plugin-item.dependency-item.warning {
+    border: 1px solid #FF9800;
+}
+
+.plugin-item.dependency-item.error {
+    border: 1px solid #F44336;
+}
+
+.plugin-item.dependency-item.failed {
+    border: 1px solid #FFC107;
+}
+
+/* 插件图标 */
+.plugin-icon,
+.plugin_icon img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    margin-right: 15px;
+    object-fit: cover;
+    animation: fade;
+    -webkit-animation: fade 0.8s;
+    -moz-animation: fade 0.8s;
+    -o-animation: fade 0.8s;
+    -ms-animation: fade 0.8s;
+}
+
+/* 详情区域 */
+.plugin-detail-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    background: var(--main-background-color-shallow);
+    border-radius: 8px;
+}
+
+.detail-title {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.detail-title h2 {
+    font-size: xx-large;
+}
+
+.detail-title p {
+    font-size: xx-small;
+}
+
+.detail-icon {
+    min-width: 128px;
+    min-height: 128px;
+    max-width: 128px;
+    max-height: 128px;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+/* 截图区域 */
+.screenshots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.screenshots a {
+    width: calc(50% - 10px);
+    height: 100%;
+    border-radius: 4px;
+}
+
+.screenshot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* 拖动控制 */
+.drag-handle {
+    margin-right: 10px;
+    cursor: move;
+    color: var(--main-text-color);
+}
+
+.drag-handle .iconfont {
+    font-size: 32px;
+}
+
+/* 插件信息 */
+.plugin-info {
+    flex: 1;
+}
+
+.plugin-info strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.plugin-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* 按钮组 */
+.store-button {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0px 0px 0px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save-btn,
+.cancel-btn,
+.install-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.save-btn:hover,
+.cancel-btn:hover,
+.install-btn:hover {
+    background: var(--main-button-hover-color);
+}
+
+.save-btn:active,
+.cancel-btn:active,
+.install-btn:active {
+    background: var(--main-button-active-color);
+}
+
+/* 详情对话框 */
+.details-dialog {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    animation: fade;
+    -webkit-animation: fade 0.5s;
+    -moz-animation: fade 0.5s;
+    -o-animation: fade 0.5s;
+    -ms-animation: fade 0.5s;
+}
+
+.details-dialog .dialog-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 300px;
+    width: 100%;
+    margin: 20px 20px 0;
+}
+
+/* 对话框容器 */
+.dialog-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.dialog-btn {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog-cancel,
+.dialog-install {
+    width: 25%;
+    display: flex;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--main-background-color);
+    margin: 0 20px;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.dialog-cancel:hover,
+.dialog-install:hover {
+    cursor: pointer;
+    background: var(--main-background-hover-color);
+}
+
+.dialog-cancel:active,
+.dialog-install:active {
+    transform: scale(0.90);
+    background: var(--main-background-active-color);
+}
+
+/* 插件管理 */
+.plugin_management {
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+}
+
+.plugin_management h3 {
+    color: var(--main-text-color);
+    margin-top: 10px;
+}
+
+.plugin_list_table {
+    margin-top: 15px;
+}
+
+.plugin_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin: 0 5px 10px 0;
+    background: var(--main-background-color);
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.plugin_item:hover {
+    background: var(--main-background-hover-color);
+}
+
+.plugin_info {
+    flex: 1;
+    overflow-x: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.plugin_name {
+    font-weight: bold;
+    color: var(--main-text-color);
+    margin-bottom: 5px;
+}
+
+.plugin_details {
+    font-size: 0.9em;
+    color: var(--main-text-secondary-color);
+}
+
+.plugin_details span {
+    margin-right: 15px;
+}
+
+.plugin_actions {
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plugin_actions button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    border-radius: 4px;
+    border: none;
+    padding: 0;
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.plugin_actions button:hover {
+    background: var(--main-button-hover-color);
+    transform: scale(1.05);
+}
+
+.plugin_actions button:active {
+    transform: scale(0.95);
+}
+
+.plugin_actions .update_plugin {
+    border-radius: 8px 0 0 8px;
+    margin-left: 0;
+}
+
+.plugin_actions .uninstall_plugin {
+    border-radius: 0 8px 8px 0;
+    margin-left: 0;
+}
+
+.plugin_item.coreNpp .plugin_actions .uninstall_plugin {
+    background: var(--main-button-active-color);
+}
+
+.plugin_item.coreNpp .plugin_actions .uninstall_plugin .iconfont {
+    color: var(--border-bottom-color-hover)
+}
+
+/* 页面布局 */
+#storePage {
+    width: 100%;
+    height: 100%;
+}
+
+/* 排序库样式 */
+.sortable-ghost {
+    opacity: 0.5;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.sortable-chosen {
+    background-color: rgba(52, 152, 219, 0.2);
+    border: 1px dashed #3498db;
+}
+
+.sortable-drag {
+    opacity: 0.8;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.entry-pluginSettings {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    flex-direction: row;
+    align-items: center;
+}
+
+#entryPluginSettings,
+.reloadPluginSettings-btn {
+    display: flex;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--main-background-color);
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+#entryPluginSettings:active,
+.reloadPluginSettings-btn:active {
+    transform: scale(0.90);
+    background: var(--main-background-active-color);
+    transition: 0.3s;
+}
+
+#entryPluginSettings:hover,
+.reloadPluginSettings-btn:hover {
+    cursor: pointer;
+    background: var(--main-background-hover-color);
+    transition: 0.3s;
+}
+
+#noPluginSetting {
+    font-size: 2vw;
+    height: 100%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.store .store-item .content {
+    display: none;
+}
+
+/* 源管理样式 */
+.store_sources_management {
+    border-radius: 8px;
+    background: var(--main-background-color);
+    padding: 10px;
+    --border-color: rgba(255, 255, 255, 0.1);
+    margin-right: 5px;
+}
+
+.store_sources_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.store_sources_header h3 {
+    color: var(--main-text-color);
+    margin: 0;
+}
+
+.toggle_store_sources {
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    border: none;
+    border-radius: 4px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.toggle_store_sources:hover {
+    background: var(--main-button-hover-color);
+    transform: scale(1.05);
+}
+
+.toggle_store_sources:active {
+    transform: scale(0.95);
+}
+
+.store_sources_content {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    margin-top: 5px;
+}
+
+.store_source_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: var(--main-background-color);
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.store_source_item:hover {
+    background: var(--main-background-hover-color);
+}
+
+.store_source_url {
+    flex: 1;
+    overflow-x: auto;
+    word-break: break-all;
+    color: var(--main-text-color);
+    padding: 5px;
+    font-size: x-small;
+}
+
+.delete_store_source {
+    border: none;
+    border-radius: 4px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    border-radius: 8px;
+}
+
+.delete_store_source:hover {
+    background: var(--main-button-hover-color);
+    transform: scale(1.05);
+}
+
+.delete_store_source:active {
+    transform: scale(0.95);
+}
+
+/* 输入框样式 */
+input[type="text"] {
+    -moz-appearance: textfield;
+    color: var(--main-text-color);
+}
+
+.add_store_source {
+    display: flex;
+    margin-top: 15px;
+}
+
+#new_store_source {
+    outline: none;
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--main-border-color);
+    border-radius: 8px 0 0 8px;
+    background: var(--main-background-color);
+    color: var(--main-text-color);
+    width: 100%;
+}
+
+#add_store_source_btn {
+    padding: 10px;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#add_store_source_btn:hover {
+    background: var(--main-button-hover-color);
+}
+
+#add_store_source_btn:active {
+    background: var(--main-button-active-color);
+}

@@ -2,48 +2,38 @@
 <html lang="zh">
 
 <head>
+    <script type="text/javascript" src="./js/plugin_welcome.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拟态起始页</title>
-    <link rel="manifest" href="./manifest.json" />
-    <link rel="icon" type="image/png" href="./favicon.ico">
-    <!-- jQuery -->
-    <script src="./js/jquery.min.js"></script>
-    <!-- Lunar -->
-    <script src="./js/lunar.js"></script>
-    <!-- 引入样式 -->
+    <title>NitaiPage</title>
+    <link rel="icon" href="favicon.ico">
+    <!-- CSS Style -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
-    <link rel="stylesheet" type="text/css" href="./css/font.css">
+    <link rel="stylesheet" type="text/css" href="./css/iconfont.css">
     <link rel="stylesheet" type="text/css" href="./css/loading.css">
     <link rel="stylesheet" type="text/css" href="./css/mobile.css">
-    <link rel="stylesheet" type="text/css" href="./css/animation.css">
-    <link rel="stylesheet" type="text/css" href="./css/desktop.css">
-    <!-- Izitoast -->
-    <link rel="stylesheet" href="./css/iziToast.min.css">
-    <script type="text/javascript" src="./js/iziToast.min.js">
-    </script>
-    <!-- IE Out -->
-    <script type="text/javascript" src="./js/ie-out.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/npplication.css">
+    <!-- Modules -->
+    <link rel="stylesheet" type="text/css" href="./css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/iziToast.min.css">
+    <script rel="text/javascript" src="./js/modules/iziToast.min.js"></script>
+    <script rel="text/javascript" src="./js/modules/jquery.min.js"></script>
+    <script rel="text/javascript" src="./js/modules/npplication.js"></script>
+    <script rel="text/javascript" src="./js/modules/sortable.min.js"></script>
+    <!-- JavaScript -->
+    <script type="text/javascript" src="./js/style.js"></script>
+    <script type="text/javascript" src="./js/function.js"></script>
+    <script type="text/javascript" src="./js/element.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
+    <script type="text/javascript" src="./js/set.js"></script>
+    <script type="text/javascript" src="./js/settings.js"></script>
+    <script type="text/javascript" src="./js/plugin_settings.js"></script>
+    <!-- CoreNpp -->
+    <script type="text/javascript" src="./js/coreNpp/themeColor.js"></script>
 </head>
 
 <body>
-    <!--加载动画-->
-    <div id="loading-box">
-        <div class="loading-left-bg"></div>
-        <div class="loading-right-bg"></div>
-        <div class="spinner-box">
-            <div class="loader">
-                <div class="inner one"></div>
-                <div class="inner two"></div>
-                <div class="inner three"></div>
-            </div>
-            <div class="loading-word">
-                <p class="loading-title">你好！</p>
-                <span id="loading-test">拟态起始页</span>
-            </div>
-        </div>
-    </div>
     <!-- 背景图片 -->
     <div class="bg-all">
         <img id="bg" onerror="this.classList.add('error');"></img>
@@ -54,802 +44,59 @@
         <div id="content">
             <div class="con">
                 <!-- 时间 -->
-                <div id="tool-all" class="tool-all">
+                <div class="tool-all">
                     <div class="time">
-                        <span id="time_text"></span>
-                        <span id="lunar_date" class="lunar_date_off"></span>
+                        <div id="time_text_container">
+                            <span id="time_text"></span>
+                            <span id="ampm"></span>
+                        </div>
                         <span id="day"></span>
-                        <span class="times_none" id="second"></span>
                     </div>
                 </div>
                 <!-- 搜索框 -->
-                <div class="close_sou"></div>
+                <div class="close_sou">
+                </div>
                 <div class="sou">
-                    <form class="search" action="https://www.baidu.com/s" target="_Blank">
-                        <div class="all-search">
-                            <div class="se" title="点击切换搜索引擎">
-                                <i id="icon-se" class="iconfont icon-baidu"></i>
-                            </div>
-                            <input class="wd" type="text" name="wd" placeholder="想要搜点什么？" autocomplete="off">
-                            <div class="sou-button">
-                                <div class="s" id="s-button">
-                                    <i id="icon-sou" class="iconfont icon-sousuo"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="submit" id="search-submit" style="display: none;">
-                    </form>
-                    <div id="keywords" style="display: none;"></div>
-                    <div class="search-engine" style="display: none;">
-                        <div class="search-engine-list">
-                            <div class="se-li">
-                                <a class="se-li-text" data-url="https://www.baidu.com/s" data-name="wd"
-                                    data-icon="iconfont icon-baidu">
-                                    <i id="icon-sou-list" class="iconfont icon-sousuo"></i>
-                                    <span>百度</span>
-                                </a>
-                            </div>
-                            <div class="se-li" data-url="https://cn.bing.com/search" data-name="q"
-                                data-icon="iconfont icon-bing">
-                                <a class="se-li-text">
-                                    <i id="icon-sou-list" class="iconfont icon-bing"></i>
-                                    <span>必应</span>
-                                </a>
-                            </div>
-                            <div class="se-li" data-url="https://www.google.com/search" data-name="q"
-                                data-icon="iconfont icon-google">
-                                <a class="se-li-text">
-                                    <i id="icon-sou-list" class="iconfont icon-google"></i>
-                                    <span>谷歌</span>
-                                </a>
-                            </div>
-                            <div class="se-li" data-url="https://www.sogou.com/web" data-name="query"
-                                data-icon="iconfont icon-bing">
-                                <a class="se-li-text">
-                                    <i id="icon-sou-list" class="iconfont icon-sougousousuo"></i>
-                                    <span>搜狗</span>
-                                </a>
-                            </div>
-                        </div>
+                    <div id="search-form-container">
                     </div>
                 </div>
-                <!-- 时钟二级页 -->
-                <div class="mark" style="display: none;">
+                <!-- 捷径 -->
+                <div class="mark animate__animated animate__zoomIn" style="display: none;">
                     <div class="tab">
                         <div class="tab-item active">捷径</div>
                     </div>
                     <div class="content products">
-                        <!-- 捷径 -->
                         <div class="mainCont selected">
                             <div class="quick-all">
                             </div>
                         </div>
-                        <!-- <div class="mainCont"> -->
-                        <!-- </div> -->
                     </div>
                 </div>
-                <!-- 设置图标 -->
-                <div id="menu">
-                    <i id="icon-menu" class="iconfont icon-shezhi"></i>
+                <!-- 入口 -->
+                <div class="entry">
+                    <div class="entry-left"></div>
+                    <div class="entry-right"></div>
                 </div>
-                <div id="fold" class="out-new" style="display: none;">
-                    <i id="icon-expand" class="iconfont icon-fold" style="display: none;"></i>
+                <!-- 商店 -->
+                <div class="store animate__animated animate__zoomIn" style="display: none;">
                 </div>
-                <!-- 设置页 -->
-                <div class="set" style="display: none;">
-                    <div class="tabs">
-                        <div class="tab-items actives">搜取</div>
-                        <div class="tab-items" id="set-quick-menu">捷径</div>
-                        <div class="tab-items">设置</div>
-                        <div class="tab-items">关于</div>
-                    </div>
-                    <div class="contents productss">
-                        <!-- 搜取 -->
-                        <div class="mainConts selected">
-                            <div class="set_blocks">
-                                <div class="set_blocks_content">
-                                    <div class="se_list">
-                                        <div class="se_list_table">
-                                            <div class="se_list_div">
-                                                <div class="se_list_num">
-                                                    <i class="iconfont icon-home"></i>
-                                                </div>
-                                                <div class="se_list_name">百度</div>
-                                                <div class="se_list_button">
-                                                    <button class="set_se_default" value="baidu"
-                                                        style="border-radius: 8px 0px 0px 8px;">
-                                                        <span class="iconfont icon-home"></span>
-                                                    </button>
-                                                    <button class="edit_se" value="baidu">
-                                                        <span class="iconfont icon-xiugai"></span>
-                                                    </button>
-                                                    <button class="delete_se" value="baidu"
-                                                        style="border-radius: 0px 8px 8px 0px;">
-                                                        <span class="iconfont icon-delete"></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="se_list_div">
-                                                <div class="se_list_num">2</div>
-                                                <div class="se_list_name">谷歌</div>
-                                                <div class="se_list_button">
-                                                    <button class="set_se_default" value="google"><span
-                                                            class="iconfont icon-home"></span></button>
-                                                    <button class="edit_se" value="google"><span
-                                                            class="iconfont icon-xiugai"></span></button>
-                                                    <button class="delete_se" value="google"><span
-                                                            class="iconfont icon-delete"></span></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="se_add_preinstall">
-                                        <div class="set_se_list_add">
-                                            <span class="set_quick_text">新增</span>
-                                        </div>
-                                        <div class="set_se_list_preinstall">
-                                            <span class="set_quick_text">重置</span>
-                                        </div>
-                                    </div>
-                                    <div class="add_content se_add_content" style="display:none;">
-                                        <div class="froms">
-                                            <div class="from_items">
-                                                <div class="from_text">顺序</div>
-                                                <input type="hidden" name="key_inhere">
-                                                <input type="number" name="key" placeholder="请填入小于 20 的正整数"
-                                                    autocomplete="off"
-                                                    oninput="if(value>20)value=20;if(value<0)value=0">
-                                            </div>
-                                            <div class="from_items">
-                                                <div class="from_text">名称</div>
-                                                <input type="text" name="title" placeholder="搜索引擎名称" autocomplete="off">
-                                            </div>
-                                            <div class="from_items">
-                                                <div class="from_text">网址</div>
-                                                <input type="url" name="url" placeholder="以 https 或 http 开头的 URL"
-                                                    autocomplete="off">
-                                            </div>
-                                            <div class="from_items">
-                                                <div class="from_text">字段名</div>
-                                                <input type="text" name="name" placeholder="URL 中 ? 后面的字段"
-                                                    autocomplete="off">
-                                            </div>
-                                            <div class="from_items" style="display: none;">
-                                                <input type="text" name="icon" placeholder="iconfont icon-Earth"
-                                                    value="iconfont icon-Earth" disabled="disabled">
-                                            </div>
-                                        </div>
-                                        <div class="from_items button">
-                                            <div class="se_add_save">保存</div>
-                                            <div class="se_add_cancel">取消</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 捷径 -->
-                        <div class="mainConts">
-                            <div class="set_blocks">
-                                <div class="set_blocks_content">
-                                    <div class="quick_list">
-                                        <div class="quick_list_table">
-                                            <div class="quick_list_div">
-                                                <div class="quick_list_div_num">1</div>
-                                                <div class="quick_list_div_name">哔哩哔哩</div>
-                                                <div class="quick_list_div_button">
-                                                    <div class="edit_quick" value="1">
-                                                        <span class="iconfont iconbook-edit"></span>
-                                                    </div>
-                                                    <div class="delete_quick" value="1">
-                                                        <span class="iconfont icondelete"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="quick_list_div">
-                                                <div class="quick_list_div_num">2</div>
-                                                <div class="quick_list_div_name">知乎</div>
-                                                <div class="quick_list_div_button">
-                                                    <button class="edit_quick" value="2"
-                                                        style="border-radius: 8px 0px 0px 8px;">
-                                                        <span class="iconfont iconbook-edit"></span>
-                                                    </button>
-                                                    <button class="delete_quick" value="2"
-                                                        style="border-radius: 0px 8px 8px 0px;">
-                                                        <span class="iconfont icondelete"></span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="se_add_preinstalls">
-                                        <div class="set_quick_list_add">
-                                            <span class="set_quick_text">新增</span>
-                                        </div>
-                                        <div class="set_quick_list_preinstall">
-                                            <span class="set_quick_text">重置</span>
-                                        </div>
-                                    </div>
-                                    <div class="add_content quick_add_content" style="display:none;">
-                                        <div class="froms">
-                                            <div class="from_items">
-                                                <div class="from_text">顺序</div>
-                                                <input type="hidden" name="key_inhere">
-                                                <input type="number" name="key" placeholder="请填入小于 100 的正整数"
-                                                    autocomplete="off"
-                                                    oninput="if(value>99)value=99;if(value<0)value=0">
-                                            </div>
-                                            <div class="from_items">
-                                                <div class="from_text">名称</div>
-                                                <input type="text" name="title" placeholder="网站名称" autocomplete="off">
-                                            </div>
-                                            <div class="from_items">
-                                                <div class="from_text">网址</div>
-                                                <input type="url" name="url" placeholder="以 https 或 http 开头的 URL"
-                                                    autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="from_items button">
-                                            <div class="quick_add_save">保存</div>
-                                            <div class="quick_add_cancel">取消</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 深浅模式辅助判段块 -->
-                        <div id="switchSetOn" class="a_switch" style="display: none;"></div>
-                        <!-- 搜索建议辅助判段块 -->
-                        <div id="suggestSetOn" class="" style="display: none;"></div>
-                        <!-- 设置 -->
-                        <div class="mainConts" style="overflow-y: auto;">
-                            <div class="set_blocks set_blocks_new" style="margin-top: 10px;">
-                                <span class="set_text" style="color: white; margin-top: 10px;">&nbsp;<span
-                                        id="iconfont-sec" class="iconfont icon-tab mobile"
-                                        style="font-size: 20px !important;"></span><big>面板设置</big></span>
-                                <!-- 占位块 -->
-                                <div class="set_tip set_tip_new text_left mobile" style="opacity: 0;">
-                                    <div>
-                                        <span class="set_text" id="wallpaper_text">恭喜你发现了这里，这里什么也没有</span><br>
-                                    </div>
-                                </div>
-                                <!-- 时间滑块 -->
-                                <div id="toggle_time" class="set_tip set_tip_new text_right"
-                                    style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;">
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>时间字体大小&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-size-slider">
-                                        </div>
-                                    </div>
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>时间字体粗细&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-thick-slider">
-                                        </div>
-                                    </div>
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>时间字体透明度&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-opacity-slider">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 日期滑块(阳) -->
-                                <div id="toggle_time" class="set_tip set_tip_new text_right"
-                                    style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;">
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>阳历字体大小&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-size-date">
-                                        </div>
-                                    </div>
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>阳历字体粗细&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-thick-date">
-                                        </div>
-                                    </div>
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>阳历字体透明度&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-opacity-date">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 日期滑块(阴) -->
-                                <div id="toggle_time" class="set_tip set_tip_new text_right lunar_date_off"
-                                    style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;">
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>阴历字体大小&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-size-lunar">
-                                        </div>
-                                    </div>
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>阴历字体粗细&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-thick-lunar">
-                                        </div>
-                                    </div>
-                                    <div class="tip_new_both">
-                                        <div>
-                                            <span class="set_text"><big>阴历字体透明度&nbsp;</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
-                                        </div>
-                                        <div>
-                                            <input type="range" class="time_slider" min="0" max="100" value="0"
-                                                id="font-opacity-lunar">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 农历显示块 -->
-                                <div id="time_lunar" class="set_tip set_tip_new text_right">
-                                    <div>
-                                        <span class="set_text"><big>显示农历&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text" style="color: gray;"><small>是否在时间下展示农历</small></span>
-                                    </div>
-                                    <div>
-                                        <script src="./js/times.js"></script>
-                                        <div class="switch" id="togglelunar"></div>
-                                    </div>
-                                </div>
-                                <!-- 时间显秒块 -->
-                                <div id="time_show" class="set_tip set_tip_new text_right">
-                                    <div>
-                                        <span class="set_text"><big>时间显秒&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text" style="color: gray;"><small>是否在时间处展示秒数</small></span>
-                                    </div>
-                                    <div>
-                                        <script src="./js/times.js"></script>
-                                        <div class="switch" id="toggletimes"></div>
-                                    </div>
-                                </div>
-                                <!-- 主题块 -->
-                                <div id="dropdown_theme" class="set_tip set_tip_new text_right">
-                                    <div>
-                                        <span class="set_text"><big>主题选择&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text" style="color: gray;"><small>默认使用深色模式</small></span>
-                                    </div>
-                                    <div class="dropdown" id="dropdown-theme"
-                                        style="display: flex; justify-content: space-between;">
-                                        <span id="selected-theme">深色模式</span>
-                                        <span id="iconfont-folding-theme" class="iconfont icon-folding"></span>
-                                        <div class="dropdown-content" id="dropdownTheme">
-                                            <div id="dropdown-theme-light" class="dropdown-item dropdown-selected"
-                                                data-theme="light">
-                                                <span class="checked"></span> 浅色模式
-                                            </div>
-                                            <div id="dropdown-theme-dark" class="dropdown-item" data-theme="dark">
-                                                <span class="checked">✔</span> 深色模式
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="set_text" style="color: white; margin-top: 10px;">&nbsp;<span
-                                        id="iconfont-sec" class="iconfont icon-tab mobile"
-                                        style="font-size: 20px !important;"></span><big>搜索设置</big></span>
-                                <!-- 占位块 -->
-                                <div class="set_tip set_tip_new text_left mobile" style="opacity: 0;">
-                                    <div>
-                                        <span class="set_text" id="wallpaper_text">恭喜你发现了这里，这里什么也没有</span><br>
-                                    </div>
-                                </div>
-                                <!-- 搜索建议(开关)块 -->
-                                <div id="toggle_suggest" class="set_tip set_tip_new text_right">
-                                    <div>
-                                        <span class="set_text"><big>搜索建议开关&nbsp;</big><span
-                                                class="desktop"></span></span>
-                                        <span class="set_text" style="color: gray;"><small>是否展示搜索建议</small></span>
-                                    </div>
-                                    <div>
-                                        <div class="switch on" id="toggleSuggests"></div>
-                                        <script src="./js/suggest.js" nonce="toggle-switch-suggest"></script>
-                                    </div>
-                                </div>
-                                <!-- 快速使用块 -->
-                                <div id="toggle_start" class="set_tip set_tip_new text_right">
-                                    <div>
-                                        <span class="set_text"><big>快速使用&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text"
-                                            style="color: gray;"><small>打开起始页后是否自动聚焦搜索框</small></span>
-                                    </div>
-                                    <div>
-                                        <div class="switch" id="toggleStart"></div>
-                                        <script src="./js/start.js" nonce="toggle-switch-start"></script>
-                                    </div>
-                                </div>
-                                <!-- 搜索建议(选择)块 -->
-                                <div id="dropdown_suggest" class="set_tip set_tip_new text_right">
-                                    <div>
-                                        <span class="set_text"><big>搜索建议选择&nbsp;</big><span
-                                                class="desktop"></span></span>
-                                        <span class="set_text" style="color: gray;"><small>选择搜索建议来源</small></span>
-                                    </div>
-                                    <div class="dropdown" id="dropdown-suggest"
-                                        style="display: flex; justify-content: space-between;">
-                                        <span id="selected-option">百度</span>
-                                        <span id="iconfont-folding" class="iconfont icon-folding"></span>
-                                        <div class="dropdown-content" id="dropdownSuggest">
-                                            <div id="dropdown-suggest-google" class="dropdown-item dropdown-selected">
-                                                <span class="checked"></span> 谷歌
-                                            </div>
-                                            <div id="dropdown-suggest-bing" class="dropdown-item">
-                                                <span class="checked"></span> 必应
-                                            </div>
-                                            <div id="dropdown-suggest-baidu" class="dropdown-item">
-                                                <span class="checked">✔</span> 百度
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="set_text" style="color: white; margin-top: 10px;">&nbsp;<span
-                                        id="iconfont-sec" class="iconfont icon-tab mobile"
-                                        style="font-size: 20px !important;"></span><big>数据设置</big></span>
-                                <!-- 占位块 -->
-                                <div class="set_tip set_tip_new text_left mobile" style="z-index: 0; opacity: 0;">
-                                    <div>
-                                        <span class="set_text" id="wallpaper_text">恭喜你发现了这里，这里什么也没有</span><br>
-                                    </div>
-                                </div>
-                                <!-- 导入块2 -->
-                                <div class="set_tip set_tip_new">
-                                    <div>
-                                        <span class="set_text"><big>导入&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text"
-                                            style="color: gray;"><small>点击导入可选择已备份文件进行恢复</small></span>
-                                    </div>
-                                    <div class="import-block" align="center">
-                                        <div class="but-ordinary" id="my_data_in" style="margin-top: 2%; width: 80%;">导入
-                                        </div>
-                                        <input type="file" id="my_data_file" name="file" style="display: none">
-                                    </div>
-                                </div>
-                                <!-- 导出块 -->
-                                <div class="set_tip set_tip_new">
-                                    <div>
-                                        <span class="set_text"><big>导出&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text"
-                                            style="color: gray;"><small>点击导出会将本站文件导出至下载目录</small></span>
-                                    </div>
-                                    <div class="export-block" align="center">
-                                        <div class="but-ordinary" id="my_data_out" style="margin-top: 2%; width: 80%;">
-                                            导出</div>
-                                    </div>
-                                </div>
-                                <!-- 重置块 -->
-                                <div class="set_tip set_tip_new">
-                                    <div>
-                                        <span class="set_text"><big>重置&nbsp;</big><span class="desktop"></span></span>
-                                        <span class="set_text" style="color: gray;"><small>若遇到问题可在此处进行重置</small></span>
-                                    </div>
-                                    <div class="reset-block" align="center">
-                                        <div class="but-ordinary" id="resetButton" style="margin-top: 2%; width: 80%;">
-                                            重置</div>
-                                    </div>
-                                </div>
-                                <!-- 占位块 -->
-                                <div class="set_tip set_tip_new mobile" style="opacity: 0;">
-                                    <div>
-                                        <span class="set_text" id="wallpaper_text">恭喜你发现了这里，这里什么也没有</span><br>
-                                    </div>
-                                </div>
-                                <span class="set_text" style="color: white;">&nbsp;<span id="iconfont-fir"
-                                        class="iconfont icon-tab mobile"
-                                        style="font-size: 20px !important;"></span><big>背景设置</big></span>
-                                <!-- 背景块 -->
-                                <div id="set_blocks_backblock" class="set_blocks_sec_new">
-                                    <!-- 背景信息块 -->
-                                    <div class="set_tip set_tip_new set_tip_sec_new set_tip_for_new mobile-b">
-                                        <div>
-                                            <span class="set_text"><span class="iconfont icon-act"
-                                                    style="font-size: 22px !important;"></span></span>
-                                            <span class="set_text" style="color: gray;"><big>提示</big><span
-                                                    class="desktop"></span></span>
-                                            <span class="set_text"><small>请点击选项以查看各项说明</small></span>
-                                            <span class="mobile"><br></span>
-                                            <span class="set_text mobile">点击下方选项以切换壁纸，使用除默认壁纸以外的选项可能会导致页面载入缓慢</span><br>
-                                            <span class="set_text mobile">不建议使用以主色调为白色的壁纸，会导致本站部分元素无法辨认</span>
-                                            <span class="mobile"><br></span>
-                                            <span class="set_text wallpaper_hid wallpaper_text"
-                                                id="wallpaper_text_1">默认壁纸</span>
-                                            <span class="set_text wallpaper_hid wallpaper_text"
-                                                id="wallpaper_text_2">必应每日一图，每天更新</span>
-                                            <span class="set_text wallpaper_hid wallpaper_text"
-                                                id="wallpaper_text_3">随机风景图，每次刷新后更换</span>
-                                            <span class="set_text wallpaper_hid wallpaper_text"
-                                                id="wallpaper_text_4">随机二次元图，每次刷新后更换</span>
-                                            <span class="set_text wallpaper_hid wallpaper_text"
-                                                id="wallpaper_text_5">自定义壁纸地址，请自行确定地址可用性</span>
-                                        </div>
-                                    </div>
-                                    <!-- 背景设置块 -->
-                                    <div class="set_blocks_content set_tip_sec_new mobile-b">
-                                        <div class="from_container">
-                                            <div class="froms">
-                                                <div class="from_row">
-                                                    <div class="from_row_content">
-                                                        <div id="wallpaper" style="flex-wrap: wrap;">
-                                                            <div class="form-radio" style="z-index: 1;">
-                                                                <input type="radio" id="radio1" class="set-wallpaper"
-                                                                    name="wallpaper-type" value="1"
-                                                                    style="display: none;">
-                                                                <label class="form-radio-label" for="radio1">
-                                                                    默认
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-radio" style="z-index: 1;">
-                                                                <input type="radio" id="radio2" class="set-wallpaper"
-                                                                    name="wallpaper-type" value="2"
-                                                                    style="display: none;">
-                                                                <label class="form-radio-label" for="radio2">
-                                                                    必应
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-radio" style="z-index: 1;">
-                                                                <input type="radio" id="radio3" class="set-wallpaper"
-                                                                    name="wallpaper-type" value="3"
-                                                                    style="display: none;">
-                                                                <label class="form-radio-label" for="radio3">
-                                                                    风景
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-radio" style="z-index: 1;">
-                                                                <input type="radio" id="radio4" class="set-wallpaper"
-                                                                    name="wallpaper-type" value="4"
-                                                                    style="display: none;">
-                                                                <label class="form-radio-label" for="radio4">
-                                                                    二次元
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-radio" style="z-index: 1;">
-                                                                <input type="radio" id="radio5"
-                                                                    class="set-wallpaper wallpaper-custom"
-                                                                    name="wallpaper-type" value="5"
-                                                                    style="display: none;">
-                                                                <label class="form-radio-label" for="radio5">
-                                                                    自定义
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="wallpaper_url" style="z-index: 1; display: none;">
-                                                    <div class="from_row">
-                                                        <div class="from_items">
-                                                            <input type="text" name="wallpaper-url" id="wallpaper-url"
-                                                                placeholder="以 https 或 http 开头的 URL" autocomplete="off">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="from_items button" id="wallpaper-button"
-                                            style="z-index: 1; display: none;">
-                                            <div class="wallpaper_save">保存</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 关于 -->
-                        <div class="mainConts" style="overflow-y: auto;">
-                            <div class="set_blocks">
-                                <div class="set_tip">
-                                    <span class="set_text" align="center"><img id="favo-icon"
-                                            src="./img/icon/favicon_144.png" style="width: 32px; height: 32px;"
-                                            align="center"><br><small>V1.2.14</small><br><big>拟态起始页</big></span>
-                                </div>
-                                <div class="set_tip">
-                                    <span class="set_text"><big>更新日志</big></span>
-                                    <div class="update_logs"
-                                        style="margin: 0px 10px; height: 300px; overflow-y: auto; overflow-x: hidden;">
-                                        <ul>
-                                            <li>V1.2.14 (2024.11.10)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：二级窗口折叠功能<br>
-                                                - 优化：设置选项展示效果<br>
-                                                - 修复：搜索建议源无法切换 <span class="update_text_description">补丁v0.2</span><br>
-                                                - 增加：多个搜索建议源<br>
-                                                - 增加：多个搜索引擎<br>
-                                                - 增加：多个待使用图标<br>
-                                                - 增加：PWA 支持<br>
-                                            </ul>
-                                            <li>V1.2.13 (2024.11.03)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：导入导出功能细节<br>
-                                                - 修复：搜索建议显示问题 <span class="issues">#2</span><br>
-                                                - 增加：搜索时视觉效果<br>
-                                            </ul>
-                                            <li>V1.2.12 (2024.08.31)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 修复：农历自定义开关问题<br>
-                                                - 修复：更新日志版块排版布局<br>
-                                                - 修复：农历自定义字体大小问题<br>
-                                                - 修复：浅色背景导致的按钮颜色问题<br>
-                                            </ul>
-                                            <li>V1.2.11 (2024.08.30)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：主题切换细节<br>
-                                                - 修复：时钟自定义内容保存问题<br>
-                                                - 修复：日期自定义内容保存问题<br>
-                                                - 新增：农历显示开关<br>
-                                                - 新增：农历自定义(粗细、大小、透明度调整)滑块<br>
-                                            </ul>
-                                            <li>V1.2.10 (2024.08.22)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：折叠/展开细节<br>
-                                                - 新增：主题选择<br>
-                                                - 新增：时间显秒开关<br>
-                                                - 新增：时钟自定义(粗细、大小、透明度调整)滑块<br>
-                                                - 新增：日期自定义(粗细、大小、透明度调整)滑块<br>
-                                            </ul>
-                                            <li>V1.2.9 (2024.08.21)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：折叠/展开按钮<br>
-                                                - 重置：面板页排版布局<br>
-                                                - 新增：搜索建议开关<br>
-                                                - 新增：快速使用开关<br>
-                                                - 新增：未来更新计划展示<br>
-                                            </ul>
-                                            <li>V1.2.8 (2024.08.18)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：部分细节<br>
-                                                - 重置：面板页排版布局<br>
-                                                - 修改：移除捷径快速添加按钮<br>
-                                            </ul>
-                                            <li>V1.2.7 (2024.08.18)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：部分细节<br>
-                                                - 修改：部分细节<br>
-                                                - 修改：设置页面布局<br>
-                                                - 修改：时钟二级页面布局<br>
-                                                - 修改：更新日志界面为子布局<br>
-                                                - 修改：移动版权信息到关于页面<br>
-                                                - 修改：数据壁纸页面二合一，优化排版<br>
-                                                - 修改：快速使用(打开起始页后自动聚焦搜索框)<br>
-                                                - 新增：站点重置按钮<br>
-                                                - 新增：时钟过度动画<br>
-                                                - 新增：Tab键打开捷径<br>
-                                                - 新增：折叠/展开按钮(更简洁的二级页面)<br>
-                                            </ul>
-                                            <li>V1.2.6 (2024.08.13)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：背景设置页面排版布局<br>
-                                                - 优化：数据备份页面排版布局<br>
-                                                - 优化：更新日志页面排版布局<br>
-                                            </ul>
-                                            <li>V1.2.5 (2024.08.12)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：设置页面排版布局<br>
-                                                - 修改：允许小屏使用自定义壁纸<br>
-                                                - 新增：更新日志页面<br>
-                                            </ul>
-                                            <li>V1.2.4 (2024.08.11)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：主页排版<br>
-                                                - 优化：数据备份页面排版布局<br>
-                                                - 修改：允许自定义壁纸使用壁纸api<br>
-                                            </ul>
-                                            <li>V1.2.3 (2024.08.10)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：主页加载方式<br>
-                                                - 新增：浏览器扩展(版本同步)<br>
-                                            </ul>
-                                            <li>V1.2.2 (2024.08.07)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：主页排版<br>
-                                                - 优化：主页加载速度<br>
-                                                - 删改：部分快捷方式<br>
-                                            </ul>
-                                            <li>V1.2.1 (2024.08.06)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：图标(icon)重绘<br>
-                                            </ul>
-                                            <li>V1.2.0 (2024.08.05)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 优化：起始页加载速度<br>
-                                                - 删改：原内容(部分完成与未完成项目)<br>
-                                            </ul>
-                                            <li>V1.1 (2024.08.01)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 继承：原imsyy的开源项目版本<br>
-                                            </ul>
-                                            <li>V1.0 (2024.07.31)</li>
-                                            <ul type="none" class="update_log_text">
-                                                - 成立：起始页项目<br>
-                                            </ul>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="set_tip">
-                                    <span class="set_text"><big>计划更新</big></span>
-                                    <div class="update_logs" style="margin: 0px 10px;">
-                                        <ul type="circle">
-                                            <li>节日显示</li>
-                                            <li>动态背景</li>
-                                            <li>待办事项</li>
-                                            <li>备忘录</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="set_tip">
-                                    <div class="set_version">
-                                        <span class="set_text"><big>版权信息</big></span>
-                                        <span class="set_version-text">Copyright&nbsp;&copy;
-                                            <script type="text/javascript" src="./js/year.js"></script>&nbsp;<a
-                                                href="https://nitai.us.kg/">Nitai</a>
-                                        </span>
-                                        <span class="set_version-text2">Open&nbsp;Source&nbsp;By&nbsp;<a
-                                                href="https://www.imsyy.top/" target="_blank"
-                                                style="color: rgb(180, 180, 180);">imsyy</a></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- 设置 -->
+                <div class="set animate__animated animate__zoomIn" style="display: none;">
                 </div>
-                <!-- 版本信息 -->
-                <div class="foot">
-                    <div class="power"><small>拟态起始页 v1.2.14.2</small></a>
-                    </div>
+                <!-- NPP 设置 -->
+                <div class="plugin_set animate__animated animate__zoomIn" style="display: none;">
                 </div>
+            </div>
+        </div>
+        <!-- 版本信息 -->
+        <div class="foot">
+            <div class="power">
+                拟态起始页
+            </div>
+        </div>
     </section>
-    <!-- noscript -->
-    <noscript>
-        <div class="noscript fixed-top">请允许本网页使用 JavaScript</div>
-    </noscript>
-    <!-- JS -->
-    <script type="text/javascript" src="./js/main.js"></script>
-    <script type="text/javascript" src="./js/set.js"></script>
-    <script type="text/javascript" src="./js/js.cookie.js"></script>
-    <script type="text/javascript" src="./js/fold.js"></script>
-    <script type="text/javascript" src="./js/suggest.js"></script>
-    <script type="text/javascript" src="./js/start.js"></script>
-    <script type="text/javascript" src="./js/dropdown.js"></script>
-    <script type="text/javascript" src="./js/times.js"></script>
-    <script type="text/javascript" src="./js/time.js"></script>
-    <script src="./service-worker.js"></script>
+    <!-- CoreNpp -->
+    <script type="text/javascript" src="./js/coreNpp/advancedSettings.js"></script>
 </body>
 
 </html>
