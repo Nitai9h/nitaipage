@@ -221,6 +221,21 @@ function createPanelContent() {
           </div>
         </div>
         <div class="switch-container">
+          <div class="set_tip set_tip_new">
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>时钟制式&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>是否使用 12 小时制</small></span>
+              </div>
+              <div id="toggle-time-format" class="switch"></div>
+            </div>
+          </div>
+          <div class="set_tip set_tip_new">
+            <div class="switch-item tip_new_both">
+              <span class="set_text">缺位补零</span>
+              <div id="toggle-zero-padding" class="switch"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -177,6 +177,13 @@
     .reloadPluginSettings-btn {
         margin: 10px 20px 0px 20px;
     }
+
+    .announcement_container {
+        min-width: 80%;
+        max-width: 80%;
+        min-height: 80%;
+        max-height: 80%;
+    }
 }
 
 /*小于260px时*/

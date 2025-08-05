@@ -357,7 +357,9 @@ img.error {
     flex-wrap: nowrap;
     align-content: center;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
+    align-items: baseline;
+    position: relative
 }
 
 #time_text:hover {
@@ -370,6 +372,19 @@ img.error {
     transition: 0.2s;
     opacity: 0.6;
     transform: scale(1.02);
+}
+
+.ampm {
+    position: absolute;
+    left: calc(100% + 8px);
+    top: 45%;
+    transform: translateY(-50%);
+    font-size: calc(0.38 * var(--time-font-size));
+    font-weight: var(--time-font-weight);
+    opacity: var(--time-opacity);
+    white-space: nowrap;
+    color: var(--border-bottom-color-hover);
+    text-shadow: var(--main-text-shadow);
 }
 
 #day {
@@ -1782,6 +1797,12 @@ input[type=range]::-ms-fill-lower {
     left: 50%;
     transform: translate(-50%, -50%);
     backdrop-filter: blur(20px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 60%;
+    max-width: 60%;
+    min-height: 60%;
+    max-height: 60%;
 }
 
 .announcement_container h2 {

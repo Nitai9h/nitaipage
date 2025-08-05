@@ -185,13 +185,13 @@ $(document).ready(function () {
             if ($(this).attr("class") === "entry-items on") {
                 $("#icon-fold").attr("class", "iconfont icon-fold");
                 $(this).removeClass('on');
-                localStorage.setItem('foldTime', 'on');
+                localStorage.setItem('foldTime', 'off');
 
                 showTime();
             } else {
                 $("#icon-fold").attr("class", "iconfont icon-unfold");
                 $(this).addClass('on');
-                localStorage.setItem('foldTime', 'off');
+                localStorage.setItem('foldTime', 'on');
 
                 hideTime();
             }
@@ -949,4 +949,30 @@ $(document).ready(function () {
 
         showOrderConfigDialog();
     });
+
+    // 设置默认值
+    localStorage.getItem('timeFormat12h') === null && localStorage.setItem('timeFormat12h', 'false');
+    localStorage.getItem('zeroPadding') === null && localStorage.setItem('zeroPadding', 'true');
+
+    // 初始化开关状态
+    $(document).ready(function () {
+        $('#toggle-time-format').toggleClass('on', localStorage.getItem('timeFormat12h') === 'true');
+        $('#toggle-zero-padding').toggleClass('on', localStorage.getItem('zeroPadding') === 'true');
+    });
+
+
+    $('#toggle-time-format').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('timeFormat12h', $(this).hasClass('on'));
+        time();
+    });
+
+    $('#toggle-zero-padding').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('zeroPadding', $(this).hasClass('on'));
+        time();
+    });
+
 });

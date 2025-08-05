@@ -23,15 +23,29 @@ function time() {
     var h = dt.getHours();
     var m = dt.getMinutes();
 
+    const is12Hour = localStorage.getItem('timeFormat12h') === 'true';
+    const zeroPad = localStorage.getItem('zeroPadding') === 'true';
+
+    if (is12Hour) {
+        var ampm = h >= 12 ? 'PM' : 'AM';
+        ampmHTML = '<span class="ampm">' + ampm + '</span>';
+        h = h % 12 || 12;
+    } else {
+        ampmHTML = '';
+    }
+
     // 格式化
-    h = h < 10 ? "0" + h : h;
+    h = zeroPad ? (h < 10 ? "0" + h : h) : h;
     m = m < 10 ? "0" + m : m;
-    mm = mm < 10 ? "0" + mm : mm;
-    d = d < 10 ? "0" + d : d;
+    mm = zeroPad ? (mm < 10 ? "0" + mm : mm) : mm;
+    d = zeroPad ? (d < 10 ? "0" + d : d) : d;
 
     $("#time_text").html(
         wrapTimeDigits(h.toString())
         + '<span id="point">:</span>' + wrapTimeDigits(m.toString())
+    );
+    $("#ampm").html(
+        ampmHTML
     );
     $("#day").html(wrapDayDigits(mm.toString()) + "&nbsp;月&nbsp;" + '<span id="point"></span>'
         + wrapDayDigits(d.toString()) + "&nbsp;日&nbsp;" + '<span id="point"></span>'
@@ -187,7 +201,7 @@ frameStyle.blackCover = function (id, opacityParam, colorParam) {
         height: '100%',
         zIndex: '999',
         backgroundColor: `rgba(${isWhite ? '255,255,255' : '0,0,0'}, ${opacity})`,
-        pointerEvents: 'none'
+        pointerEvents: 'auto'
     });
 };
 
@@ -234,7 +248,7 @@ frameStyle.guassianCover = function (id, blurParam, opacityParam) {
         zIndex: '998',
         backgroundColor: `rgba(255, 255, 255, ${opacity})`,
         backdropFilter: `blur(${blur})`,
-        pointerEvents: 'none',
+        pointerEvents: 'auto',
         transition: 'opacity 0.3s ease, filter 0.3s ease'
     });
 };

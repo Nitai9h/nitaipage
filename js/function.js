@@ -286,8 +286,9 @@ function setBgImg(bg_img) {
 // 初始化折叠状态
 function foldInit() {
     var foldValue = localStorage.getItem('foldTime');
-    if (foldValue == "true") {
+    if (foldValue == 'on') {
         $("#icon-fold").attr("class", "iconfont icon-unfold");
+        $("#fold").addClass("on");
     } else {
         $("#icon-fold").attr("class", "iconfont icon-fold");
     }
