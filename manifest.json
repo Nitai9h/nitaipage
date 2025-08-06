@@ -1,0 +1,16 @@
+{
+  "name": "拟态起始页",
+  "short_name": "拟态起始页",
+  "description": "一个优雅的浏览器起始页",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "./favicon.png",
+      "sizes": "600x600",
+      "type": "image/png"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

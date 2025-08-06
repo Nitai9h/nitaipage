@@ -529,7 +529,7 @@ function createMoreContent() {
             <div class="but-ordinary" id="${option.buttonId}">${option.buttonText}</div>
           </div>
         `).join('')}
-        <input type="file" id="my_data_file" style="display: none;" accept=".zip">
+        <input type="file" id="my_data_file" style="display: none;" accept=".json">
       </div>
     </div>
   `;

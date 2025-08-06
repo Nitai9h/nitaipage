@@ -602,6 +602,7 @@
 /* 输入框样式 */
 input[type="text"] {
     -moz-appearance: textfield;
+    appearance: textfield;
     color: var(--main-text-color);
 }
 

@@ -2,6 +2,11 @@
 <html lang="zh">
 
 <head>
+    <!-- PWA -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" sizes="600x600" href="./favicon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <script type="text/javascript" src="./js/plugin_welcome.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -98,6 +103,20 @@
     </section>
     <!-- CoreNpp -->
     <script type="text/javascript" src="./js/coreNpp/advancedSettings.js"></script>
+    <!-- PWA Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('ServiceWorker: ', registrationError);
+                    });
+            });
+        }
+    </script>
 </body>
 
 </html>

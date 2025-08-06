@@ -54,6 +54,7 @@ p {
     transition: 0.3s;
     color: var(--main-text-color);
     user-select: none;
+    -webkit-user-select: none;
 }
 
 section {
@@ -1418,6 +1419,7 @@ input[type="radio"]:checked+label {
 /*弹窗样式*/
 .iziToast {
     backdrop-filter: var(--main-box-gauss) !important;
+    -webkit-backdrop-filter: var(--main-box-gauss) !important;
     background-color: var(--main-background-color) !important;
 }
 
@@ -1590,6 +1592,7 @@ input[type="radio"]:checked+label {
     transition: all 0.3s ease;
     top: 100%;
     left: 0;
+    -webkit-backdrop-filter: var(--main-box-gauss);
     backdrop-filter: var(--main-box-gauss);
     overflow-y: auto;
 }
