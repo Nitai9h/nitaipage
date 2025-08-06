@@ -1298,6 +1298,7 @@ input::-webkit-input-placeholder {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center
 }
 
 #wallpaper_url {

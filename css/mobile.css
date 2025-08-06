@@ -186,6 +186,21 @@
     }
 }
 
+/*小于400px时*/
+@media (max-width: 400px) {
+    .slider {
+        width: 80px !important;
+    }
+}
+
+/*小于325px时*/
+@media (max-width: 325px) {
+    .tip_new_slider {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+}
+
 /*小于260px时*/
 @media (max-width: 260px) {
 

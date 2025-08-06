@@ -47,10 +47,10 @@ $(document).ready(function () {
     // 时间点击
     $("#time_text").click(function () {
         if ($("#content").hasClass("box")) {
+            blurWd();
             closeBox();
             closeSet();
             closeStore();
-            blurWd();
         } else {
             $("body").removeClass("onsearch");
             openBox();

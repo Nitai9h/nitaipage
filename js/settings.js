@@ -144,7 +144,7 @@ function createPanelContent() {
       <div class="panelContent">
         <div class="slider-container">
           <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
-            <div class="tip_new_both advancedSetting">
+            <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
                 <span class="set_text"><big>时间大小&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
@@ -153,7 +153,7 @@ function createPanelContent() {
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider">
               </div>
             </div>
-            <div class="tip_new_both advancedSetting">
+            <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
                 <span class="set_text"><big>时间宽度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
@@ -162,7 +162,7 @@ function createPanelContent() {
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-width-time">
               </div>
             </div>
-            <div class="tip_new_both">
+            <div class="tip_new_both tip_new_slider">
               <div>
                 <span class="set_text"><big>时间粗细&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
@@ -171,7 +171,7 @@ function createPanelContent() {
                 <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-slider">
               </div>
             </div>
-            <div class="tip_new_both">
+            <div class="tip_new_both tip_new_slider">
               <div>
                 <span class="set_text"><big>时间透明度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
@@ -182,7 +182,7 @@ function createPanelContent() {
             </div>
           </div>
           <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
-            <div class="tip_new_both advancedSetting">
+            <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
                 <span class="set_text"><big>日期大小&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
@@ -191,7 +191,7 @@ function createPanelContent() {
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date">
               </div>
             </div>
-            <div class="tip_new_both advancedSetting">
+            <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
                 <span class="set_text"><big>日期宽度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小 (12.5px)</small></span>
@@ -200,7 +200,7 @@ function createPanelContent() {
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-width-date">
               </div>
             </div>
-            <div class="tip_new_both">
+            <div class="tip_new_both tip_new_slider">
               <div>
                 <span class="set_text"><big>日期粗细&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
@@ -209,7 +209,7 @@ function createPanelContent() {
                 <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-date">
               </div>
             </div>
-            <div class="tip_new_both">
+            <div class="tip_new_both tip_new_slider">
               <div>
                 <span class="set_text"><big>日期透明度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
@@ -222,7 +222,7 @@ function createPanelContent() {
         </div>
         <div class="switch-container">
           <div class="set_tip set_tip_new">
-            <div class="switch-item tip_new_both">
+            <div class="switch-item tip_new_both" style="align-items: center;">
               <div>
                 <span class="set_text"><big>时钟制式&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>是否使用 12 小时制</small></span>
@@ -544,7 +544,7 @@ function createAboutContent() {
   <div class="set_blocks">
     <div class="aboutContainer set_blocks_content">
       <div class="set_tip_about">
-        <span class="set_text" align="center"><img id="favo-icon" src="./favicon.ico" style="width: 32px; height: 32px;" align="center"><br>
+        <span class="set_text" style="text-align: center;"><img id="favo-icon" src="./favicon.ico" style="width: 32px; height: 32px;"><br>
           <span id="version-number">${VersionInfo.VERSION}</span>
           <br><big>NitaiPage</big></span>
       </div>
