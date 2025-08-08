@@ -904,6 +904,12 @@ async function init() {
     // 应用管理加载
     await loadPluginManagementPage()
 
+    // 搜索模糊效果加载
+    updateSearchBlur();
+
+    // 滑块显示监听器
+    addSliderValueListeners();
+
     // 壁纸数据加载
     setBgImgInit();
 
@@ -1158,6 +1164,8 @@ function initSliderControls() {
     const dateFontWeightSlider = document.getElementById('font-thick-date');
     const dateFontOpacitySlider = document.getElementById('font-opacity-date');
     const dateFontWidthSlider = document.getElementById('font-width-date');
+    const mainFontWeightSlider = document.getElementById('main-font-weight');
+    const mainBoxBlurSlider = document.getElementById('main-box-gauss');
 
     // 从 localStorage 加载设置或使用默认值
     const timeSettings = {
@@ -1172,6 +1180,10 @@ function initSliderControls() {
         opacity: parseInt(localStorage.getItem('dateFontOpacity')) || 100,
         width: parseInt(localStorage.getItem('dateFontWidth')) || 0
     };
+    const mainSettings = {
+        blur: parseInt(localStorage.getItem('mainBoxBlur')) || 50,
+        weight: parseInt(localStorage.getItem('mainFontWeight')) || 50
+    };
 
     // 设置滑块初始值
     timeFontSizeSlider.value = timeSettings.size;
@@ -1182,10 +1194,35 @@ function initSliderControls() {
     dateFontWeightSlider.value = dateSettings.weight;
     dateFontOpacitySlider.value = dateSettings.opacity;
     dateFontWidthSlider.value = dateSettings.width;
+    mainBoxBlurSlider.value = mainSettings.blur;
+    mainFontWeightSlider.value = mainSettings.weight;
+    // 设置 Value 初始值
+    document.getElementById('font-thick-value').textContent = timeSettings.weight;
+    document.getElementById('font-size-slider-value').textContent = timeSettings.size;
+    document.getElementById('font-width-time-value').textContent = timeSettings.width;
+    document.getElementById('font-opacity-slider-value').textContent = timeSettings.opacity;
+    document.getElementById('font-size-date-value').textContent = dateSettings.size;
+    document.getElementById('font-width-date-value').textContent = dateSettings.width;
+    document.getElementById('font-thick-date-value').textContent = dateSettings.weight;
+    document.getElementById('font-opacity-date-value').textContent = dateSettings.opacity;
+    document.getElementById('main-font-weight-value').textContent = mainSettings.weight;
+    document.getElementById('main-box-gauss-value').textContent = mainSettings.blur;
+
+    initSliderProgress(timeFontSizeSlider);
+    initSliderProgress(timeFontWeightSlider);
+    initSliderProgress(timeFontOpacitySlider);
+    initSliderProgress(timeFontWidthSlider);
+    initSliderProgress(dateFontSizeSlider);
+    initSliderProgress(dateFontWeightSlider);
+    initSliderProgress(dateFontOpacitySlider);
+    initSliderProgress(dateFontWidthSlider);
+    initSliderProgress(mainBoxBlurSlider);
+    initSliderProgress(mainFontWeightSlider);
 
     // 应用初始样式
     updateTimeStyle(timeSettings.size, timeSettings.weight, timeSettings.opacity, timeSettings.width);
     updateDateStyle(dateSettings.size, dateSettings.weight, dateSettings.opacity, dateSettings.width);
+    updateMainStyle(mainSettings.blur, mainSettings.weight);
 
     // 添加滑块事件监听器
     timeFontSizeSlider.addEventListener('input', function () {
@@ -1193,56 +1230,206 @@ function initSliderControls() {
         updateTimeStyle(value, timeSettings.weight, timeSettings.opacity, timeSettings.width);
         localStorage.setItem('timeFontSize', value);
         timeSettings.size = value;
+        // 更新 Value
+        const valueElement = document.getElementById('font-size-slider-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
     });
+
+
 
     timeFontWeightSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateTimeStyle(timeSettings.size, value, timeSettings.opacity, timeSettings.width);
         localStorage.setItem('timeFontWeight', value);
         timeSettings.weight = value;
+        // 更新 Value
+        const valueElement = document.getElementById('font-thick-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
     });
+
+
 
     timeFontOpacitySlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateTimeStyle(timeSettings.size, timeSettings.weight, value, timeSettings.width);
         localStorage.setItem('timeFontOpacity', value);
         timeSettings.opacity = value;
+        // 更新 Value
+        const valueElement = document.getElementById('font-opacity-slider-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
     });
+
+
 
     timeFontWidthSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateTimeStyle(timeSettings.size, timeSettings.weight, timeSettings.opacity, value);
         localStorage.setItem('timeFontWidth', value);
         timeSettings.width = value;
+        // 更新 Value
+        const valueElement = document.getElementById('font-width-time-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
     });
+
+
 
     dateFontSizeSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateDateStyle(value, dateSettings.weight, dateSettings.opacity, dateSettings.width);
         localStorage.setItem('dateFontSize', value);
         dateSettings.size = value;
+        // 更新 Value
+        const valueElement = document.getElementById('font-size-date-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
     });
+
+
 
     dateFontWeightSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateDateStyle(dateSettings.size, value, dateSettings.opacity, dateSettings.width);
         localStorage.setItem('dateFontWeight', value);
         dateSettings.weight = value;
+        // 更新 Value
+        const valueElement = document.getElementById('font-thick-date-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
     });
+
+
 
     dateFontOpacitySlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateDateStyle(dateSettings.size, dateSettings.weight, value, dateSettings.width);
         localStorage.setItem('dateFontOpacity', value);
         dateSettings.opacity = value;
+        // 更新 Value
+        const valueElement = document.getElementById('font-opacity-date-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
     });
+
+
 
     dateFontWidthSlider.addEventListener('input', function () {
         const value = parseInt(this.value);
         updateDateStyle(dateSettings.size, dateSettings.weight, dateSettings.opacity, value);
         localStorage.setItem('dateFontWidth', value);
         dateSettings.width = value;
+        // 更新 Value
+        const valueElement = document.getElementById('font-width-date-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
     });
+
+
+
+    mainFontWeightSlider.addEventListener('input', function () {
+        const value = parseInt(this.value);
+        updateMainStyle(mainSettings.blur, value)
+        localStorage.setItem('mainFontWeight', value);
+        mainSettings.weight = value;
+        // 更新 Value
+        const valueElement = document.getElementById('main-font-weight-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
+    });
+
+
+
+    mainBoxBlurSlider.addEventListener('input', function () {
+        const value = parseInt(this.value);
+        updateMainStyle(value, mainSettings.weight)
+        localStorage.setItem('mainBoxBlur', value);
+        mainSettings.blur = value;
+        // 更新 Value
+        const valueElement = document.getElementById('main-box-gauss-value');
+        valueElement.textContent = value;
+        const progress = ((value - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--slider-progress', progress + '%');
+    });
+}
+
+// 添加滑块数值显示监听器
+function addSliderValueListeners() {
+    const sliders = document.querySelectorAll('.slider');
+
+    sliders.forEach(slider => {
+        // 鼠标按下时显示
+        slider.addEventListener('mousedown', function () {
+            const valueElementId = this.id;
+            const valueElement = document.querySelector(`[data-slider="${valueElementId}"]`);
+            if (valueElement) {
+                valueElement.classList.add('show');
+            }
+        });
+
+        // 鼠标释放时隐藏
+        slider.addEventListener('mouseup', function () {
+            const valueElementId = this.id;
+            const valueElement = document.querySelector(`[data-slider="${valueElementId}"]`);
+            if (valueElement) {
+                valueElement.classList.remove('show');
+            }
+        });
+
+        // 鼠标离开滑块也隐藏
+        slider.addEventListener('mouseleave', function () {
+            const valueElementId = this.id;
+            const valueElement = document.querySelector(`[data-slider="${valueElementId}"]`);
+            if (valueElement) {
+                valueElement.classList.remove('show');
+            }
+        });
+
+        // 触摸开始时显示
+        slider.addEventListener('touchstart', function (e) {
+            const valueElementId = this.id;
+            const valueElement = document.querySelector(`[data-slider="${valueElementId}"]`);
+            if (valueElement) {
+                valueElement.classList.add('show');
+            }
+        });
+
+        // 触摸结束时隐藏
+        slider.addEventListener('touchend', function (e) {
+            const valueElementId = this.id;
+            const valueElement = document.querySelector(`[data-slider="${valueElementId}"]`);
+            if (valueElement) {
+                valueElement.classList.remove('show');
+            }
+        });
+
+        // 触摸取消时隐藏
+        slider.addEventListener('touchcancel', function (e) {
+            const valueElementId = this.id;
+            const valueElement = document.querySelector(`[data-slider="${valueElementId}"]`);
+            if (valueElement) {
+                valueElement.classList.remove('show');
+            }
+        });
+    });
+}
+
+// 初始化滑块 Value 显示
+function initSliderProgress(slider) {
+    const value = parseInt(slider.value);
+    const progress = ((value - slider.min) / (slider.max - slider.min)) * 100;
+    slider.style.setProperty('--slider-progress', progress + '%');
 }
 
 // 更新时间样式
@@ -1277,6 +1464,17 @@ function updateDateStyle(size, weight, opacity, width) {
     document.documentElement.style.setProperty('--date-font-weight', fontWeight);
     document.documentElement.style.setProperty('--date-opacity', opacityValue);
     document.documentElement.style.setProperty('--date-width', `${fontWidth}px`);
+}
+
+// 更新全局样式
+function updateMainStyle(blur, weight) {
+    // 转换滑块值
+    const mainFontWeight = 100 + (weight / 100) * 800; // 100-900
+    const blurValue = (blur / 100) * 24; // 0-24
+
+    // 更新 CSS
+    document.documentElement.style.setProperty('--main-font-weight', mainFontWeight);
+    document.documentElement.style.setProperty('--main-box-gauss', `blur(${blurValue}px)`);
 }
 
 // 显示通知弹窗

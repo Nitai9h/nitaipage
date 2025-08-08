@@ -21,10 +21,12 @@
     --main-search-hover-shadow: 0 0 20px #00000033;
     --border-bottom-color-hover: #efefef80;
     --border-bottom-color-active: #efefef;
-    /* --main-box-gauss: blur(10px); */
+    --search-blur: var(--main-box-gauss);
+    --main-box-gauss: blur(10px);
+    --main-font-weight: 500;
     /* 时间样式变量 */
     --time-font-size: 2.75rem;
-    --time-font-weight: 400;
+    --time-font-weight: 700;
     --time-opacity: 1;
     --time-width: 29.5px;
     /* 日期样式变量 */
@@ -32,6 +34,7 @@
     --date-font-weight: 400;
     --date-opacity: 1;
     --date-width: 12.5px;
+    --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
 html,
@@ -44,7 +47,7 @@ body {
     -webkit-user-select: none;
     user-select: none;
     font-family: var(--font-family), sans-serif;
-    font-weight: 400;
+    font-weight: var(--main-font-weight);
 }
 
 *,
@@ -448,8 +451,8 @@ img.error {
     color: var(--main-text-color);
     background-color: var(--main-background-color);
     box-shadow: var(--main-search-shadow);
-    -webkit-backdrop-filter: var(--main-box-gauss);
-    backdrop-filter: var(--main-box-gauss);
+    -webkit-backdrop-filter: var(--search-blur);
+    backdrop-filter: var(--search-blur);
     overflow: hidden;
     transition: ease-in-out 0.25s !important;
 }
@@ -1312,7 +1315,7 @@ input::-webkit-input-placeholder {
 }
 
 #wallpaper_text {
-    font-weight: bold;
+    font-weight: calc(700 + var(--main-font-weight));
     margin-top: 6px;
 }
 
@@ -1632,11 +1635,6 @@ input[type="radio"]:checked+label {
     /* 选中项的背景颜色 */
 }
 
-.checked {
-    margin-right: 8px;
-    /* 调整对勾位置 */
-}
-
 .update_logs {
     margin: 0px 10px;
     overflow-y: auto;
@@ -1644,12 +1642,16 @@ input[type="radio"]:checked+label {
 }
 
 /* 滑块 */
+.slider-container {
+    position: relative;
+}
+
 .slider {
     appearance: none;
     width: 130px;
     height: 10px;
     /* 设置滑块的高度 */
-    background: var(--main-background-active-color);
+    background: linear-gradient(to right, var(--main-input-text-placeholder-color) 0%, var(--main-input-text-placeholder-color) var(--slider-progress), var(--main-background-hover-color) var(--slider-progress), var(--main-background-hover-color) 100%);
     /* 背景颜色 */
     border-radius: 10px;
     outline: none;
@@ -1693,6 +1695,29 @@ input[type=range]::-ms-fill-lower {
     background: var(--main-text-color) !important;
 }
 
+/* 滑块数值显示 */
+.slider-value {
+    position: absolute;
+    transform: translateX(-170px);
+    background: var(--main-background-color);
+    color: var(--main-text-color);
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: var(--date-font-weight);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1000;
+    width: 20px;
+    text-align: center;
+}
+
+.slider-value.show {
+    opacity: 1;
+}
+
 .set_tip_new {
     margin-left: 2.5%;
     margin-right: 2.5%;
@@ -1724,10 +1749,21 @@ input[type=range]::-ms-fill-lower {
     height: 20px;
     background-color: var(--main-background-active-color);
     border-radius: 4px;
-    /* 圆角 */
     position: relative;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s ease;
+    will-change: background-color;
+    transform: translateZ(0);
+}
+
+.switch:active::before {
+    transform: scale(1.1);
+    transition: transform 0.15s ease;
+}
+
+.switch.on:active::before {
+    transform: translateX(20px) scale(1.1);
+    transition: transform 0.15s ease;
 }
 
 .switch::before {
@@ -1739,8 +1775,9 @@ input[type=range]::-ms-fill-lower {
     height: 16px;
     background-color: var(--main-text-color);
     border-radius: 4px;
-    /* 圆角 */
-    transition: transform 0.3s;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .switch.on {

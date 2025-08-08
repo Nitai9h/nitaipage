@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.2.1
+// @version    0.2.3
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -154,9 +154,18 @@ function applyThemeColors(originalColors) {
         document.documentElement.style.setProperty('--main-background-active-color', chroma(primaryColor).saturate(-0.2).alpha(0.5).hex());
         document.documentElement.style.setProperty('--main-text-color', chroma(textColor).brighten(0.3).hex());
         document.documentElement.style.setProperty('--main-text-form-hover-color', chroma(textColor).brighten(0.3).hex());
-        document.documentElement.style.setProperty('--main-text-form-hover-color', chroma(textColor).brighten(0.3).hex());
         document.documentElement.style.setProperty('--border-bottom-color-hover', chroma(textColor).brighten(0.3).hex() + 80);
         document.documentElement.style.setProperty('--border-bottom-color-active', chroma(textColor).brighten(0.3).hex());
+
+        // 应用按钮颜色
+        document.documentElement.style.setProperty('--main-button-color', chroma(textColor).alpha(0.25).hex());
+        document.documentElement.style.setProperty('--main-button-hover-color', chroma(textColor).alpha(0.18).hex());
+        document.documentElement.style.setProperty('--main-button-active-color', chroma(textColor).alpha(0.12).hex());
+
+        // 应用输入框颜色
+        document.documentElement.style.setProperty('--main-input-color', chroma(textColor).alpha(0.18).hex());
+        document.documentElement.style.setProperty('--main-input-text-placeholder-color', chroma(textColor).alpha(0.43).hex());
+
     } catch (error) {
         console.error('应用主题颜色时出错:', error);
     }
@@ -171,6 +180,15 @@ function resetThemeColors() {
     document.documentElement.style.setProperty('--main-background-active-color', '#8a8a8a80');
     document.documentElement.style.setProperty('--border-bottom-color-hover', '#efefef80');
     document.documentElement.style.setProperty('--border-bottom-color-active', '#efefef');
+
+    // 重置按钮颜色
+    document.documentElement.style.setProperty('--main-button-color', '#ffffff40');
+    document.documentElement.style.setProperty('--main-button-hover-color', '#00000030');
+    document.documentElement.style.setProperty('--main-button-active-color', '#00000020');
+
+    // 重置输入框颜色
+    document.documentElement.style.setProperty('--main-input-color', '#ffffff30');
+    document.documentElement.style.setProperty('--main-input-text-placeholder-color', '#ffffff70');
 }
 
 /**

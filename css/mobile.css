@@ -186,18 +186,30 @@
     }
 }
 
-/*小于400px时*/
-@media (max-width: 400px) {
+/*小于450px时*/
+@media (max-width: 450px) {
     .slider {
         width: 80px !important;
     }
+
+    .slider-value {
+        transform: translateX(-120px);
+    }
 }
 
-/*小于325px时*/
-@media (max-width: 325px) {
+/*小于370px时*/
+@media (max-width: 370px) {
     .tip_new_slider {
         flex-direction: column !important;
         align-items: stretch !important;
+    }
+
+    .slider {
+        width: calc(100% - 25px) !important;
+    }
+
+    .slider-value {
+        transform: translateX(3px);
     }
 }
 

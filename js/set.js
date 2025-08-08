@@ -953,11 +953,13 @@ $(document).ready(function () {
     // 设置默认值
     localStorage.getItem('timeFormat12h') === null && localStorage.setItem('timeFormat12h', 'false');
     localStorage.getItem('zeroPadding') === null && localStorage.setItem('zeroPadding', 'true');
+    localStorage.getItem('searchBlur') === null && localStorage.setItem('searchBlur', 'true');
 
     // 初始化开关状态
     $(document).ready(function () {
         $('#toggle-time-format').toggleClass('on', localStorage.getItem('timeFormat12h') === 'true');
         $('#toggle-zero-padding').toggleClass('on', localStorage.getItem('zeroPadding') === 'true');
+        $('#toggle-search-blur').toggleClass('on', localStorage.getItem('searchBlur') === 'true');
     });
 
 
@@ -973,6 +975,13 @@ $(document).ready(function () {
         $(this).toggleClass('on', !isOn);
         localStorage.setItem('zeroPadding', $(this).hasClass('on'));
         time();
+    });
+
+    $('#toggle-search-blur').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('searchBlur', $(this).hasClass('on'));
+        updateSearchBlur();
     });
 
 });

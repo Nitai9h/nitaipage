@@ -149,8 +149,10 @@ function createPanelContent() {
                 <span class="set_text"><big>时间大小&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
-              <div>
+              <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider">
+                <span class="slider-value" id="font-size-slider-value" data-slider="font-size-slider">0</span>
+
               </div>
             </div>
             <div class="tip_new_both advancedSetting tip_new_slider">
@@ -158,8 +160,9 @@ function createPanelContent() {
                 <span class="set_text"><big>时间宽度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
-              <div>
+              <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-width-time">
+                <span class="slider-value" id="font-width-time-value" data-slider="font-width-time">0</span>
               </div>
             </div>
             <div class="tip_new_both tip_new_slider">
@@ -167,8 +170,9 @@ function createPanelContent() {
                 <span class="set_text"><big>时间粗细&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
-              <div>
+              <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-slider">
+                <span class="slider-value" id="font-thick-value" data-slider="font-thick-slider">50</span>
               </div>
             </div>
             <div class="tip_new_both tip_new_slider">
@@ -176,8 +180,9 @@ function createPanelContent() {
                 <span class="set_text"><big>时间透明度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
               </div>
-              <div>
+              <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-slider">
+                <span class="slider-value" id="font-opacity-slider-value" data-slider="font-opacity-slider">0</span>
               </div>
             </div>
           </div>
@@ -187,8 +192,9 @@ function createPanelContent() {
                 <span class="set_text"><big>日期大小&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
-              <div>
+              <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date">
+                <span class="slider-value" id="font-size-date-value" data-slider="font-size-date">0</span>
               </div>
             </div>
             <div class="tip_new_both advancedSetting tip_new_slider">
@@ -196,8 +202,9 @@ function createPanelContent() {
                 <span class="set_text"><big>日期宽度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小 (12.5px)</small></span>
               </div>
-              <div>
+              <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-width-date">
+                <span class="slider-value" id="font-width-date-value" data-slider="font-width-date">0</span>
               </div>
             </div>
             <div class="tip_new_both tip_new_slider">
@@ -205,8 +212,9 @@ function createPanelContent() {
                 <span class="set_text"><big>日期粗细&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
-              <div>
+              <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-date">
+                <span class="slider-value" id="font-thick-date-value" data-slider="font-thick-date">50</span>
               </div>
             </div>
             <div class="tip_new_both tip_new_slider">
@@ -214,9 +222,33 @@ function createPanelContent() {
                 <span class="set_text"><big>日期透明度&nbsp;</big><span class="desktop"></span></span>
                 <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
               </div>
-              <div>
+              <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-date">
+                <span class="slider-value" id="font-opacity-date-value" data-slider="font-opacity-date">0</span>
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="global-settings">
+          <div class="set_tip set_tip_new">
+            <div class="tip_new_both tip_new_slider">
+              <div>
+                <span class="set_text"><big>全局字重&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+              </div>
+              <div class="slider-container">
+                <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
+                <span class="slider-value" id="main-font-weight-value" data-slider="main-font-weight">50</span>
+              </div>
+            </div>
+          <div class="tip_new_both tip_new_slider">
+            <div>
+              <span class="set_text"><big>全局模糊度&nbsp;</big><span class="desktop"></span></span>
+              <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+            </div>
+            <div class="slider-container">
+              <input type="range" class="slider" min="0" max="100" value="50" id="main-box-gauss">
+              <span class="slider-value" id="main-box-gauss-value" data-slider="main-box-gauss">50</span>
             </div>
           </div>
         </div>
@@ -232,8 +264,20 @@ function createPanelContent() {
           </div>
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both">
-              <span class="set_text">缺位补零</span>
+              <div>
+                <span class="set_text"><big>缺位补零&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
+              </div>
               <div id="toggle-zero-padding" class="switch"></div>
+            </div>
+          </div>
+          <div class="set_tip set_tip_new">
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>搜索模糊&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+              </div>
+              <div id="toggle-search-blur" class="switch"></div>
             </div>
           </div>
         </div>

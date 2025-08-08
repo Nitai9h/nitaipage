@@ -53,7 +53,16 @@ function time() {
     t = setTimeout(time, 1000);
 }
 
-const blurValue = localStorage.getItem('gaussianBlur') || '10px';
+function updateSearchBlur() {
+    const isEnabled = localStorage.getItem('searchBlur') === 'true';
+    if (isEnabled) {
+        document.documentElement.style.setProperty('--search-blur', 'var(--main-box-gauss)');
+    } else {
+        document.documentElement.style.setProperty('--search-blur', 'blur(0px)');
+    }
+}
+
+const blurValue = localStorage.getItem('gaussianBlur') || '12px';
 document.documentElement.style.setProperty('--main-box-gauss', `blur(${blurValue})`);
 
 var frameStyle = frameStyle || {}; // 定义一个命名空间
