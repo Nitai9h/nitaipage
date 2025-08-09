@@ -708,7 +708,7 @@ function openBox() {
     mark.css("display", "flex");
     toolAll.css("transform", "translateY(-190%)");
     searchContainer.css("transform", "translateY(90%)");
-    bg.css({ transform: 'scale(1.08)', filter: "var(--main-box-gauss)", transition: "ease 0.3s" });
+    bg.css({ transform: 'scale(1.08)', filter: "blur(calc(var(--main-box-gauss) * 0.666))", transition: "ease 0.3s" });
     iconFold.css("display", "flex");
     pluginSet.css("display", "none");
 }
@@ -1474,7 +1474,7 @@ function updateMainStyle(blur, weight) {
 
     // 更新 CSS
     document.documentElement.style.setProperty('--main-font-weight', mainFontWeight);
-    document.documentElement.style.setProperty('--main-box-gauss', `blur(${blurValue}px)`);
+    document.documentElement.style.setProperty('--main-box-gauss', `${blurValue}px`);
 }
 
 // 显示通知弹窗
@@ -1528,5 +1528,5 @@ function showAnnouncement(title, content, buttonText = '关闭') {
     frameStyle.blackCover(uniqueId);
     frameStyle.fadeIn('guassianCover', 300, 0);
     frameStyle.fadeIn('blackCover', 300, 0);
-    $('#bg').css({ transform: 'scale(1.08)', filter: "var(--main-box-gauss)", transition: "ease 0.3s" });
+    $('#bg').css({ transform: 'scale(1.08)', filter: "blur(var(--main-box-gauss))", transition: "ease 0.3s" });
 }

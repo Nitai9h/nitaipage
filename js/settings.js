@@ -102,7 +102,7 @@ function generateSettings() {
     const tabElement = document.createElement('div');
     tabElement.className = `tab-items mark-items ${tab.active ? 'actives' : ''}`;
     if (tab.id) tabElement.id = tab.id;
-    tabElement.textContent = tab.name;
+    tabElement.innerHTML = `<span class="tab_text">${tab.name}</span>`;
     tabsContainer.appendChild(tabElement);
   });
   container.appendChild(tabsContainer);
@@ -146,7 +146,7 @@ function createPanelContent() {
           <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
             <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
-                <span class="set_text"><big>时间大小&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时间大小&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
               <div class="slider-container">
@@ -157,7 +157,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
-                <span class="set_text"><big>时间宽度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时间宽度&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
               <div class="slider-container">
@@ -167,7 +167,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both tip_new_slider">
               <div>
-                <span class="set_text"><big>时间粗细&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时间粗细&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
               <div class="slider-container">
@@ -177,7 +177,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both tip_new_slider">
               <div>
-                <span class="set_text"><big>时间透明度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时间透明度&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
               </div>
               <div class="slider-container">
@@ -189,7 +189,7 @@ function createPanelContent() {
           <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
             <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
-                <span class="set_text"><big>日期大小&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>日期大小&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
               <div class="slider-container">
@@ -199,7 +199,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
-                <span class="set_text"><big>日期宽度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>日期宽度&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>最左侧为默认大小 (12.5px)</small></span>
               </div>
               <div class="slider-container">
@@ -209,7 +209,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both tip_new_slider">
               <div>
-                <span class="set_text"><big>日期粗细&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>日期粗细&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
               <div class="slider-container">
@@ -219,7 +219,7 @@ function createPanelContent() {
             </div>
             <div class="tip_new_both tip_new_slider">
               <div>
-                <span class="set_text"><big>日期透明度&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>日期透明度&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
               </div>
               <div class="slider-container">
@@ -233,7 +233,7 @@ function createPanelContent() {
           <div class="set_tip set_tip_new">
             <div class="tip_new_both tip_new_slider">
               <div>
-                <span class="set_text"><big>全局字重&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>全局字重&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
               </div>
               <div class="slider-container">
@@ -243,7 +243,7 @@ function createPanelContent() {
             </div>
           <div class="tip_new_both tip_new_slider">
             <div>
-              <span class="set_text"><big>全局模糊度&nbsp;</big><span class="desktop"></span></span>
+              <span class="set_text"><big>全局模糊度&nbsp;</big><br></span>
               <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
             </div>
             <div class="slider-container">
@@ -256,7 +256,7 @@ function createPanelContent() {
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both" style="align-items: center;">
               <div>
-                <span class="set_text"><big>时钟制式&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>时钟制式&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>是否使用 12 小时制</small></span>
               </div>
               <div id="toggle-time-format" class="switch"></div>
@@ -265,7 +265,7 @@ function createPanelContent() {
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both">
               <div>
-                <span class="set_text"><big>缺位补零&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>缺位补零&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
               </div>
               <div id="toggle-zero-padding" class="switch"></div>
@@ -274,7 +274,7 @@ function createPanelContent() {
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both">
               <div>
-                <span class="set_text"><big>搜索模糊&nbsp;</big><span class="desktop"></span></span>
+                <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
               </div>
               <div id="toggle-search-blur" class="switch"></div>
@@ -422,7 +422,7 @@ function loadUpdateLog() {
       // 切换图标
       const iconElement = this.querySelector('.iconfont');
       if (dropdownContent.classList.contains('show')) {
-        $('#update_logs').css('filter', 'var(--main-box-gauss)');
+        $('#update_logs').css('filter', 'blur(var(--main-box-gauss))');
         iconElement.classList.remove('icon-unfolding');
         iconElement.classList.add('icon-folding');
       } else {
@@ -567,7 +567,7 @@ function createMoreContent() {
         ${backupOptions.map(option => `
           <div class="data_backup_tip set_tip">
             <div>
-              <span class="set_text"><big>${option.title}&nbsp;</big><span class="desktop"></span></span>
+              <span class="set_text"><big>${option.title}&nbsp;</big><br></span>
               <span class="set_text" style="color: gray;"><small>${option.description}</small></span>
             </div>
             <div class="but-ordinary" id="${option.buttonId}">${option.buttonText}</div>

@@ -1,12 +1,13 @@
 #manageContent,
 .store-button,
 .store-item,
-.dialog-content {
+.dialog-content,
+#storeContent {
     animation: fade;
-    -webkit-animation: fade 0.3s;
-    -moz-animation: fade 0.3s;
-    -o-animation: fade 0.3s;
-    -ms-animation: fade 0.3s;
+    -webkit-animation: fade 0.45s;
+    -moz-animation: fade 0.45s;
+    -o-animation: fade 0.45s;
+    -ms-animation: fade 0.45s;
 }
 
 /* 对话框基础样式 */
@@ -614,10 +615,8 @@ input[type="text"] {
 #new_store_source {
     outline: none;
     flex: 1;
-    padding: 10px;
     border: 1px solid var(--main-border-color);
     border-radius: 8px 0 0 8px;
-    background: var(--main-background-color);
     color: var(--main-text-color);
     width: 100%;
 }

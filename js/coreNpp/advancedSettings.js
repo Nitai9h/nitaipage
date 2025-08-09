@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    高级设置
 // @id    advancedSettings
-// @version    1.0.2
+// @version    1.0.3
 // @updateUrl    https://nfdb.nitai.us.kg/advancedSettings.js
 // @description    用于开关高级设置
 // @author    Nitai
@@ -39,7 +39,7 @@ function createAdvancedSettingSwitch() {
                 </style>
                 <div class="advancedSetting_switch-container">
                     <div>
-                        <span class="set_text"><big>高级设置开关&nbsp;</big><span class="desktop"></span></span>
+                        <span class="set_text"><big>高级设置开关&nbsp;</big><br></span>
                         <span class="set_text" style="color: gray;"><small>启用高级功能设置</small></span>
                     </div>
                     <div class="switch" id="toggleAdvancedSetting"></div>
@@ -115,4 +115,3 @@ window.addEventListener('load', function () {
         }, 10000);
     }
 });
-

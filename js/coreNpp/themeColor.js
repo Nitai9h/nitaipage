@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.2.3
+// @version    0.2.4
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -61,7 +61,7 @@ function createDynamicThemeSetting() {
                 </style>
                 <div class="themeColor_switch-container">
                     <div>
-                        <span class="set_text"><big>动态主题(Beta)&nbsp;</big><span class="desktop"></span></span>
+                        <span class="set_text"><big>动态主题(Beta)&nbsp;</big><br></span>
                         <span class="set_text" style="color: gray;"><small>根据壁纸切换主题</small></span>
                     </div>
                     <div class="switch" id="toggledytheme"></div>

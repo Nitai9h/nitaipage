@@ -7,7 +7,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.0.3',
+    VERSION: 'v2.0.4',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -85,7 +85,8 @@ window.addEventListener('load', async function () {
 
     // 初始化 tabs 横向滚动和自动隐藏
     setupTabsScrolling('.set .tabs');
-    setupTabsScrolling('.store .tabs');
+    setupTabsScrolling('.store #storePage .tabs');
+    setupTabsScrolling('.plugin_set .tabs');
 
     // 初始化 (持久化元素加载)
     init();

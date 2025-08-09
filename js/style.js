@@ -56,14 +56,15 @@ function time() {
 function updateSearchBlur() {
     const isEnabled = localStorage.getItem('searchBlur') === 'true';
     if (isEnabled) {
-        document.documentElement.style.setProperty('--search-blur', 'var(--main-box-gauss)');
+        document.documentElement.style.setProperty('--search-blur', 'blur(calc(var(--main-box-gauss) * 1.333))');
+
     } else {
         document.documentElement.style.setProperty('--search-blur', 'blur(0px)');
     }
 }
 
 const blurValue = localStorage.getItem('gaussianBlur') || '12px';
-document.documentElement.style.setProperty('--main-box-gauss', `blur(${blurValue})`);
+document.documentElement.style.setProperty('--main-box-gauss', `${blurValue}px`);
 
 var frameStyle = frameStyle || {}; // 定义一个命名空间
 

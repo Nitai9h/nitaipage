@@ -40,8 +40,8 @@ function generatePluginSettings() {
     const tabElement = document.createElement('div');
     tabElement.className = `tab-items ${tab.active ? 'actives' : ''}`;
     tabElement.id = tab.id;
-    tabElement.textContent = tab.name;
     tabElement.dataset.value = tab.value; // 设置 value (NID)
+    tabElement.innerHTML = `<span class="tab_text">${tab.name}</span>`;
     tabElement.setAttribute('translate', 'none');
     tabsContainer.appendChild(tabElement);
   });

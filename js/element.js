@@ -109,7 +109,9 @@ function createStore() {
   const storeHtml = `
     <div id="storePage">
       <div class="tabs" id="storeTabs">
-        <div class="tab-items active" id="storeManage">管理</div>
+        <div class="tab-items active" id="storeManage">
+          <span class="tab_text">管理</span>
+        </div>
       </div>
       <div class="store-block">
         <div class="store-item">

@@ -397,7 +397,7 @@ function savePluginMetadata(metadata) {
 }
 
 /**
-* 下载并保存NPP
+* 下载并保存 NPP
 * @param {string} id
 * @param {string} url
 */
@@ -699,7 +699,7 @@ async function checkUpdates(id, info = 'show') {
     }
 }
 
-// 按指定顺序加载所以插件
+// 按指定顺序加载所有插件
 async function loadNpp() {
     // 顺序
     const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
@@ -1450,7 +1450,7 @@ function renderStoreTabs(categories) {
     Object.entries(categories).forEach(([key, name]) => {
         const tab = document.createElement('div');
         tab.className = `tab-items`;
-        tab.textContent = name;
+        tab.innerHTML = `<span class="tab_text">${name}</span>`;
         tab.dataset.category = key;
 
         tab.addEventListener('click', () => {
