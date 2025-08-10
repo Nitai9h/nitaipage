@@ -127,6 +127,7 @@
     .set_tip_new {
         margin-left: 2.5%;
         margin-right: 2.5%;
+        gap: 5px;
     }
 
     .set_tip_updateLog {
@@ -148,10 +149,6 @@
     }
 
     .wallpapers_content {
-        margin: 0px 5px 0px 5px !important;
-    }
-
-    .panelContent {
         margin: 0px 5px 0px 5px !important;
     }
 
@@ -213,6 +210,7 @@
     }
 
     .slider-value {
+        opacity: 1;
         transform: translateX(3px);
     }
 }

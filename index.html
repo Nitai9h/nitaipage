@@ -106,19 +106,7 @@
     <!-- CoreNpp -->
     <script type="text/javascript" src="./js/coreNpp/advancedSettings.js"></script>
     <!-- PWA Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then(registration => {
-                        console.log('ServiceWorker: ', registration);
-                    })
-                    .catch(registrationError => {
-                        console.log('ServiceWorker: ', registrationError);
-                    });
-            });
-        }
-    </script>
+    <script src="./pwa_cache.js"></script>
 </body>
 
 </html>

@@ -960,6 +960,7 @@ $(document).ready(function () {
         $('#toggle-time-format').toggleClass('on', localStorage.getItem('timeFormat12h') === 'true');
         $('#toggle-zero-padding').toggleClass('on', localStorage.getItem('zeroPadding') === 'true');
         $('#toggle-search-blur').toggleClass('on', localStorage.getItem('searchBlur') === 'true');
+        $('#toggle-blur-plus').toggleClass('on', localStorage.getItem('blurPlus') === 'true');
     });
 
 
@@ -982,6 +983,13 @@ $(document).ready(function () {
         $(this).toggleClass('on', !isOn);
         localStorage.setItem('searchBlur', $(this).hasClass('on'));
         updateSearchBlur();
+    });
+
+    $('#toggle-blur-plus').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('blurPlus', $(this).hasClass('on'));
+        updateBlurPlusStyle();
     });
 
 });

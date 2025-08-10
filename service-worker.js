@@ -34,16 +34,66 @@ const urlsToCache = [
   './favicon.png'
 ];
 
+// 检查是否为 PWA
+async function isPwaClient(client) {
+  if (!client) return false;
+
+  try {
+    const clientUrl = new URL(client.url);
+    const isStandalone = clientUrl.searchParams.get('standalone') === 'true';
+
+    const isNormalBrowser = clientUrl.origin === self.location.origin &&
+      !clientUrl.searchParams.has('pwa') &&
+      clientUrl.pathname === '/' &&
+      clientUrl.hash === '';
+
+    if (isNormalBrowser && !isStandalone) {
+      return false;
+    }
+
+    const response = await new Promise((resolve) => {
+      const messageChannel = new MessageChannel();
+      messageChannel.port1.onmessage = (event) => {
+        resolve(event.data);
+      };
+
+      client.postMessage({
+        type: 'CHECK_PWA_MODE'
+      }, [messageChannel.port2]);
+
+      setTimeout(() => resolve(false), 100);
+    });
+
+    return response.isPwa || isStandalone;
+  } catch (error) {
+    try {
+      const clientUrl = new URL(client.url);
+      return clientUrl.searchParams.get('standalone') === 'true' ||
+        clientUrl.searchParams.get('pwa') === 'true' ||
+        clientUrl.pathname.includes('/pwa/') ||
+        clientUrl.hash.includes('pwa');
+    } catch (urlError) {
+      return false;
+    }
+  }
+}
+
+// 缓存
+async function cacheResources() {
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(urlsToCache);
+  } catch (error) {
+    console.error('缓存失败:', error);
+  }
+}
+
+// 监听安装
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(urlsToCache);
-      })
-  );
   self.skipWaiting();
 });
 
+// 监听激活
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -59,33 +109,79 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
+// 监听消息
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'INSTALL_PWA') {
+    // 安装
+    event.waitUntil(cacheResources());
+  } else if (event.data && event.data.type === 'UNINSTALL_PWA') {
+    // 卸载
+    event.waitUntil(
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            return caches.delete(cacheName);
+          })
+        );
+      }).catch(error => {
+        console.error('清除缓存失败:', error);
+      })
+    );
+  }
+});
+
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
+    (async () => {
+      const requestUrl = new URL(event.request.url);
+      const isNormalBrowserAccess = requestUrl.origin === self.location.origin &&
+        requestUrl.pathname === '/' &&
+        !requestUrl.searchParams.has('pwa') &&
+        !requestUrl.searchParams.has('standalone') &&
+        !requestUrl.hash.includes('pwa') &&
+        event.request.headers.get('Sec-Fetch-Dest') === 'document' &&
+        event.request.headers.get('Sec-Fetch-Mode') === 'navigate';
+
+      if (isNormalBrowserAccess) {
+        return fetch(event.request);
+      }
+
+      const clients = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+      });
+
+      let isPwa = false;
+      for (const client of clients) {
+        if (await isPwaClient(client)) {
+          isPwa = true;
+          break;
+        }
+      }
+
+      if (!isPwa) {
+        return fetch(event.request);
+      }
+
+      const cachedResponse = await caches.match(event.request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      try {
+        const response = await fetch(event.request);
+
+        if (response && response.status === 200 && response.type === 'basic') {
+          const responseToCache = response.clone();
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, responseToCache);
         }
 
-        return fetch(event.request).then(
-          response => {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            const responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          }
-        ).catch(error => {
-          console.error('获取资源失败:', error);
-          return caches.match('./index.html');
-        });
-      })
+        return response;
+      } catch (error) {
+        console.error('获取失败:', error);
+        return caches.match('./index.html');
+      }
+    })()
   );
 });

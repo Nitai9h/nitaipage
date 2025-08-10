@@ -906,6 +906,7 @@ async function init() {
 
     // 搜索模糊效果加载
     updateSearchBlur();
+    updateBlurPlusStyle();
 
     // 滑块显示监听器
     addSliderValueListeners();
@@ -1529,4 +1530,24 @@ function showAnnouncement(title, content, buttonText = '关闭') {
     frameStyle.fadeIn('guassianCover', 300, 0);
     frameStyle.fadeIn('blackCover', 300, 0);
     $('#bg').css({ transform: 'scale(1.08)', filter: "blur(var(--main-box-gauss))", transition: "ease 0.3s" });
+}
+
+function getExtensionUrl() {
+    return new Promise((resolve) => {
+        const handler = (event) => {
+            if (event.data.type === 'extensionUrlResponse') {
+                window.removeEventListener('message', handler);
+                resolve(event.data.url);
+            }
+        };
+
+        window.addEventListener('message', handler);
+        window.parent.postMessage({ type: 'getExtensionUrl' }, '*');
+
+        // 超时
+        setTimeout(() => {
+            window.removeEventListener('message', handler);
+            resolve(null);
+        }, 1000);
+    });
 }

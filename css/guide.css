@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: sans-serif;
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body {

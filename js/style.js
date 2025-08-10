@@ -56,10 +56,18 @@ function time() {
 function updateSearchBlur() {
     const isEnabled = localStorage.getItem('searchBlur') === 'true';
     if (isEnabled) {
-        document.documentElement.style.setProperty('--search-blur', 'blur(calc(var(--main-box-gauss) * 1.333))');
-
+        document.documentElement.style.setProperty('--search-blur', 'var(--main-box-gauss-plus)');
     } else {
         document.documentElement.style.setProperty('--search-blur', 'blur(0px)');
+    }
+}
+
+function updateBlurPlusStyle() {
+    const isEnabled = localStorage.getItem('blurPlus') === 'true';
+    if (isEnabled) {
+        document.documentElement.style.setProperty('--main-box-gauss-plus', 'blur(calc(var(--main-box-gauss) * 1.533))');
+    } else {
+        document.documentElement.style.setProperty('--main-box-gauss-plus', 'blur(var(--main-box-gauss))');
     }
 }
 

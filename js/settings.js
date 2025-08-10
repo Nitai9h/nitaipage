@@ -279,6 +279,13 @@ function createPanelContent() {
               </div>
               <div id="toggle-search-blur" class="switch"></div>
             </div>
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
+              </div>
+              <div id="toggle-blur-plus" class="switch"></div>
+            </div>
           </div>
         </div>
       </div>
