@@ -708,7 +708,7 @@ function openBox() {
     mark.css("display", "flex");
     toolAll.css("transform", "translateY(-190%)");
     searchContainer.css("transform", "translateY(90%)");
-    bg.css({ transform: 'scale(1.08)', filter: "blur(calc(var(--main-box-gauss) * 0.666))", transition: "ease 0.3s" });
+    bg.css({ transform: 'scale(1.08)', filter: "var(--main-bg-blur)", transition: "ease 0.3s" });
     iconFold.css("display", "flex");
     pluginSet.css("display", "none");
 }
@@ -910,6 +910,9 @@ async function init() {
 
     // 滑块显示监听器
     addSliderValueListeners();
+
+    // 壁纸遮罩加载
+    updateBgCover();
 
     // 壁纸数据加载
     setBgImgInit();

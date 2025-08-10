@@ -132,7 +132,7 @@ $(document).ready(function () {
         $('#keywords').show();
     });
 
-    // 自动提示 (调用百度 api）
+    // 自动提示
     $('.wd').keyup(function (event) {
         var key = event.keyCode;
         // 屏蔽上下键
@@ -954,6 +954,8 @@ $(document).ready(function () {
     localStorage.getItem('timeFormat12h') === null && localStorage.setItem('timeFormat12h', 'false');
     localStorage.getItem('zeroPadding') === null && localStorage.setItem('zeroPadding', 'true');
     localStorage.getItem('searchBlur') === null && localStorage.setItem('searchBlur', 'true');
+    localStorage.getItem('blurPlus') === null && localStorage.setItem('blurPlus', 'false');
+    localStorage.getItem('bgCover') === null && localStorage.setItem('bgCover', 'true');
 
     // 初始化开关状态
     $(document).ready(function () {
@@ -961,6 +963,7 @@ $(document).ready(function () {
         $('#toggle-zero-padding').toggleClass('on', localStorage.getItem('zeroPadding') === 'true');
         $('#toggle-search-blur').toggleClass('on', localStorage.getItem('searchBlur') === 'true');
         $('#toggle-blur-plus').toggleClass('on', localStorage.getItem('blurPlus') === 'true');
+        $('#toggle-bg-cover').toggleClass('on', localStorage.getItem('bgCover') === 'true');
     });
 
 
@@ -990,6 +993,13 @@ $(document).ready(function () {
         $(this).toggleClass('on', !isOn);
         localStorage.setItem('blurPlus', $(this).hasClass('on'));
         updateBlurPlusStyle();
+    });
+
+    $('#toggle-bg-cover').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('bgCover', $(this).hasClass('on'));
+        updateBgCover();
     });
 
 });

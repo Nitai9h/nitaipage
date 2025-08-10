@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.2.4
+// @version    0.3.0
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -18,6 +18,11 @@ function isDynamicThemeEnabled() {
     return localStorage.getItem('dynamicTheme') === 'on';
 }
 
+// 检查白色主题是否启用
+function isWhiteThemeEnabled() {
+    return localStorage.getItem('whiteTheme') === 'on';
+}
+
 // 对比度计算
 function calculateContrastRatio(color1, color2) {
     // 使用 chroma 计算对比度
@@ -29,7 +34,7 @@ let colorThiefLoaded = false;
 let chromaLoaded = false;
 
 function checkLibrariesLoaded() {
-    if (colorThiefLoaded && chromaLoaded && isDynamicThemeEnabled()) {
+    if (colorThiefLoaded && chromaLoaded && isDynamicThemeEnabled() && !isWhiteThemeEnabled()) {
         // 初始化主题颜色
         if (document.getElementById('bg') && document.getElementById('bg').src) {
             setTimeout(() => {
@@ -40,14 +45,14 @@ function checkLibrariesLoaded() {
 }
 
 // 创建设置
-function createDynamicThemeSetting() {
+function createThemeSetting() {
     const pluginId = 'themeColor';
     const mainConts = document.querySelector(`.mainConts[data-value="${pluginId}"]`);
 
     if (mainConts) {
         const dythemeDiv = document.createElement('div');
         dythemeDiv.id = 'themeColor_dytheme';
-        dythemeDiv.className = 'set_tip';
+        dythemeDiv.className = 'set_tip set_tip_new';
         dythemeDiv.style = 'width: 100%';
         dythemeDiv.innerHTML = `
                 <style>
@@ -59,6 +64,13 @@ function createDynamicThemeSetting() {
                     align-items: center;
                 }
                 </style>
+                <div class="themeColor_switch-container">
+                    <div>
+                        <span class="set_text"><big>白色主题&nbsp;</big><br></span>
+                        <span class="set_text" style="color: gray;"><small>是否切换为白色主题</small></span>
+                    </div>
+                    <div class="switch" id="togglewhitetheme"></div>
+                </div>
                 <div class="themeColor_switch-container">
                     <div>
                         <span class="set_text"><big>动态主题(Beta)&nbsp;</big><br></span>
@@ -90,15 +102,20 @@ function createDynamicThemeSetting() {
     document.head.appendChild(chromaScript);
 
     $(document).ready(function () {
-        // 初始化主题开关
-        createDynamicThemeSetting();
+        createThemeSetting();
 
+        // 初始化主题开关
         const toggleSwitch = $('#toggledytheme');
         const savedState = localStorage.getItem('dynamicTheme') || 'off';
 
         // 设置初始状态
         if (savedState === 'on') {
             toggleSwitch.addClass('on');
+        }
+
+        // 初始化白色主题状态
+        if (isWhiteThemeEnabled()) {
+            applyWhiteTheme();
         }
 
         // 开关点击
@@ -111,11 +128,41 @@ function createDynamicThemeSetting() {
             } else {
                 $(this).addClass('on');
                 localStorage.setItem('dynamicTheme', 'on');
+                // 关闭白色主题
+                $('#togglewhitetheme').removeClass('on');
+                localStorage.setItem('whiteTheme', 'off');
+                resetThemeColors();
                 // 应用主题
                 if (document.getElementById('bg') && document.getElementById('bg').src) {
                     const imgUrl = sessionStorage.getItem('bgImageFinalURL');
                     setThemeByImage(imgUrl);
                 }
+            }
+        });
+
+        // 白色主题开关
+        const whiteThemeSwitch = $('#togglewhitetheme');
+        const whiteThemeState = localStorage.getItem('whiteTheme') || 'off';
+
+        // 设置初始状态
+        if (whiteThemeState === 'on') {
+            whiteThemeSwitch.addClass('on');
+        }
+
+        // 白色主题开关点击
+        whiteThemeSwitch.on('click', function () {
+            const isOn = $(this).hasClass('on');
+            if (isOn) {
+                $(this).removeClass('on');
+                localStorage.setItem('whiteTheme', 'off');
+                resetThemeColors();
+            } else {
+                $(this).addClass('on');
+                localStorage.setItem('whiteTheme', 'on');
+                // 关闭动态主题
+                $('#toggledytheme').removeClass('on');
+                localStorage.setItem('dynamicTheme', 'off');
+                applyWhiteTheme();
             }
         });
     });
@@ -166,6 +213,9 @@ function applyThemeColors(originalColors) {
         document.documentElement.style.setProperty('--main-input-color', chroma(textColor).alpha(0.18).hex());
         document.documentElement.style.setProperty('--main-input-text-placeholder-color', chroma(textColor).alpha(0.43).hex());
 
+        // 壁纸遮罩
+        document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(.8)');
+
     } catch (error) {
         console.error('应用主题颜色时出错:', error);
     }
@@ -189,6 +239,32 @@ function resetThemeColors() {
     // 重置输入框颜色
     document.documentElement.style.setProperty('--main-input-color', '#ffffff30');
     document.documentElement.style.setProperty('--main-input-text-placeholder-color', '#ffffff70');
+
+    // 壁纸遮罩
+    document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666))');
+}
+
+// 应用白色主题
+function applyWhiteTheme() {
+    document.documentElement.style.setProperty('--main-text-color', '#ffffff');
+    document.documentElement.style.setProperty('--main-text-form-hover-color', '#ffffff');
+    document.documentElement.style.setProperty('--main-background-color', '#ffffff30');
+    document.documentElement.style.setProperty('--main-background-hover-color', '#ffffff70');
+    document.documentElement.style.setProperty('--main-background-active-color', '#ffffff30');
+    document.documentElement.style.setProperty('--border-bottom-color-hover', '#ffffff57');
+    document.documentElement.style.setProperty('--border-bottom-color-active', '#ffffff38');
+
+    // 设置按钮颜色
+    document.documentElement.style.setProperty('--main-button-color', '#ffffff30');
+    document.documentElement.style.setProperty('--main-button-hover-color', '#ffffff45');
+    document.documentElement.style.setProperty('--main-button-active-color', '#ffffff17');
+
+    // 设置输入框颜色
+    document.documentElement.style.setProperty('--main-input-color', '#ffffff30');
+    document.documentElement.style.setProperty('--main-input-text-placeholder-color', '#ffffff70');
+
+    // 壁纸遮罩
+    document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(.8)');
 }
 
 /**

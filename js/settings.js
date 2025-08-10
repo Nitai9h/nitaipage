@@ -254,6 +254,22 @@ function createPanelContent() {
         </div>
         <div class="switch-container">
           <div class="set_tip set_tip_new">
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+              </div>
+              <div id="toggle-search-blur" class="switch"></div>
+            </div>
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
+              </div>
+              <div id="toggle-blur-plus" class="switch"></div>
+            </div>
+          </div>
+          <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both" style="align-items: center;">
               <div>
                 <span class="set_text"><big>时钟制式&nbsp;</big><br></span>
@@ -274,17 +290,10 @@ function createPanelContent() {
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both">
               <div>
-                <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+                <span class="set_text"><big>壁纸遮罩&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否启用壁纸遮罩</small></span>
               </div>
-              <div id="toggle-search-blur" class="switch"></div>
-            </div>
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
-              </div>
-              <div id="toggle-blur-plus" class="switch"></div>
+              <div id="toggle-bg-cover" class="switch"></div>
             </div>
           </div>
         </div>

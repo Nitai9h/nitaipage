@@ -21,9 +21,10 @@
     --main-search-hover-shadow: 0 0 20px #00000033;
     --border-bottom-color-hover: #efefef80;
     --border-bottom-color-active: #efefef;
-    --search-blur: var(--main-box-gauss-plus);
     --main-box-gauss: 12px;
     --main-box-gauss-plus: blur(calc(var(--main-box-gauss) * 1.533));
+    --search-blur: var(--main-box-gauss-plus);
+    --main-bg-blur: blur(calc(var(--main-box-gauss) * 0.666));
     --main-font-weight: 500;
     /* 时间样式变量 */
     --time-font-size: 2.75rem;
@@ -185,7 +186,7 @@ section {
     opacity: 0;
     transition: opacity 1s ease-in-out;
     transform: scale(1.10);
-    filter: blur(calc(var(--main-box-gauss) * 0.666));
+    filter: var(--main-bg-blur);
 
     position: fixed;
     left: 0;
@@ -282,7 +283,7 @@ img.error {
 
 /*时间上移*/
 .onsearch .tool-all {
-    transform: translateY(-140%) !important;
+    transform: translateY(-160%) !important;
 }
 
 /*搜索引擎选择上移*/
@@ -684,7 +685,7 @@ img.error {
     min-height: 40px;
     width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
@@ -1665,7 +1666,7 @@ input::selection {
     width: 130px;
     height: 10px;
     /* 设置滑块的高度 */
-    background: linear-gradient(to right, var(--main-input-text-placeholder-color) 0%, var(--main-input-text-placeholder-color) var(--slider-progress), var(--main-background-hover-color) var(--slider-progress), var(--main-background-hover-color) 100%);
+    background: linear-gradient(to right, var(--main-input-text-placeholder-color) 0%, var(--main-input-text-placeholder-color) var(--slider-progress), var(--main-background-active-color) var(--slider-progress), var(--main-background-active-color) 100%);
     /* 背景颜色 */
     border-radius: 10px;
     outline: none;

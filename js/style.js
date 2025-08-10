@@ -71,6 +71,15 @@ function updateBlurPlusStyle() {
     }
 }
 
+function updateBgCover() {
+    const isEnabled = localStorage.getItem('bgCover') === 'true';
+    if (isEnabled) {
+        $('.bg-all .cover').css('opacity', '1');
+    } else {
+        $('.bg-all .cover').css('opacity', '0');
+    }
+}
+
 const blurValue = localStorage.getItem('gaussianBlur') || '12px';
 document.documentElement.style.setProperty('--main-box-gauss', `${blurValue}px`);
 
