@@ -143,6 +143,14 @@ function createPanelContent() {
     <div class="set_blocks">
       <div class="panelContent">
         <div class="slider-container">
+          <div class="tip_new_ac">
+            <div>
+              <span class="set_text">
+                <i class="iconfont icon-tab mobile"></i>
+                <big>时间与日期&nbsp;</big>
+              </span>
+            </div>
+          </div>
           <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
             <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
@@ -152,7 +160,6 @@ function createPanelContent() {
               <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider">
                 <span class="slider-value" id="font-size-slider-value" data-slider="font-size-slider">0</span>
-
               </div>
             </div>
             <div class="tip_new_both advancedSetting tip_new_slider">
@@ -228,47 +235,6 @@ function createPanelContent() {
               </div>
             </div>
           </div>
-        </div>
-        <div class="global-settings">
-          <div class="set_tip set_tip_new">
-            <div class="tip_new_both tip_new_slider">
-              <div>
-                <span class="set_text"><big>全局字重&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
-              </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
-                <span class="slider-value" id="main-font-weight-value" data-slider="main-font-weight">50</span>
-              </div>
-            </div>
-          <div class="tip_new_both tip_new_slider">
-            <div>
-              <span class="set_text"><big>全局模糊度&nbsp;</big><br></span>
-              <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
-            </div>
-            <div class="slider-container">
-              <input type="range" class="slider" min="0" max="100" value="50" id="main-box-gauss">
-              <span class="slider-value" id="main-box-gauss-value" data-slider="main-box-gauss">50</span>
-            </div>
-          </div>
-        </div>
-        <div class="switch-container">
-          <div class="set_tip set_tip_new">
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
-              </div>
-              <div id="toggle-search-blur" class="switch"></div>
-            </div>
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
-              </div>
-              <div id="toggle-blur-plus" class="switch"></div>
-            </div>
-          </div>
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both" style="align-items: center;">
               <div>
@@ -287,13 +253,79 @@ function createPanelContent() {
               <div id="toggle-zero-padding" class="switch"></div>
             </div>
           </div>
+        </div>
+        <div class="global-settings">
+          <div class="tip_new_ac">
+            <div>
+              <span class="set_text">
+                <i class="iconfont icon-tab mobile"></i>
+                <big>搜索框&nbsp;</big>
+              </span>
+            </div>
+          </div>
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both">
               <div>
-                <span class="set_text"><big>壁纸遮罩&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用壁纸遮罩</small></span>
+                <span class="set_text"><big>搜索框样式&nbsp;</big></span>
               </div>
-              <div id="toggle-bg-cover" class="switch"></div>
+              <div id="button_search_mini" class="button"></div>
+            </div>
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+              </div>
+              <div id="toggle-search-blur" class="switch"></div>
+            </div>
+          </div>
+          <div class="tip_new_ac">
+            <div>
+              <span class="set_text">
+                <i class="iconfont icon-tab mobile"></i>
+                <big>页面设置&nbsp;</big>
+              </span>
+            </div>
+          </div>
+          <div class="switch-container">
+            <div class="set_tip set_tip_new">
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
+                </div>
+                <div id="toggle-blur-plus" class="switch"></div>
+              </div>
+              <div class="tip_new_both tip_new_slider">
+                <div>
+                  <span class="set_text"><big>全局模糊度&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="50" id="main-box-gauss">
+                  <span class="slider-value" id="main-box-gauss-value" data-slider="main-box-gauss">50</span>
+                </div>
+              </div>
+            </div>
+            <div class="set_tip set_tip_new">
+              <div class="tip_new_both tip_new_slider">
+                <div>
+                  <span class="set_text"><big>全局字重&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
+                  <span class="slider-value" id="main-font-weight-value" data-slider="main-font-weight">50</span>
+                </div>
+              </div>
+            </div>
+            <div class="set_tip set_tip_new">
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>壁纸遮罩&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否启用壁纸遮罩</small></span>
+                </div>
+                <div id="toggle-bg-cover" class="switch"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -578,6 +610,14 @@ function createMoreContent() {
       <div class="entry-pluginSettings set_tip">
         <span class="set_text">Npplication</span>
         <div id="entryPluginSettings">设置</div>
+      </div>
+      <div class="tip_new_ac">
+        <div>
+          <span class="set_text">
+            <i class="iconfont icon-tab mobile"></i>
+            <big>数据设置&nbsp;</big>
+          </span>
+        </div>
       </div>
       <div class="data_backup">
         ${backupOptions.map(option => `

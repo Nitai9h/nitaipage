@@ -1344,13 +1344,41 @@ input[type="radio"]+label {
     padding: 6px 10px;
     background: var(--main-background-color);
     border-radius: 8px;
-    transition: 0.3s;
     border: 2px solid transparent;
+    transition: .3s;
 }
 
 input[type="radio"]:checked+label {
+    padding: 4px 8px;
     background: var(--main-background-active-color);
-    border: 2px solid var(--main-background-active-color);
+    background-color: var(--main-background-hover-color);
+    position: relative;
+}
+
+input[type="radio"]:checked+label::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    border-radius: 12px;
+    border: 2px solid var(--main-background-hover-color);
+    opacity: 1;
+    bottom: -6px;
+    right: -6px;
+}
+
+input[type="radio"]::before:hover {
+    opacity: 0;
+    padding: 6px 10px;
+}
+
+input[type="radio"]+label:hover {
+    background-color: var(--main-background-hover-color);
+    box-shadow: 0 0 0 2px var(--main-background-hover-color);
+}
+
+input[type="radio"]+label:active {
+    box-shadow: none;
 }
 
 /*数据备份*/
@@ -1361,6 +1389,15 @@ input[type="radio"]:checked+label {
     padding: 20px;
     border-radius: 8px;
     flex-direction: column;
+    box-shadow: 0px 0px 10px 0px #00000020;
+    -webkit-box-shadow: 0px 0px 10px 0px #00000020;
+}
+
+.set_tip:hover,
+.set_tip_about:hover {
+    transition: 0.3s;
+    box-shadow: 0px 0px 20px 0px #00000020;
+    -webkit-box-shadow: 0px 0px 20px 0px #00000020;
 }
 
 .set_tip_about {
@@ -1370,6 +1407,8 @@ input[type="radio"]:checked+label {
     padding: 10px;
     border-radius: 8px;
     flex-direction: column;
+    box-shadow: 0px 0px 10px 0px #00000020;
+    -webkit-box-shadow: 0px 0px 10px 0px #00000020;
 }
 
 .set_tip_updateLog {
@@ -1382,6 +1421,24 @@ input[type="radio"]:checked+label {
 
 .set_tip_updateLog .set_text {
     margin-left: 10px;
+}
+
+.tip_new_ac {
+    margin: 10px 10px -10px 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tip_new_ac .set_text .iconfont {
+    font-size: 27px;
+    font-weight: 900 !important;
+}
+
+.tip_new_ac .set_text big {
+    left: 30px;
+    position: absolute;
 }
 
 .set_text_wallpaper {
@@ -1415,7 +1472,7 @@ input[type="radio"]:checked+label {
 .foot {
     position: absolute;
     bottom: 10px;
-    z-index: 1000;
+    z-index: 2000;
     text-align: center;
     width: 100%;
     height: 20px;
@@ -1652,6 +1709,10 @@ input::selection {
     overflow-x: hidden;
 }
 
+.global-settings {
+    position: relative;
+}
+
 /* 滑块 */
 .slider-container {
     position: relative;
@@ -1815,6 +1876,7 @@ input[type=range]::-ms-fill-lower {
 .set_blocks_more {
     overflow-y: auto;
     overflow-x: hidden;
+    position: relative;
 }
 
 .data_backup_tip {
@@ -1829,6 +1891,7 @@ input[type=range]::-ms-fill-lower {
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
+    margin-top: 20px;
 }
 
 .about-link {

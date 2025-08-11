@@ -63,7 +63,7 @@ function generatePluginSettings() {
   // 创建插件 mainConts
   settingPlugins.forEach((plugin, index) => {
     const pluginContent = document.createElement('div');
-    pluginContent.className = `mainConts ${index === 0 ? 'selected' : ''}`;
+    pluginContent.className = `mainConts pluginMainConts ${index === 0 ? 'selected' : ''}`;
     pluginContent.dataset.value = plugin.id;
     contents.appendChild(pluginContent);
   });

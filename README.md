@@ -75,6 +75,7 @@ http-server -p 11123 -o
 * [Iconfont](https://www.iconfont.cn/)
 * [jQuery](https://jquery.com/)
 * [sortable](https://github.com/SortableJS/Sortable)
+* [js-cookies](https://github.com/js-cookie/js-cookie)
 * [chroma](https://github.com/gka/chroma.js)
 
 ###### API

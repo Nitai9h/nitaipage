@@ -439,6 +439,10 @@
     height: 100%;
 }
 
+.pluginMainConts {
+    position: relative;
+}
+
 /* 排序库样式 */
 .sortable-ghost {
     opacity: 0.5;
