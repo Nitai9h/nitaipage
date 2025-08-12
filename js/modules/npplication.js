@@ -1542,9 +1542,9 @@ function showPluginDetails(pluginWithMetadata) {
                     <h3>描述</h3>
                     <p translate="none">${pluginWithMetadata.description}</p>
                     <h3>依赖</h3>
-                    <div id="dependencies-container"></div>
+                    <div id="dependencies-container" translate="none"></div>
                     <h3>截图</h3>
-                    <div class="screenshots">
+                    <div class="screenshots" translate="none">
                         ${(() => {
             const screenshots = pluginWithMetadata.screen || pluginWithMetadata.screenshots || [];
             if (screenshots.length === 0) {

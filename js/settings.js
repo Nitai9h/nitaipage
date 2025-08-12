@@ -207,7 +207,7 @@ function createPanelContent() {
             <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
                 <span class="set_text"><big>日期宽度&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小 (12.5px)</small></span>
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
               <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-width-date">
@@ -259,29 +259,6 @@ function createPanelContent() {
             <div>
               <span class="set_text">
                 <i class="iconfont icon-tab mobile"></i>
-                <big>搜索框&nbsp;</big>
-              </span>
-            </div>
-          </div>
-          <div class="set_tip set_tip_new">
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>搜索框样式&nbsp;</big></span>
-              </div>
-              <div id="button_search_mini" class="button"></div>
-            </div>
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
-              </div>
-              <div id="toggle-search-blur" class="switch"></div>
-            </div>
-          </div>
-          <div class="tip_new_ac">
-            <div>
-              <span class="set_text">
-                <i class="iconfont icon-tab mobile"></i>
                 <big>页面设置&nbsp;</big>
               </span>
             </div>
@@ -294,6 +271,13 @@ function createPanelContent() {
                   <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
                 </div>
                 <div id="toggle-blur-plus" class="switch"></div>
+              </div>
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+                </div>
+                <div id="toggle-search-blur" class="switch"></div>
               </div>
               <div class="tip_new_both tip_new_slider">
                 <div>
@@ -657,7 +641,7 @@ function createAboutContent() {
             <div class="dropdown-content" id="versionDropdownContent"></div>
           </div>
         </div>
-        <div class="update_logs" id="update_logs">
+        <div class="update_logs" id="update_logs" translate="none">
           <div id="updateLog"></div>
         </div>
       </div>

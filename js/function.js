@@ -352,7 +352,7 @@ function setBgImgInit() {
             sessionStorage.setItem('bgImageFinalURL', finalUrl);
             const img = new Image();
             img.onload = function () {
-                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 1.2s;");
+                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;");
                 bg.postMessage("bgImgLoadinged");
                 bg.close();
             };
@@ -364,7 +364,7 @@ function setBgImgInit() {
             console.error('Failed to track image redirect:', error);
             const img = new Image();
             img.onload = function () {
-                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 1.2s;");
+                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;");
                 sessionStorage.setItem('bgImageFinalURL', img.src);
                 bg.postMessage("bgImgLoadinged");
                 bg.close();
@@ -600,7 +600,10 @@ function download(filename, text) {
 
 // 隐藏时钟
 function hideTime() {
-    $(".tool-all").hide();
+    $(".tool-all").css({
+        "opacity": "0",
+        "pointer-events": "none"
+    });
     $(".set").css({
         "margin-top": "0px",
         "max-height": "480px",
@@ -646,7 +649,10 @@ function hideTime() {
 
 // 显示时钟
 function showTime() {
-    $(".tool-all").show();
+    $(".tool-all").css({
+        "opacity": "1",
+        "pointer-events": "unset"
+    });
     $(".set").css({
         "margin-top": "180px",
         "max-height": "400px",
@@ -692,7 +698,7 @@ function showTime() {
 
 // 书签显示
 function openBox() {
-    if ($('#fold').attr("class") === "entry-items on"
+    if ($('#fold').hasClass("on")
         || window.matchMedia('(max-width: 260px)').matches) {
         hideTime();
     }
@@ -705,12 +711,12 @@ function openBox() {
     const pluginSet = $(".plugin_set");
 
     content.addClass('box');
-    mark.css("display", "flex");
+    mark.addClass('active').removeClass('inactive');
     toolAll.css("transform", "translateY(-190%)");
     searchContainer.css("transform", "translateY(90%)");
     bg.css({ transform: 'scale(1.08)', filter: "var(--main-bg-blur)", transition: "ease 0.3s" });
-    iconFold.css("display", "flex");
-    pluginSet.css("display", "none");
+    iconFold.addClass('active').removeClass('inactive');
+    pluginSet.addClass('inactive').removeClass('active');
 }
 
 // 书签关闭
@@ -727,17 +733,17 @@ function closeBox() {
     const pluginSet = $(".plugin_set");
 
     content.removeClass('box');
-    mark.css("display", "none");
+    mark.addClass('inactive').removeClass('active');
     toolAll.css("transform", "translateY(-120%)");
     searchContainer.css("transform", "translateY(0%)");
-    bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 1.2s" });
-    iconFold.css("display", "none");
-    pluginSet.css("display", "none");
+    bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.7s" });
+    iconFold.addClass('inactive').removeClass('active');
+    pluginSet.addClass('inactive').removeClass('active');
 }
 
 // 打开设置
 function openSet() {
-    if ($("#fold").attr("class") === "entry-items on") {
+    if ($("#fold").hasClass("on")) {
         hideTime();
     }
 
@@ -750,33 +756,16 @@ function openSet() {
     //更改设置图标
     $("#icon-menu").attr("class", "iconfont icon-home");
 
-    // .set元素过渡动画
-    $("set").css({ display: "flex", opacity: 0, transition: "opacity 0.3s" });
-    setTimeout(() => $("set").css({ opacity: 1 }), 10);
-    // .mark元素过渡动画
-    $("mark").css({ opacity: 0, transition: "opacity 0.3s" });
-    setTimeout(() => $("mark").css({ display: "none" }), 300);
-    $(".mark").css({
-        "display": "none",
-    });
-    $(".store").css({
-        "display": "none",
-    });
-    $(".set").css({
-        "display": "flex",
-    });
-    $(".plugin_set").css({
-        "display": "none",
-    });
-    $("#fold").css({
-        "display": "flex",
-        "transition": "all 0.3s"
-    });
+    // 使用新的类切换动画
+    $(".mark").addClass('inactive').removeClass('active');
+    $(".store").addClass('inactive').removeClass('active');
+    $(".set").addClass('active').removeClass('inactive');
+    $(".plugin_set").addClass('inactive').removeClass('active');
 }
 
 // 关闭设置
 function closeSet() {
-    if ($("#fold").attr("class") === "entry-items on") {
+    if ($("#fold").hasClass("on")) {
         showTime();
     }
 
@@ -787,19 +776,8 @@ function closeSet() {
     //更改设置图标
     $("#icon-menu").attr("class", "iconfont icon-settings");
 
-    $(".set").css({
-        "display": "none",
-    });
-    $(".plugin_set").css({
-        "display": "none",
-    });
-    $("#fold").css({
-        "display": "none",
-        "transition": "all 0.3s"
-    });
-    // .store元素过渡动画
-    $("store").css({ opacity: 0, transition: "opacity 0.3s" });
-    setTimeout(() => $("store").css({ display: "none" }), 300);
+    $(".set").addClass('inactive').removeClass('active');
+    $(".plugin_set").addClass('inactive').removeClass('active');
 
     // 刷新主页数据
     seList();
@@ -808,7 +786,7 @@ function closeSet() {
 
 // 商店显示
 function openStore() {
-    if ($("#fold").attr("class") === "entry-items on") {
+    if ($("#fold").hasClass("on")) {
         hideTime();
     }
 
@@ -821,27 +799,15 @@ function openStore() {
     //更改商店图标
     $("#icon-store").attr("class", "iconfont icon-home");
 
-    $(".mark").css({
-        "display": "none",
-    });
-    $(".store").css({
-        "display": "flex",
-    });
-    $(".set").css({
-        "display": "none",
-    });
-    $(".plugin_set").css({
-        "display": "none",
-    });
-    $("#fold").css({
-        "display": "flex",
-        "transition": "all 0.3s"
-    });
+    $(".mark").addClass('inactive').removeClass('active');
+    $(".store").addClass('active').removeClass('inactive');
+    $(".set").addClass('inactive').removeClass('active');
+    $(".plugin_set").addClass('inactive').removeClass('active');
 }
 
 // 商店关闭
 function closeStore() {
-    if ($("#fold").attr("class") === "entry-items on") {
+    if ($("#fold").hasClass("on")) {
         showTime();
     }
 
@@ -853,13 +819,7 @@ function closeStore() {
     $("#icon-store").attr("class", "iconfont icon-store");
 
     //隐藏商店
-    $('.store').css({
-        "display": "none",
-    });
-    $("#fold").css({
-        "display": "none",
-        "transition": "all 0.3s"
-    });
+    $('.store').addClass('inactive').removeClass('active');
 }
 
 //显示设置搜索引擎列表
@@ -1139,7 +1099,6 @@ function setupTabsScrolling(selector) {
         setTimeout(() => tabs.addClass('scrollbar-hidden'), 1500);
     });
 }
-
 
 function showWelcomeMessage() {
     //用户欢迎
@@ -1456,7 +1415,7 @@ function updateTimeStyle(size, weight, opacity, width) {
 // 更新日期样式
 function updateDateStyle(size, weight, opacity, width) {
     // 转换滑块值
-    const baseFontSize = 1.05; // 基础字体大小
+    const baseFontSize = 1.15; // 基础字体大小
     const maxIncrease = 5; // 最大增加 5rem
     const fontSize = baseFontSize + (size / 100) * maxIncrease; // 计算字体大小
     const fontWeight = 100 + (weight / 100) * 800; // 100-900
@@ -1517,7 +1476,7 @@ function showAnnouncement(title, content, buttonText = '关闭') {
         if (announcementCounter == '0') {
             frameStyle.fadeOut('guassianCover', 300, 0);
             frameStyle.fadeOut('blackCover', 300, 0);
-            $('#bg').css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 1.2s" });
+            $('#bg').css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.7s" });
             setTimeout(() => {
                 $('#guassianCover').remove();
                 $('#blackCover').remove();

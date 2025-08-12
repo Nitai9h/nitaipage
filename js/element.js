@@ -2,7 +2,7 @@ const entry = [{
   left: [
     {
       id: 'fold',
-      style: 'display: none;',
+      style: '',
       icon: [{
         id: 'icon-fold',
         class: 'iconfont icon-fold'
@@ -85,7 +85,7 @@ function createEntry() {
   $entryRight.empty();
 
   entry[0].left.forEach(item => {
-    const $div = $(`<div class="entry-items" id="${item.id}" style="${item.style}"></div>`);
+    const $div = $(`<div class="entry-items inactive" id="${item.id}" style="${item.style}"></div>`);
     item.icon.forEach(icon => {
       $div.append(`<i id="${icon.id}" class="${icon.class}"></i>`);
     });

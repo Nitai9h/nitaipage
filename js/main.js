@@ -7,7 +7,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.1.0',
+    VERSION: 'v2.1.1',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -133,7 +133,9 @@ window.addEventListener('load', async function () {
         closeOnEscape: true,
         position: 'topCenter',
         transitionIn: 'bounceInDown',
-        transitionOut: 'flipOutX',
+        transitionOut: 'fadeOutUp',
+        transitionInMobile: 'fadeInDown',
+        transitionOutMobile: 'fadeOutUp',
         displayMode: 'replace',
         layout: '1'
     });

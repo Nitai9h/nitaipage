@@ -60,16 +60,16 @@ $(document).ready(function () {
     // Npp 设置打开
     $(function () {
         $("#entryPluginSettings").click(function () {
-            $(".set").css("display", "none");
-            $(".plugin_set").css("display", "flex");
+            $(".set").addClass("inactive").removeClass("active");
+            $(".plugin_set").addClass("active").removeClass("inactive");
         })
     })
 
     // Npp 设置关闭
     $(function () {
         $("#close-pluginSettings").click(function () {
-            $(".set").css("display", "flex");
-            $(".plugin_set").css("display", "none");
+            $(".set").addClass("active").removeClass("inactive");
+            $(".plugin_set").addClass("inactive").removeClass("active");
         })
     })
 
@@ -179,10 +179,10 @@ $(document).ready(function () {
     // 折叠点击
     $("#fold").click(function () {
         if ($("#content").attr("class") === "box"
-            || $("#menu").attr("class") === "entry-items on"
-            || $("#store").attr("class") === "entry-items on") {
+            || $("#menu").hasClass("on")
+        || $("#store").hasClass("on")) {
             //更改图标、状态
-            if ($(this).attr("class") === "entry-items on") {
+            if ($(this).hasClass("on")) {
                 $("#icon-fold").attr("class", "iconfont icon-fold");
                 $(this).removeClass('on');
                 localStorage.setItem('foldTime', 'off');
@@ -200,7 +200,7 @@ $(document).ready(function () {
 
     // 菜单 (设置) 点击
     $("#menu").click(async function () {
-        if ($(this).attr("class") === "entry-items on") {
+        if ($(this).hasClass("on")) {
             closeSet();
         } else {
             openSet();
@@ -213,7 +213,7 @@ $(document).ready(function () {
 
     // 商店点击
     $("#store").click(function () {
-        if ($(this).attr("class") === "entry-items on") {
+        if ($(this).hasClass("on")) {
             closeStore();
         } else {
             openStore();

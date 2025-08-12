@@ -32,7 +32,7 @@
     --time-opacity: 1;
     --time-width: 29.5px;
     /* 日期样式变量 */
-    --date-font-size: 1.05rem;
+    --date-font-size: 1.15rem;
     --date-font-weight: 400;
     --date-opacity: 1;
     --date-width: 12.5px;
@@ -233,12 +233,6 @@ img.error {
 .sou {
     max-width: 680px;
     width: calc(100% - 60px);
-    animation: scaleIn;
-    -webkit-animation: scaleIn 0.25s;
-    -moz-animation: scaleIn 0.25s;
-    -o-animation: scaleIn 0.25s;
-    -ms-animation: scaleIn 0.25s;
-    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     /* transform: translateY(-150%); */
 }
 
@@ -300,7 +294,7 @@ img.error {
     align-items: center;
     transform: translateY(-50%);
     z-index: 1;
-    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .time {
@@ -321,7 +315,6 @@ img.error {
     text-align: center;
     font-size: var(--time-font-size);
     font-weight: var(--time-font-weight);
-    opacity: var(--time-opacity);
     color: var(--main-text-color);
     text-shadow: var(--main-text-shadow);
     min-width: var(--time-width);
@@ -333,7 +326,6 @@ img.error {
     width: 80%;
     font-size: var(--date-font-size);
     font-weight: var(--date-font-weight);
-    opacity: var(--date-opacity);
     text-align: center;
     color: var(--main-text-color);
     text-shadow: var(--main-text-shadow);
@@ -521,18 +513,33 @@ img.error {
 }
 
 .all-search input::-webkit-input-placeholder {
-    color: var(--main-text-color);
+    color: var(--main-input-text-placeholder-color);
     text-align: center;
+    transition: all 0.3s;
 }
 
 .all-search input::-moz-placeholder {
-    color: var(--main-text-color);
+    color: var(--main-input-text-placeholder-color);
     text-align: center;
+    transition: all 0.3s;
 }
 
 .all-search input:-ms-input-placeholder {
-    color: var(--main-text-color);
+    color: var(--main-input-text-placeholder-color);
     text-align: center;
+    transition: all 0.3s;
+}
+
+.all-search:hover input::-webkit-input-placeholder {
+    color: var(--main-text-color);
+}
+
+.all-search:hover input::-moz-placeholder {
+    color: var(--main-text-color);
+}
+
+.all-search:hover input:-ms-input-placeholder {
+    color: var(--main-text-color);
 }
 
 /*切换搜索引擎*/
@@ -554,7 +561,7 @@ img.error {
     -moz-animation: fade 0.4s;
     -o-animation: fade 0.4s;
     -ms-animation: fade 0.4s;
-    transition: opacity 800ms, transform 800ms
+    transition: opacity 800ms, transform 800ms;
 }
 
 .search-engine-list {
@@ -666,15 +673,31 @@ img.error {
     max-height: 400px;
     width: 80%;
     max-width: 900px;
-    max-width: 900px;
     position: absolute;
-    margin-top: 200px;
     z-index: 2000;
-    animation: scaleIn 0.25s;
-    -webkit-animation: scaleIn 0.25s;
-    -moz-animation: scaleIn 0.25s;
-    -o-animation: scaleIn 0.25s;
-    -ms-animation: scaleIn 0.25s;
+    transition: all .3s;
+}
+
+/* 开启状态 */
+.mark.active,
+.set.active,
+.store.active,
+.plugin_set.active {
+    opacity: 1;
+    margin-top: 20vh;
+    transform: scale(1);
+    visibility: visible;
+}
+
+/* 关闭状态 */
+.mark.inactive,
+.set.inactive,
+.store.inactive,
+.plugin_set.inactive {
+    opacity: 0;
+    margin-top: 0;
+    transform: scale(0.35) translateY(-20%);
+    pointer-events: none;
 }
 
 .mark .tab,
@@ -707,7 +730,8 @@ img.error {
 .set .tabs::-webkit-scrollbar,
 .store .tabs::-webkit-scrollbar,
 .plugin_set .tabs::-webkit-scrollbar {
-    height: 2px;
+    margin-top: 20px;
+    height: 3px;
     position: absolute;
     top: 0;
 }
@@ -717,14 +741,16 @@ img.error {
 .plugin_set .tabs::-webkit-scrollbar-thumb {
     background-color: transparent;
     border-radius: 2px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    opacity: 0;
 }
 
 .set .tabs:hover::-webkit-scrollbar-thumb,
 .store .tabs:hover::-webkit-scrollbar-thumb,
 .plugin_set .tabs:hover::-webkit-scrollbar-thumb {
     background-color: var(--border-bottom-color-hover);
+    opacity: 1;
 }
 
 .set .tabs::-webkit-scrollbar-track,
@@ -766,13 +792,6 @@ img.error {
     .plugin_set .tabs:hover {
         scrollbar-color: var(--main-background-hover-color) transparent;
     }
-}
-
-.set .tabs.scrollbar-hidden::-webkit-scrollbar-thumb,
-.store .tabs.scrollbar-hidden::-webkit-scrollbar-thumb,
-.plugin_set .tabs.scrollbar-hidden::-webkit-scrollbar-thumb {
-    opacity: 0;
-    transition: opacity 0.3s;
 }
 
 .mark .tab .tab-item,
@@ -841,56 +860,83 @@ img.error {
 
 .mark .tab .tab-item:hover,
 .set .tabs .tab-items:hover,
-.store .tabs .tab-items:hover,
+#storePage .tabs .tab-items:hover,
 .plugin_set .tabs .tab-items:hover {
+    opacity: 1;
     transition: 0.3s;
     cursor: pointer;
 }
 
 .mark .tab .tab-item:hover::after,
 .set .tabs .tab-items:hover::after,
-.store .tabs .tab-items:hover::after,
+#storePage .tabs .tab-items:hover::after,
 .plugin_set .tabs .tab-items:hover::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
+    opacity: 1;
     width: 100%;
     height: 2px;
     background-color: var(--border-bottom-color-hover);
-    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mark .tab .tab-item.active,
 .set .tabs .tab-items.actives,
-.store .tabs .tab-items.active,
-.plugin_set .tabs .tab-items.active {
+#storePage .tabs .tab-items.active,
+.plugin_set .tabs .tab-items.actives {
     position: relative;
+    opacity: 1;
+}
+
+.mark .tab .tab-item::after,
+#storePage .tabs .tab-items::after,
+.plugin_set .tabs .tab-items::after,
+.set .tabs .tab-items::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    opacity: 0;
+    background-color: var(--border-bottom-color-hover);
+    transition:
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.4s ease;
+    transform-origin: left center;
+    border-radius: 6px;
 }
 
 .mark .tab .tab-item.active::after,
-.store .tabs .tab-items.active::after,
-.plugin_set .tabs .tab-items.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+#storePage .tabs .tab-items.active::after,
+.plugin_set .tabs .tab-items.actives::after,
+.set .tabs .tab-items.actives::after {
     height: 2px;
-    background-color: var(--border-bottom-color-active);
-    transition: all 0.3s ease;
+    left: 0;
+    opacity: 1;
+    width: 100%;
+    background-color: var(--main-text-color);
+    transition:
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.4s 0.1s ease;
 }
 
-.set .tabs .tab-items.actives::after,
-.plugin_set .tabs .tab-items.actives::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
+.set .tabs .tab-items.actives:hover::after,
+.plugin_set .tabs .tab-items.actives:hover::after,
+#storePage .tabs .tab-items.active:hover::after,
+.mark .tab .tab-item.active:hover::after {
     left: 0;
+    opacity: 1;
     width: 100%;
-    height: 2px;
-    background-color: var(--border-bottom-color-active);
-    transition: all 0.3s ease;
 }
 
 .products,
@@ -991,6 +1037,8 @@ img.error {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 /* 入口区域统一样式 */
@@ -1043,6 +1091,17 @@ img.error {
     justify-content: center;
     align-content: center;
     align-items: center;
+    transition: all 0.3s;
+}
+
+.entry-items.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.entry-items.inactive {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .entry-items:hover {
@@ -1113,6 +1172,8 @@ img.error {
     align-items: center;
     transition: 0.3s;
     border-style: unset;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .set_se_list_add:hover,
@@ -1345,11 +1406,10 @@ input[type="radio"]+label {
     background: var(--main-background-color);
     border-radius: 8px;
     border: 2px solid transparent;
-    transition: .3s;
+    transition: all .3s;
 }
 
 input[type="radio"]:checked+label {
-    padding: 4px 8px;
     background: var(--main-background-active-color);
     background-color: var(--main-background-hover-color);
     position: relative;
@@ -1361,24 +1421,21 @@ input[type="radio"]:checked+label::before {
     top: -6px;
     left: -6px;
     border-radius: 12px;
-    border: 2px solid var(--main-background-hover-color);
+    border: 3px solid var(--main-background-hover-color);
     opacity: 1;
     bottom: -6px;
     right: -6px;
+    opacity: 1;
+    transition: opacity 0.3s;
 }
 
-input[type="radio"]::before:hover {
+input[type="radio"]:checked+label:hover::before {
     opacity: 0;
-    padding: 6px 10px;
 }
 
 input[type="radio"]+label:hover {
     background-color: var(--main-background-hover-color);
     box-shadow: 0 0 0 2px var(--main-background-hover-color);
-}
-
-input[type="radio"]+label:active {
-    box-shadow: none;
 }
 
 /*数据备份*/
@@ -1389,8 +1446,8 @@ input[type="radio"]+label:active {
     padding: 20px;
     border-radius: 8px;
     flex-direction: column;
-    box-shadow: 0px 0px 10px 0px #00000020;
-    -webkit-box-shadow: 0px 0px 10px 0px #00000020;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .set_tip:hover,
@@ -1407,8 +1464,8 @@ input[type="radio"]+label:active {
     padding: 10px;
     border-radius: 8px;
     flex-direction: column;
-    box-shadow: 0px 0px 10px 0px #00000020;
-    -webkit-box-shadow: 0px 0px 10px 0px #00000020;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .set_tip_updateLog {
@@ -1454,6 +1511,8 @@ input[type="radio"]+label:active {
     justify-content: center;
     align-items: center;
     transition: 0.3s;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .but-ordinary:hover {
@@ -1477,7 +1536,6 @@ input[type="radio"]+label:active {
     width: 100%;
     height: 20px;
     line-height: 20px;
-    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .power {
@@ -1492,6 +1550,7 @@ input[type="radio"]+label:active {
     backdrop-filter: var(--main-box-gauss-plus) !important;
     -webkit-backdrop-filter: var(--main-box-gauss-plus) !important;
     background-color: var(--main-background-color) !important;
+    box-shadow: var(--main-search-hover-shadow) !important;
 }
 
 .iziToast-title,
@@ -1547,7 +1606,7 @@ input[type="radio"]+label:active {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--main-background-active-color);
+    background-color: var(--main-background-hover-color);
 }
 
 /*文字选中*/
@@ -1640,6 +1699,8 @@ input::selection {
     /* 添加白色边框 */
     display: flex;
     justify-content: space-between;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .dropdown:hover {
@@ -1748,9 +1809,10 @@ input::selection {
 }
 
 .slider::-moz-range-thumb {
-    width: 15px;
+    appearance: none;
+    width: 10px;
     /* 设置滑块球的大小 */
-    height: 15px;
+    height: 10px;
     /* 设置滑块球的大小 */
     border-radius: 50%;
     background: var(--main-text-color);
@@ -1828,19 +1890,23 @@ input[type=range]::-ms-fill-lower {
     border-radius: 4px;
     position: relative;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    will-change: background-color;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease;
+    will-change: background-color, transform;
     transform: translateZ(0);
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .switch:active::before {
-    transform: scale(1.1);
-    transition: transform 0.15s ease;
+    transform: scaleX(1.1) scaleY(1.05);
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .switch.on:active::before {
-    transform: translateX(20px) scale(1.1);
-    transition: transform 0.15s ease;
+    transform: translateX(20px) scaleX(1.1) scaleY(1.05);
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .switch::before {
@@ -1852,17 +1918,20 @@ input[type=range]::-ms-fill-lower {
     height: 16px;
     background-color: var(--main-text-color);
     border-radius: 4px;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+    will-change: transform, box-shadow;
     transform: translateZ(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .switch.on {
     background-color: var(--border-bottom-color-hover);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .switch.on::before {
     transform: translateX(20px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .switch.disabled {
