@@ -1,6 +1,8 @@
 //禁用右键
 document.oncontextmenu = new Function("return false");
 
+var t = null;
+
 // 时钟等宽效果辅助函数
 function wrapTimeDigits(numStr) {
     return numStr.split('').map(digit => `<div class="timeNum">${digit}</div>`).join('');
@@ -8,10 +10,6 @@ function wrapTimeDigits(numStr) {
 function wrapDayDigits(numStr) {
     return numStr.split('').map(digit => `<div class="dayNum">${digit}</div>`).join('');
 }
-
-// 获取时间
-var t = null;
-t = setTimeout(time, 1000);
 
 function time() {
     clearTimeout(t);
@@ -77,6 +75,26 @@ function updateBgCover() {
         $('.bg-all .cover').css('opacity', '1');
     } else {
         $('.bg-all .cover').css('opacity', '0');
+    }
+}
+
+function updateDateDisplay() {
+    const isEnabled = localStorage.getItem('dateDisplay') === 'true';
+    if (isEnabled) {
+        document.documentElement.style.setProperty('--date-display-opacity', '1');
+        document.documentElement.style.setProperty('--date-display-margin', '0px');
+    } else {
+        document.documentElement.style.setProperty('--date-display-opacity', '0');
+        document.documentElement.style.setProperty('--date-display-margin', '-12px');
+    }
+}
+
+function updateClockBlink() {
+    const isEnabled = localStorage.getItem('clockBlink') === 'true';
+    if (isEnabled) {
+        document.documentElement.style.setProperty('--clock-blink-animation', 'fadenum 2s infinite');
+    } else {
+        document.documentElement.style.setProperty('--clock-blink-animation', 'none');
     }
 }
 

@@ -36,6 +36,9 @@
     --date-font-weight: 400;
     --date-opacity: 1;
     --date-width: 12.5px;
+    --date-display-opacity: 1;
+    --date-display-margin: 0px;
+    --clock-blink-animation: fadenum 4s infinite;
     --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
@@ -76,6 +79,10 @@ section {
 /*文字闪烁*/
 @-webkit-keyframes fadenum {
     0% {
+        opacity: 0;
+    }
+
+    25% {
         opacity: 1;
     }
 
@@ -83,13 +90,21 @@ section {
         opacity: 0;
     }
 
-    100% {
+    75% {
         opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 
 @-moz-keyframes fadenum {
     0% {
+        opacity: 0;
+    }
+
+    25% {
         opacity: 1;
     }
 
@@ -97,13 +112,21 @@ section {
         opacity: 0;
     }
 
-    100% {
+    75% {
         opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 
 @-o-keyframes fadenum {
     0% {
+        opacity: 0;
+    }
+
+    25% {
         opacity: 1;
     }
 
@@ -111,13 +134,21 @@ section {
         opacity: 0;
     }
 
-    100% {
+    75% {
         opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 
 @keyframes fadenum {
     0% {
+        opacity: 0;
+    }
+
+    25% {
         opacity: 1;
     }
 
@@ -125,8 +156,12 @@ section {
         opacity: 0;
     }
 
-    100% {
+    75% {
         opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 
@@ -288,13 +323,14 @@ img.error {
 
 /*时间*/
 .tool-all {
+    opacity: 0;
     position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
     transform: translateY(-50%);
     z-index: 1;
-    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 0.633s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .time {
@@ -335,11 +371,11 @@ img.error {
 
 #point {
     margin: 0px 4px;
-    animation: fadenum 2s infinite;
-    -webkit-animation: fadenum 2s infinite;
-    -moz-animation: fadenum 2s infinite;
-    -o-animation: fadenum 2s linear infinite;
-    -ms-animation: fadenum 2s linear infinite;
+    animation: var(--clock-blink-animation);
+    -webkit-animation: var(--clock-blink-animation);
+    -moz-animation: var(--clock-blink-animation);
+    -o-animation: var(--clock-blink-animation);
+    -ms-animation: var(--clock-blink-animation);
 }
 
 #day #point {
@@ -352,7 +388,7 @@ img.error {
     opacity: var(--time-opacity);
     margin: 6px 0px;
     text-shadow: var(--main-text-shadow);
-    transition: 0.2s;
+    transition: 0.2s, opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -391,8 +427,7 @@ img.error {
 #day {
     font-size: var(--date-font-size);
     font-weight: var(--date-font-weight);
-    opacity: var(--date-opacity);
-    margin: 4px 0px;
+    opacity: var(--date-display-opacity);
     text-shadow: var(--main-text-shadow);
     display: flex;
     flex-direction: row;
@@ -401,6 +436,10 @@ img.error {
     justify-content: center;
     align-items: center;
     white-space: nowrap;
+    margin-top: var(--date-display-margin);
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        margin-top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /*天气*/
@@ -684,7 +723,6 @@ img.error {
 .store.active,
 .plugin_set.active {
     opacity: 1;
-    margin-top: 20vh;
     transform: scale(1);
     visibility: visible;
 }
@@ -695,7 +733,6 @@ img.error {
 .store.inactive,
 .plugin_set.inactive {
     opacity: 0;
-    margin-top: 0;
     transform: scale(0.35) translateY(-20%);
     pointer-events: none;
 }
@@ -1405,8 +1442,8 @@ input[type="radio"]+label {
     padding: 6px 10px;
     background: var(--main-background-color);
     border-radius: 8px;
-    border: 2px solid transparent;
-    transition: all .3s;
+    border: 1px solid transparent;
+    transition: all .3s cubic-bezier(.25, .8, .25, 1);
 }
 
 input[type="radio"]:checked+label {
@@ -1429,13 +1466,18 @@ input[type="radio"]:checked+label::before {
     transition: opacity 0.3s;
 }
 
-input[type="radio"]:checked+label:hover::before {
+input[type="radio"]:checked+label:hover::before,
+input[type="radio"]:checked+label:active::before {
     opacity: 0;
 }
 
 input[type="radio"]+label:hover {
     background-color: var(--main-background-hover-color);
     box-shadow: 0 0 0 2px var(--main-background-hover-color);
+}
+
+input[type="radio"]+label:hover:active {
+    box-shadow: 0 0 0 0px var(--main-background-hover-color);
 }
 
 /*数据备份*/

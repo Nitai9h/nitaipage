@@ -1,3 +1,23 @@
+$(function () {
+    // 数据库初始化
+    initializaNitaiPageDB();
+    initializaNppDB();
+
+    // 搜索模糊效果加载
+    updateSearchBlur();
+    updateBlurPlusStyle();
+
+    // 初始化日期显示和时钟闪烁状态
+    updateDateDisplay();
+    updateClockBlink();
+
+    // 获取时间
+    t = setTimeout(time, 1000);
+
+    // 初始化 (持久化元素加载)
+    init();
+})
+
 // 控制台信息
 const VersionInfo = {
     // 常量
@@ -7,7 +27,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.1.1',
+    VERSION: 'v2.1.2',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -79,28 +99,17 @@ window.addEventListener('load', async function () {
         $(".power").append(`${VersionInfo.VERSION}`);
     }
 
-    // 数据库初始化
-    initializaNitaiPageDB();
-    initializaNppDB();
-
-    // 初始化 tabs 横向滚动和自动隐藏
-    setupTabsScrolling('.set .tabs');
-    setupTabsScrolling('.store #storePage .tabs');
-    setupTabsScrolling('.plugin_set .tabs');
-
-    // 初始化 (持久化元素加载)
-    init();
-
     const bg = new BroadcastChannel("bgLoad");
     let loadTimeout;
 
     // 设置加载超时定时器
     loadTimeout = setTimeout(() => {
         const elapsedTime = Date.now() - startTime;
-        const remainingTime = Math.max(0, 300 - elapsedTime);
+        const remainingTime = Math.max(0, 1000 - elapsedTime);
         setTimeout(() => {
             frameStyle.removeLoading();
             $('.tool-all').css('transform', 'translateY(-120%)');
+            $('.tool-all').css('opacity', '1');
             $('.all-search').css('transform', 'translateY(0%)');
             $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
             $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
@@ -113,10 +122,11 @@ window.addEventListener('load', async function () {
         if (event.data === "bgImgLoadinged") {
             clearTimeout(loadTimeout);
             const elapsedTime = Date.now() - startTime;
-            const remainingTime = Math.max(0, 300 - elapsedTime);
+            const remainingTime = Math.max(0, 1000 - elapsedTime);
             setTimeout(() => {
                 frameStyle.removeLoading();
                 $('.tool-all').css('transform', 'translateY(-120%)');
+                $('.tool-all').css('opacity', '1');
                 $('.all-search').css('transform', 'translateY(0%)');
                 $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
                 $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");

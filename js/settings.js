@@ -238,6 +238,13 @@ function createPanelContent() {
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both" style="align-items: center;">
               <div>
+                <span class="set_text"><big>日期显示&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否显示日期</small></span>
+              </div>
+              <div id="toggle-date-display" class="switch"></div>
+            </div>
+            <div class="switch-item tip_new_both" style="align-items: center;">
+              <div>
                 <span class="set_text"><big>时钟制式&nbsp;</big><br></span>
                 <span class="set_text" style="color: gray;"><small>是否使用 12 小时制</small></span>
               </div>
@@ -251,6 +258,13 @@ function createPanelContent() {
                 <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
               </div>
               <div id="toggle-zero-padding" class="switch"></div>
+            </div>
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>时钟闪烁&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否闪烁时钟指示器</small></span>
+              </div>
+              <div id="toggle-clock-blink" class="switch"></div>
             </div>
           </div>
         </div>

@@ -180,7 +180,7 @@ $(document).ready(function () {
     $("#fold").click(function () {
         if ($("#content").attr("class") === "box"
             || $("#menu").hasClass("on")
-        || $("#store").hasClass("on")) {
+            || $("#store").hasClass("on")) {
             //更改图标、状态
             if ($(this).hasClass("on")) {
                 $("#icon-fold").attr("class", "iconfont icon-fold");
@@ -607,89 +607,50 @@ $(document).ready(function () {
         var type = $(this).val();
         var bg_img = getBgImg();
         bg_img["type"] = type;
+        setBgImg(bg_img);
 
         if (type === "1") {
             $('#wallpaper_text').html("默认壁纸");
-            setBgImg(bg_img);
+            changeWallpaper();
             iziToast.show({
-                message: '壁纸设置成功，刷新生效',
-                buttons: [
-                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
-                        window.location.reload(true);
-                    }, true],
-                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
-                    }]
-                ]
+                message: '壁纸切换成功',
+                timeout: 2000
             });
         }
 
         if (type === "2") {
             $('#wallpaper_text').html("必应每日一图 4K UHD 超高清，每天更新");
-            setBgImg(bg_img);
+            changeWallpaper();
             iziToast.show({
-                message: '壁纸设置成功，刷新生效',
-                buttons: [
-                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
-                        window.location.reload(true);
-                    }, true],
-                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
-                    }]
-                ]
+                message: '壁纸切换成功',
+                timeout: 2000
             });
         }
 
         if (type === "3") {
             $('#wallpaper_text').html("必应每日一图 1080P FHD 全高清，每天更新");
-            setBgImg(bg_img);
+            changeWallpaper();
             iziToast.show({
-                message: '壁纸设置成功，刷新生效',
-                buttons: [
-                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
-                        window.location.reload(true);
-                    }, true],
-                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
-                    }]
-                ]
+                message: '壁纸切换成功',
+                timeout: 2000
             });
         }
 
         if (type === "4") {
             $('#wallpaper_text').html("随机风景图，每次刷新后更换");
-            setBgImg(bg_img);
+            changeWallpaper();
             iziToast.show({
-                message: '壁纸设置成功，刷新生效',
-                buttons: [
-                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
-                        window.location.reload(true);
-                    }, true],
-                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
-                    }]
-                ]
+                message: '壁纸切换成功',
+                timeout: 2000
             });
         }
 
         if (type === "5") {
             $('#wallpaper_text').html("随机二次元图，每次刷新后更换");
-            setBgImg(bg_img);
+            changeWallpaper();
             iziToast.show({
-                message: '壁纸设置成功，刷新生效',
-                buttons: [
-                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
-                        window.location.reload(true);
-                    }, true],
-                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
-                    }]
-                ]
+                message: '壁纸切换成功',
+                timeout: 2000
             });
         }
 
@@ -723,17 +684,10 @@ $(document).ready(function () {
                         bg_img["type"] = "6";
                         bg_img["path"] = url;
                         setBgImg(bg_img);
+                        changeWallpaper();
                         iziToast.show({
-                            message: '链接设置成功，刷新生效',
-                            buttons: [
-                                ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
-                                    instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
-                                    window.location.reload(true);
-                                }, true],
-                                ['<button class="later-btn">稍后</button>', function (instance, toast) {
-                                    instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
-                                }]
-                            ]
+                            message: '链接设置成功',
+                            timeout: 2000
                         });
                         // setTimeout(function () {
                         //     window.location.reload()
@@ -751,17 +705,10 @@ $(document).ready(function () {
             bg_img["type"] = "6";
             bg_img["path"] = url;
             setBgImg(bg_img);
+            changeWallpaper();
             iziToast.show({
-                message: '链接设置成功，刷新生效',
-                buttons: [
-                    ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
-                        window.location.reload(true);
-                    }, true],
-                    ['<button class="later-btn">稍后</button>', function (instance, toast) {
-                        instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
-                    }]
-                ]
+                message: '链接设置成功',
+                timeout: 2000
             });
         }
     });
@@ -956,6 +903,8 @@ $(document).ready(function () {
     localStorage.getItem('searchBlur') === null && localStorage.setItem('searchBlur', 'true');
     localStorage.getItem('blurPlus') === null && localStorage.setItem('blurPlus', 'false');
     localStorage.getItem('bgCover') === null && localStorage.setItem('bgCover', 'true');
+    localStorage.getItem('dateDisplay') === null && localStorage.setItem('dateDisplay', 'true');
+    localStorage.getItem('clockBlink') === null && localStorage.setItem('clockBlink', 'true');
 
     // 初始化开关状态
     $(document).ready(function () {
@@ -964,6 +913,8 @@ $(document).ready(function () {
         $('#toggle-search-blur').toggleClass('on', localStorage.getItem('searchBlur') === 'true');
         $('#toggle-blur-plus').toggleClass('on', localStorage.getItem('blurPlus') === 'true');
         $('#toggle-bg-cover').toggleClass('on', localStorage.getItem('bgCover') === 'true');
+        $('#toggle-date-display').toggleClass('on', localStorage.getItem('dateDisplay') === 'true');
+        $('#toggle-clock-blink').toggleClass('on', localStorage.getItem('clockBlink') === 'true');
     });
 
 
@@ -1000,6 +951,20 @@ $(document).ready(function () {
         $(this).toggleClass('on', !isOn);
         localStorage.setItem('bgCover', $(this).hasClass('on'));
         updateBgCover();
+    });
+
+    $('#toggle-date-display').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('dateDisplay', $(this).hasClass('on'));
+        updateDateDisplay();
+    });
+
+    $('#toggle-clock-blink').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('clockBlink', $(this).hasClass('on'));
+        updateClockBlink();
     });
 
 });

@@ -373,6 +373,28 @@ function setBgImgInit() {
         });
 };
 
+// 壁纸切换
+function changeWallpaper() {
+
+    // 淡出效果
+    $('#bg').css("cssText", "opacity: 0;transform: scale(1.08);filter: blur(var(--main-box-gauss));transition: ease 0.3s;");
+
+    setTimeout(() => {
+        // 移除 onerror 事件处理器
+        // 避免触发 error
+        $('#bg').removeAttr('onerror');
+        $('#bg').attr('src', '');
+        $('#bg').removeClass('error');
+
+        setBgImgInit();
+
+        // 添加 onerror 事件处理器
+        setTimeout(() => {
+            $('#bg').attr('onerror', 'this.classList.add("error");');
+        }, 100);
+    }, 300);
+}
+
 // 搜索框高亮
 function focusWd() {
     $("body").addClass("onsearch");
@@ -864,9 +886,10 @@ async function init() {
     // 应用管理加载
     await loadPluginManagementPage()
 
-    // 搜索模糊效果加载
-    updateSearchBlur();
-    updateBlurPlusStyle();
+    // 初始化 tabs 横向滚动和自动隐藏
+    setupTabsScrolling('.set .tabs');
+    setupTabsScrolling('.store #storePage .tabs');
+    setupTabsScrolling('.plugin_set .tabs');
 
     // 滑块显示监听器
     addSliderValueListeners();
