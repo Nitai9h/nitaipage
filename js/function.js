@@ -332,7 +332,7 @@ function setBgImgInit() {
             var pictureURL = 'https://bing.biturl.top/?resolution=1920&format=image'; //必应每日 1080P
             break;
         case "4":
-            var pictureURL = 'https://v.api.aa1.cn/api/api-fj-2/index.php'; //随机风景
+            var pictureURL = 'https://tu.ltyuanfang.cn/api/fengjing.php'; //随机风景
             break;
         case "5":
             var pictureURL = 'https://www.loliapi.com/acg'; //随机二次元
@@ -870,26 +870,36 @@ function hideQuick() {
 
 // 初始化各项已持久化的元素
 async function init() {
+    // 初始化日期显示和时钟闪烁状态
+    updateDateDisplay();
+    updateClockBlink();
+
+    // 搜索模糊效果加载
+    updateSearchBlur();
+    updateBlurPlusStyle();
+
+    // 初始化时钟数字切换动画
+    updateClockNumAnimation();
+
+    // 数据库初始化
+    initializaNitaiPageDB();
+    initializaNppDB();
+
     // 搜索框数据加载
-    await searchData();
+    searchData();
 
     // 搜索引擎列表加载
-    await seList();
+    seList();
 
     // 快捷方式数据加载
-    await quickData();
+    quickData();
 
     // Npp插件加载
-    await initCoreNpp();
-    await loadNpp();
+    initCoreNpp();
+    loadNpp();
 
     // 应用管理加载
-    await loadPluginManagementPage()
-
-    // 初始化 tabs 横向滚动和自动隐藏
-    setupTabsScrolling('.set .tabs');
-    setupTabsScrolling('.store #storePage .tabs');
-    setupTabsScrolling('.plugin_set .tabs');
+    loadPluginManagementPage()
 
     // 滑块显示监听器
     addSliderValueListeners();
@@ -908,6 +918,9 @@ async function init() {
 
     // 检查更新
     checkUpdates('all', 'hide');
+
+    // 壁纸加载
+    initWallpaerLoader();
 }
 
 // 或取信息 JSON
@@ -1101,16 +1114,54 @@ function importIndexedDBData(indexedDBData) {
 function setupTabsScrolling(selector) {
     $(function () {
         const tabs = $(selector);
-        let scrollTimer;
 
         if (!tabs.length) return;
 
-        // 自动隐藏滚动条
-        tabs.on('scroll', function () {
-            tabs.removeClass('scrollbar-hidden');
-            clearTimeout(scrollTimer);
-            scrollTimer = setTimeout(() => tabs.addClass('scrollbar-hidden'), 1500);
+        // 为每个 tabs 创建容器并添加左右箭头元素
+        tabs.each(function () {
+            const $tab = $(this);
+            const $container = $('<div class="tabs-container"></div>');
+            const $leftArrow = $('<div class="scroll-arrow-left"><i class="iconfont icon-right_button"></i></div>');
+            const $rightArrow = $('<div class="scroll-arrow-right"><i class="iconfont icon-left_button"></i></div>');
+
+            // 将 tabs 插入到容器中
+            $tab.wrap($container);
+            // 添加箭头
+            $tab.parent().append($leftArrow, $rightArrow);
         });
+
+        // 更新箭头显示状态
+        function updateArrowVisibility($tab) {
+            const scrollLeft = $tab.scrollLeft();
+            const scrollWidth = $tab[0].scrollWidth;
+            const clientWidth = $tab[0].clientWidth;
+
+            // 计算滚动百分比
+            const scrollPercentage = scrollWidth > clientWidth ? (scrollLeft / (scrollWidth - clientWidth)) * 100 : 0;
+
+            // 更新 CSS 变量
+            $tab.css('--scrollbar', scrollPercentage + '%');
+
+            // 获取包装容器
+            const $container = $tab.parent();
+
+            // 根据滚动状态调整箭头显示
+            if (scrollPercentage >= 98) {
+                // 滚动到最右侧，隐藏右侧箭头
+                $container.removeClass('can-scroll-right').addClass('can-scroll-left');
+            } else if (scrollPercentage <= 2) {
+                // 滚动到最左侧，隐藏左侧箭头
+                $container.removeClass('can-scroll-left').addClass('can-scroll-right');
+            } else {
+                // 两箭头都显示
+                $container.addClass('can-scroll-left can-scroll-right');
+            }
+
+            // 无需滚动
+            if (scrollWidth <= clientWidth) {
+                $container.removeClass('can-scroll-left can-scroll-right');
+            }
+        }
 
         // 横向滚动支持
         tabs.on('wheel', function (e) {
@@ -1118,8 +1169,23 @@ function setupTabsScrolling(selector) {
             $(this).scrollLeft($(this).scrollLeft() + e.originalEvent.deltaY);
         });
 
-        // 初始隐藏
-        setTimeout(() => tabs.addClass('scrollbar-hidden'), 1500);
+        // 滚动事件监听
+        tabs.on('scroll', function () {
+            updateArrowVisibility($(this));
+        });
+
+        // 初始化箭头状态
+        tabs.each(function () {
+            updateArrowVisibility($(this));
+        });
+
+        // 响应式
+        // 窗口大小改变时重新检查箭头状态
+        $(window).on('resize', function () {
+            tabs.each(function () {
+                updateArrowVisibility($(this));
+            });
+        });
     });
 }
 
@@ -1535,4 +1601,53 @@ function getExtensionUrl() {
             resolve(null);
         }, 1000);
     });
+}
+
+async function initWallpaerLoader() {
+    const startTime = Date.now(); // 记录开始加载时间
+
+    // 初始控制台展示
+    VersionInfo.displayVersionInfo();
+    await searchData();
+    // 版本信息
+    if (typeof VersionInfo !== 'undefined' && VersionInfo.VERSION) {
+        $(".power").append(`${VersionInfo.VERSION}`);
+    }
+
+    const bg = new BroadcastChannel("bgLoad");
+    let loadTimeout;
+
+    // 设置加载超时定时器
+    loadTimeout = setTimeout(() => {
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, 300 - elapsedTime);
+        setTimeout(() => {
+            frameStyle.removeLoading();
+            $('.tool-all').css('transform', 'translateY(-120%)');
+            $('.tool-all').css('opacity', '1');
+            $('.all-search').css('transform', 'translateY(0%)');
+            $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
+            $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
+            bg.close();
+            showWelcomeMessage();
+        }, remainingTime);
+    }, 1500);
+
+    bg.onmessage = (event) => {
+        if (event.data === "bgImgLoadinged") {
+            clearTimeout(loadTimeout);
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = Math.max(0, 300 - elapsedTime);
+            setTimeout(() => {
+                frameStyle.removeLoading();
+                $('.tool-all').css('transform', 'translateY(-120%)');
+                $('.tool-all').css('opacity', '1');
+                $('.all-search').css('transform', 'translateY(0%)');
+                $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
+                $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
+                bg.close();
+                showWelcomeMessage();
+            }, remainingTime);
+        }
+    };
 }

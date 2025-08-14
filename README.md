@@ -81,5 +81,5 @@ http-server -p 11123 -o
 ###### API
 
 * [Bing : https://bing.biturl.top](https://bing.biturl.top)
-* [随机风景 : https://v.api.aa1.cn/api/api-fj-2/index.php](https://v.api.aa1.cn/api/api-fj-2/index.php)
+* [随机风景 : https://tu.ltyuanfang.cn/api/fengjing.php](https://tu.ltyuanfang.cn/api/fengjing.php)
 * [随机二次元 : https://www.loliapi.com/acg](https://www.loliapi.com/acg)

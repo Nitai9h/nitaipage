@@ -9,10 +9,17 @@
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 16px;
-  font-style: normal !important;
-  font-weight: 400 !important;
+  font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-left_button:before {
+  content: "\e833";
+}
+
+.icon-right_button:before {
+  content: "\e834";
 }
 
 .icon-fanyi:before {
@@ -274,3 +281,4 @@
 .icon-NitaiPage:before {
   content: "\ea02";
 }
+

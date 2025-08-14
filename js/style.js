@@ -2,13 +2,35 @@
 document.oncontextmenu = new Function("return false");
 
 var t = null;
+var previousTimeDigits = {
+    hour: '',
+    minute: ''
+};
+var previousDayDigits = {
+    month: '',
+    day: ''
+};
 
 // 时钟等宽效果辅助函数
-function wrapTimeDigits(numStr) {
-    return numStr.split('').map(digit => `<div class="timeNum">${digit}</div>`).join('');
+function wrapTimeDigits(numStr, type) {
+    const previousDigits = previousTimeDigits[type] || '';
+    const result = numStr.split('').map((digit, index) => {
+        const hasChanged = previousDigits[index] !== digit;
+        const animationClass = (hasChanged && localStorage.getItem('clockNumAnimation') === 'true') ? 'changing' : '';
+        return `<div class="timeNum ${animationClass}">${digit}</div>`;
+    }).join('');
+    previousTimeDigits[type] = numStr;
+    return result;
 }
-function wrapDayDigits(numStr) {
-    return numStr.split('').map(digit => `<div class="dayNum">${digit}</div>`).join('');
+function wrapDayDigits(numStr, type) {
+    const previousDigits = previousDayDigits[type] || '';
+    const result = numStr.split('').map((digit, index) => {
+        const hasChanged = previousDigits[index] !== digit;
+        const animationClass = (hasChanged && localStorage.getItem('clockNumAnimation') === 'true') ? 'changing' : '';
+        return `<div class="dayNum ${animationClass}">${digit}</div>`;
+    }).join('');
+    previousDayDigits[type] = numStr;
+    return result;
 }
 
 function time() {
@@ -39,24 +61,30 @@ function time() {
     d = zeroPad ? (d < 10 ? "0" + d : d) : d;
 
     $("#time_text").html(
-        wrapTimeDigits(h.toString())
-        + '<span id="point">:</span>' + wrapTimeDigits(m.toString())
+        wrapTimeDigits(h.toString(), 'hour')
+        + '<span id="point">:</span>' + wrapTimeDigits(m.toString(), 'minute')
     );
     $("#ampm").html(
         ampmHTML
     );
-    $("#day").html(wrapDayDigits(mm.toString()) + "&nbsp;月&nbsp;" + '<span id="point"></span>'
-        + wrapDayDigits(d.toString()) + "&nbsp;日&nbsp;" + '<span id="point"></span>'
+    $("#day").html(wrapDayDigits(mm.toString(), 'month') + "&nbsp;月&nbsp;" + '<span id="point"></span>'
+        + wrapDayDigits(d.toString(), 'day') + "&nbsp;日&nbsp;" + '<span id="point"></span>'
         + weekday[day]);
+
+    // 清理动画
+    setTimeout(() => {
+        $('.timeNum.changing, .dayNum.changing').removeClass('changing');
+    }, 300);
+
     t = setTimeout(time, 1000);
 }
 
 function updateSearchBlur() {
-    const isEnabled = localStorage.getItem('searchBlur') === 'true';
-    if (isEnabled) {
-        document.documentElement.style.setProperty('--search-blur', 'var(--main-box-gauss-plus)');
-    } else {
+    const isDisEnabled = localStorage.getItem('searchBlur') === 'false';
+    if (isDisEnabled) {
         document.documentElement.style.setProperty('--search-blur', 'blur(0px)');
+    } else {
+        document.documentElement.style.setProperty('--search-blur', 'var(--main-box-gauss-plus)');
     }
 }
 
@@ -79,22 +107,31 @@ function updateBgCover() {
 }
 
 function updateDateDisplay() {
-    const isEnabled = localStorage.getItem('dateDisplay') === 'true';
-    if (isEnabled) {
-        document.documentElement.style.setProperty('--date-display-opacity', '1');
-        document.documentElement.style.setProperty('--date-display-margin', '0px');
-    } else {
+    const isDisEnabled = localStorage.getItem('dateDisplay') === 'false';
+    if (isDisEnabled) {
         document.documentElement.style.setProperty('--date-display-opacity', '0');
         document.documentElement.style.setProperty('--date-display-margin', '-12px');
+    } else {
+        document.documentElement.style.setProperty('--date-display-opacity', '1');
+        document.documentElement.style.setProperty('--date-display-margin', '0px');
     }
 }
 
 function updateClockBlink() {
-    const isEnabled = localStorage.getItem('clockBlink') === 'true';
-    if (isEnabled) {
-        document.documentElement.style.setProperty('--clock-blink-animation', 'fadenum 2s infinite');
-    } else {
+    const isDisEnabled = localStorage.getItem('clockBlink') === 'false';
+    if (isDisEnabled) {
         document.documentElement.style.setProperty('--clock-blink-animation', 'none');
+    } else {
+        document.documentElement.style.setProperty('--clock-blink-animation', 'fadenum 2s infinite');
+    }
+}
+
+function updateClockNumAnimation() {
+    const isDisEnabled = localStorage.getItem('clockNumAnimation') === 'false';
+    if (isDisEnabled) {
+        document.documentElement.style.setProperty('--clock-num-animation-enabled', 'paused');
+    } else {
+        document.documentElement.style.setProperty('--clock-num-animation-enabled', 'running');
     }
 }
 

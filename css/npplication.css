@@ -568,7 +568,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
     margin-bottom: 10px;
     background: var(--main-background-color);
     border-radius: 8px;

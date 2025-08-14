@@ -905,6 +905,7 @@ $(document).ready(function () {
     localStorage.getItem('bgCover') === null && localStorage.setItem('bgCover', 'true');
     localStorage.getItem('dateDisplay') === null && localStorage.setItem('dateDisplay', 'true');
     localStorage.getItem('clockBlink') === null && localStorage.setItem('clockBlink', 'true');
+    localStorage.getItem('clockNumAnimation') === null && localStorage.setItem('clockNumAnimation', 'true');
 
     // 初始化开关状态
     $(document).ready(function () {
@@ -915,6 +916,7 @@ $(document).ready(function () {
         $('#toggle-bg-cover').toggleClass('on', localStorage.getItem('bgCover') === 'true');
         $('#toggle-date-display').toggleClass('on', localStorage.getItem('dateDisplay') === 'true');
         $('#toggle-clock-blink').toggleClass('on', localStorage.getItem('clockBlink') === 'true');
+        $('#toggle-clock-num').toggleClass('on', localStorage.getItem('clockNumAnimation') === 'true');
     });
 
 
@@ -965,6 +967,13 @@ $(document).ready(function () {
         $(this).toggleClass('on', !isOn);
         localStorage.setItem('clockBlink', $(this).hasClass('on'));
         updateClockBlink();
+    });
+
+    $('#toggle-clock-num').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('clockNumAnimation', $(this).hasClass('on'));
+        updateClockNumAnimation();
     });
 
 });

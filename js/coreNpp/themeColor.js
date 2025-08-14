@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.3.0
+// @version    0.3.1
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -214,7 +214,7 @@ function applyThemeColors(originalColors) {
         document.documentElement.style.setProperty('--main-input-text-placeholder-color', chroma(textColor).alpha(0.43).hex());
 
         // 壁纸遮罩
-        document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(.8)');
+        document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(0.90)');
 
     } catch (error) {
         console.error('应用主题颜色时出错:', error);
@@ -264,7 +264,7 @@ function applyWhiteTheme() {
     document.documentElement.style.setProperty('--main-input-text-placeholder-color', '#ffffff70');
 
     // 壁纸遮罩
-    document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(.8)');
+    document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(0.90)');
 }
 
 /**

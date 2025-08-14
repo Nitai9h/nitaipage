@@ -266,6 +266,13 @@ function createPanelContent() {
               </div>
               <div id="toggle-clock-blink" class="switch"></div>
             </div>
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>时钟动效&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否启用时钟数字切换动效</small></span>
+              </div>
+              <div id="toggle-clock-num" class="switch"></div>
+            </div>
           </div>
         </div>
         <div class="global-settings">
@@ -563,8 +570,7 @@ function createWallpaperContent() {
     <div class="set_blocks wallpapers_content">
       <div class="set_tip">
         <span class="set_text_wallpaper">点击下方选项以切换壁纸，使用除默认壁纸以外的选项可能会导致页面载入缓慢</span>
-        <span class="set_text_wallpaper">不建议使用以主色调为白色的壁纸，会导致本站部分元素无法辨认</span>
-        <span class="set_text_wallpaper" id="wallpaper_text">请点击选项以查看各项说明，高亮项为选中，选中后刷新页面以生效</span>
+        <span class="set_text_wallpaper" id="wallpaper_text">点击选项切换壁纸，部分壁纸源不支持动态颜色</span>
       </div>
       <div class="set_blocks_content">
         <div class="from_container">
@@ -696,7 +702,54 @@ function createAboutContent() {
   return div;
 }
 
+// 初始化滚动进度指示器
+function initScrollProgressIndicators() {
+  const tabsContainers = document.querySelectorAll('.set .tabs, .store .tabs, .plugin_set .tabs');
+  
+  tabsContainers.forEach(container => {
+    // 如果已经存在进度指示器，则不再创建
+    if (container.querySelector('.scroll-progress-indicator')) {
+      return;
+    }
+    
+    // 创建进度指示器
+    const progressIndicator = document.createElement('div');
+    progressIndicator.className = 'scroll-progress-indicator';
+    container.appendChild(progressIndicator);
+    
+    // 监听滚动事件
+    container.addEventListener('scroll', function() {
+      const scrollWidth = container.scrollWidth;
+      const clientWidth = container.clientWidth;
+      const scrollLeft = container.scrollLeft;
+      
+      // 计算滚动进度百分比
+      const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+      
+      // 更新进度指示器宽度
+      progressIndicator.style.width = Math.min(scrollPercentage, 100) + '%';
+    });
+    
+    // 初始化时设置进度指示器
+    const scrollWidth = container.scrollWidth;
+    const clientWidth = container.clientWidth;
+    const scrollLeft = container.scrollLeft;
+    const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+    progressIndicator.style.width = Math.min(scrollPercentage, 100) + '%';
+    
+    // 如果内容不需要滚动，隐藏进度指示器
+    if (scrollWidth <= clientWidth) {
+      progressIndicator.style.display = 'none';
+    }
+  });
+}
+
 // 生成设置
 document.addEventListener('DOMContentLoaded', function () {
   generateSettings();
+  
+  // 初始化滚动进度指示器
+  setTimeout(() => {
+    initScrollProgressIndicators();
+  }, 100);
 });
