@@ -154,19 +154,28 @@ const PAGEDB_STORE = 'nitaiPage';
 */
 function initializaNitaiPageDB() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open(PAGEDB_NAME, 1);
+        const request = indexedDB.open(PAGEDB_NAME, 2);
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
             if (!db.objectStoreNames.contains(PAGEDB_STORE)) {
                 db.createObjectStore(PAGEDB_STORE, { keyPath: 'id' });
             }
+            if (!db.objectStoreNames.contains('randomWallpaper')) {
+                db.createObjectStore('randomWallpaper', { keyPath: 'id', autoIncrement: true });
+            }
+            if (!db.objectStoreNames.contains('customWallpaper')) {
+                db.createObjectStore('customWallpaper', { keyPath: 'id', autoIncrement: true });
+            }
         };
         request.onsuccess = (event) => {
             const db = event.target.result;
-            // 验证
-            if (!db.objectStoreNames.contains(PAGEDB_STORE)) {
-                console.error('缺少必要的对象存储: ' + PAGEDB_STORE);
+            // 验证对象
+            const requiredStores = [PAGEDB_STORE, 'randomWallpaper', 'customWallpaper'];
+            const missingStores = requiredStores.filter(store => !db.objectStoreNames.contains(store));
+            
+            if (missingStores.length > 0) {
+                console.error('缺少必要的对象: ' + missingStores.join(', '));
                 reject();
                 return;
             }
@@ -257,32 +266,6 @@ function getSeDefault() {
     return se_default ? se_default : "1";
 }
 
-//背景图片
-var bg_img_preinstall = {
-    "type": "1", // 1:使用主题默认的背景图片 2:关闭背景图片 3:使用自定义的背景图片
-    "path": "", //自定义图片
-};
-
-// 获取背景图片
-function getBgImg() {
-    var bg_img_local = localStorage.getItem('bg_img');
-    if (bg_img_local && bg_img_local !== "{}") {
-        return JSON.parse(bg_img_local);
-    } else {
-        setBgImg(bg_img_preinstall);
-        return bg_img_preinstall;
-    }
-}
-
-// 设置背景图片
-function setBgImg(bg_img) {
-    if (bg_img) {
-        localStorage.setItem('bg_img', JSON.stringify(bg_img));
-        return true;
-    }
-    return false;
-}
-
 // 初始化折叠状态
 function foldInit() {
     var foldValue = localStorage.getItem('foldTime');
@@ -293,108 +276,6 @@ function foldInit() {
         $("#icon-fold").attr("class", "iconfont icon-fold");
     }
 }
-
-// 设置-壁纸
-function setBgImgInit() {
-    const bg = new BroadcastChannel("bgLoad");
-
-    var bg_img = getBgImg();
-    $(":input[name='wallpaper-type'][value='" + bg_img["type"] + "']").prop("checked", true);
-    if (bg_img["type"] === "6") {
-        $("#wallpaper-url").val(bg_img["path"]);
-        $("#wallpaper-button").fadeIn(100);
-        $("#wallpaper_url").fadeIn(100);
-    } else {
-        $("#wallpaper_url").fadeOut(300);
-        $("#wallpaper-button").fadeOut(300);
-    }
-
-    switch (bg_img["type"]) {
-        case "1":
-            var pictures = new Array();
-            pictures[0] = './img/background1.webp';
-            pictures[1] = './img/background2.webp';
-            pictures[2] = './img/background3.webp';
-            pictures[3] = './img/background4.webp';
-            pictures[4] = './img/background5.webp';
-            pictures[5] = './img/background6.webp';
-            pictures[6] = './img/background7.webp';
-            pictures[7] = './img/background8.webp';
-            pictures[8] = './img/background9.webp';
-            pictures[9] = './img/background10.webp';
-            var rd = Math.floor(Math.random() * 10);
-            var pictureURL = pictures[rd]; //随机默认壁纸
-            break;
-        case "2":
-            var pictureURL = 'https://bing.biturl.top/?resolution=UHD&format=image'; //必应每日 4K
-            break;
-        case "3":
-            var pictureURL = 'https://bing.biturl.top/?resolution=1920&format=image'; //必应每日 1080P
-            break;
-        case "4":
-            var pictureURL = 'https://tu.ltyuanfang.cn/api/fengjing.php'; //随机风景
-            break;
-        case "5":
-            var pictureURL = 'https://www.loliapi.com/acg'; //随机二次元
-            break;
-        case "6":
-            var pictureURL = bg_img["path"]; //自定义
-            break;
-        default:
-            var pictureURL = localStorage.getItem('bgImage'); // 插件接口
-    }
-    bg.postMessage("bgImgLoadingStart");
-    // 跟踪API重定向
-    fetch(pictureURL)
-        .then(response => {
-            const finalUrl = response.url;
-            $('#bg').attr('src', finalUrl)
-            sessionStorage.setItem('bgImageFinalURL', finalUrl);
-            const img = new Image();
-            img.onload = function () {
-                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;");
-                bg.postMessage("bgImgLoadinged");
-                bg.close();
-            };
-            img.src = finalUrl;
-        })
-        .catch(error => {
-            // 原始方法
-            $('#bg').attr('src', pictureURL)
-            console.error('Failed to track image redirect:', error);
-            const img = new Image();
-            img.onload = function () {
-                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;");
-                sessionStorage.setItem('bgImageFinalURL', img.src);
-                bg.postMessage("bgImgLoadinged");
-                bg.close();
-            };
-            img.src = pictureURL;
-        });
-};
-
-// 壁纸切换
-function changeWallpaper() {
-
-    // 淡出效果
-    $('#bg').css("cssText", "opacity: 0;transform: scale(1.08);filter: blur(var(--main-box-gauss));transition: ease 0.3s;");
-
-    setTimeout(() => {
-        // 移除 onerror 事件处理器
-        // 避免触发 error
-        $('#bg').removeAttr('onerror');
-        $('#bg').attr('src', '');
-        $('#bg').removeClass('error');
-
-        setBgImgInit();
-
-        // 添加 onerror 事件处理器
-        setTimeout(() => {
-            $('#bg').attr('onerror', 'this.classList.add("error");');
-        }, 100);
-    }, 300);
-}
-
 // 搜索框高亮
 function focusWd() {
     $("body").addClass("onsearch");
@@ -907,7 +788,14 @@ async function init() {
     // 壁纸遮罩加载
     updateBgCover();
 
-    // 壁纸数据加载
+    // 壁纸加载
+    initWallpaerLoader();
+    await initWallpaperSettings();
+
+    // 初始化自定义壁纸
+    await loadCustomWallpaperOptions();
+
+    // 壁纸初始化
     setBgImgInit();
 
     // 折叠状态
@@ -919,8 +807,14 @@ async function init() {
     // 检查更新
     checkUpdates('all', 'hide');
 
-    // 壁纸加载
-    initWallpaerLoader();
+    // 初始控制台展示
+    VersionInfo.displayVersionInfo();
+    await searchData();
+
+    // 版本信息
+    if (typeof VersionInfo !== 'undefined' && VersionInfo.VERSION) {
+        $(".power").append(`${VersionInfo.VERSION}`);
+    }
 }
 
 // 或取信息 JSON
@@ -1529,58 +1423,35 @@ function updateMainStyle(blur, weight) {
     document.documentElement.style.setProperty('--main-box-gauss', `${blurValue}px`);
 }
 
-// 显示通知弹窗
-// 计数器
-let announcementCounter = 0;
+/** 
+ * 显示通知弹窗
+ * \n 也可以换行，但建议使用<br>
+ * @param {string} title - 通知标题
+ * @param {string} content - 通知内容
+ * @param {string} buttonText - 关闭按钮文本
+ */
 function showAnnouncement(title, content, buttonText = '关闭') {
-    // 唯一 ID
-    announcementCounter++;
-    const uniqueId = 'announcement_container_' + announcementCounter;
+    // \n 换行
+    const formattedContent = content ? content.replace(/\n/g, '<br>') : '暂无内容';
 
-    // 创建弹窗容器
-    const announcementContainer = document.createElement('div');
-    announcementContainer.className = 'announcement_container';
-    announcementContainer.id = uniqueId;
-
-    // 标题
-    const announcementTitle = document.createElement('h2');
-    announcementTitle.textContent = title || '通知';
-    announcementContainer.appendChild(announcementTitle);
-
-    // 内容
-    const announcementContent = document.createElement('div');
-    announcementContent.className = 'announcement_content';
-    announcementContent.textContent = content || '暂无内容';
-    announcementContainer.appendChild(announcementContent);
-
-    // 关闭
-    const closeButton = document.createElement('button');
-    closeButton.textContent = buttonText || '关闭';
-    closeButton.addEventListener('click', function () {
-        announcementCounter--;
-        $('#' + uniqueId).remove();
-        setTimeout(() => {
-            $('#' + uniqueId).remove();
-        }, 300);
-        if (announcementCounter == '0') {
-            frameStyle.fadeOut('guassianCover', 300, 0);
-            frameStyle.fadeOut('blackCover', 300, 0);
-            $('#bg').css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.7s" });
-            setTimeout(() => {
-                $('#guassianCover').remove();
-                $('#blackCover').remove();
-            }, 300);
-        }
-    });
-    announcementContainer.appendChild(closeButton);
-
-    document.body.appendChild(announcementContainer);
-
-    frameStyle.guassianCover(uniqueId, 10, 0);
-    frameStyle.blackCover(uniqueId);
-    frameStyle.fadeIn('guassianCover', 300, 0);
-    frameStyle.fadeIn('blackCover', 300, 0);
-    $('#bg').css({ transform: 'scale(1.08)', filter: "blur(var(--main-box-gauss))", transition: "ease 0.3s" });
+    // 使用iziToast显示通知
+    iziToast.show({
+        title: title || '通知',
+        message: formattedContent,
+        position: 'center',
+        timeout: false,
+        close: false,
+        overlay: true,
+        transitionIn: 'fadeIn',
+        transitionOut: 'fadeOut',
+        transitionInMobile: 'fadeIn',
+        transitionOutMobile: 'fadeOut',
+        buttons: [
+            ['<button>' + buttonText + '</button>', function (instance, toast) {
+                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+            }, true]
+        ],
+    })
 }
 
 function getExtensionUrl() {
@@ -1601,53 +1472,4 @@ function getExtensionUrl() {
             resolve(null);
         }, 1000);
     });
-}
-
-async function initWallpaerLoader() {
-    const startTime = Date.now(); // 记录开始加载时间
-
-    // 初始控制台展示
-    VersionInfo.displayVersionInfo();
-    await searchData();
-    // 版本信息
-    if (typeof VersionInfo !== 'undefined' && VersionInfo.VERSION) {
-        $(".power").append(`${VersionInfo.VERSION}`);
-    }
-
-    const bg = new BroadcastChannel("bgLoad");
-    let loadTimeout;
-
-    // 设置加载超时定时器
-    loadTimeout = setTimeout(() => {
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = Math.max(0, 300 - elapsedTime);
-        setTimeout(() => {
-            frameStyle.removeLoading();
-            $('.tool-all').css('transform', 'translateY(-120%)');
-            $('.tool-all').css('opacity', '1');
-            $('.all-search').css('transform', 'translateY(0%)');
-            $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
-            $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
-            bg.close();
-            showWelcomeMessage();
-        }, remainingTime);
-    }, 1500);
-
-    bg.onmessage = (event) => {
-        if (event.data === "bgImgLoadinged") {
-            clearTimeout(loadTimeout);
-            const elapsedTime = Date.now() - startTime;
-            const remainingTime = Math.max(0, 300 - elapsedTime);
-            setTimeout(() => {
-                frameStyle.removeLoading();
-                $('.tool-all').css('transform', 'translateY(-120%)');
-                $('.tool-all').css('opacity', '1');
-                $('.all-search').css('transform', 'translateY(0%)');
-                $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
-                $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
-                bg.close();
-                showWelcomeMessage();
-            }, remainingTime);
-        }
-    };
 }

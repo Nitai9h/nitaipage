@@ -8,7 +8,7 @@
 // @type    coreNpp
 // @time    head
 // @icon    https://nitai-images.pages.dev/nitaiPage/themeColor.svg
-// @foreced    true
+// @forced    true
 // @setting    true
 // @screen    [`https://nitai-images.pages.dev/nitaiPage/store/themeColor_screen.webp`]
 // ==/Npplication==

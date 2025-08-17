@@ -30,45 +30,6 @@ const shortcuts = [
   { id: 2, name: '知乎', icon: 'iconbook-edit' }
 ];
 
-const wallpaperOptions = [
-  {
-    id: 'radio1',
-    value: '1',
-    label: '默认',
-    className: ''
-  },
-  {
-    id: 'radio2',
-    value: '2',
-    label: '必应 4K',
-    className: ''
-  },
-  {
-    id: 'radio3',
-    value: '3',
-    label: '必应 1080P',
-    className: ''
-  },
-  {
-    id: 'radio4',
-    value: '4',
-    label: '风景',
-    className: ''
-  },
-  {
-    id: 'radio5',
-    value: '5',
-    label: '二次元',
-    className: ''
-  },
-  {
-    id: 'radio6',
-    value: '6',
-    label: '自定义',
-    className: ''
-  }
-];
-
 const backupOptions = [
   {
     title: '导入',
@@ -243,6 +204,13 @@ function createPanelContent() {
               </div>
               <div id="toggle-date-display" class="switch"></div>
             </div>
+            <div class="switch-item tip_new_both">
+              <div>
+                <span class="set_text"><big>缺位补零&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
+              </div>
+              <div id="toggle-zero-padding" class="switch"></div>
+            </div>
             <div class="switch-item tip_new_both" style="align-items: center;">
               <div>
                 <span class="set_text"><big>时钟制式&nbsp;</big><br></span>
@@ -252,13 +220,6 @@ function createPanelContent() {
             </div>
           </div>
           <div class="set_tip set_tip_new">
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>缺位补零&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
-              </div>
-              <div id="toggle-zero-padding" class="switch"></div>
-            </div>
             <div class="switch-item tip_new_both">
               <div>
                 <span class="set_text"><big>时钟闪烁&nbsp;</big><br></span>
@@ -321,15 +282,6 @@ function createPanelContent() {
                   <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
                   <span class="slider-value" id="main-font-weight-value" data-slider="main-font-weight">50</span>
                 </div>
-              </div>
-            </div>
-            <div class="set_tip set_tip_new">
-              <div class="switch-item tip_new_both">
-                <div>
-                  <span class="set_text"><big>壁纸遮罩&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否启用壁纸遮罩</small></span>
-                </div>
-                <div id="toggle-bg-cover" class="switch"></div>
               </div>
             </div>
           </div>
@@ -568,6 +520,15 @@ function createWallpaperContent() {
   div.className = 'mainConts';
   div.innerHTML = `
     <div class="set_blocks wallpapers_content">
+      <div class="set_tip set_tip_new">
+        <div class="switch-item tip_new_both">
+          <div>
+            <span class="set_text"><big>壁纸遮罩&nbsp;</big><br></span>
+            <span class="set_text" style="color: gray;"><small>是否启用壁纸遮罩</small></span>
+          </div>
+          <div id="toggle-bg-cover" class="switch on"></div>
+        </div>
+      </div>
       <div class="set_tip">
         <span class="set_text_wallpaper">点击下方选项以切换壁纸，使用除默认壁纸以外的选项可能会导致页面载入缓慢</span>
         <span class="set_text_wallpaper" id="wallpaper_text">点击选项切换壁纸，部分壁纸源不支持动态颜色</span>
@@ -578,19 +539,62 @@ function createWallpaperContent() {
             <div class="from_row">
               <div class="from_row_content">
                 <div id="wallpaper">
-                  ${wallpaperOptions.map(option => `
-                    <div class="form-radio ${option.className}">
-                      <input type="radio" id="${option.id}" class="set-wallpaper ${option.value === '5' ? 'wallpaper-custom' : ''}" name="wallpaper-type" value="${option.value}" style="display: none;">
-                      <label class="form-radio-label" for="${option.id}">${option.label}</label>
+                  ${wallpaperOptions.map((option, index) => `
+                    <div class="form-radio">
+                      <input type="radio" id="radio${index}" class="set-wallpaper ${index === 0 ? 'wallpaper-custom' : ''}" name="wallpaper-type" value="${index}" style="display: none;">
+                      <label class="form-radio-label" for="radio${index}">${option.label}</label>
                     </div>
                   `).join('')}
                 </div>
+                <div class="wallpaper-list-setting" id="wallpaper-list-setting" style="display: none;">
+                  <div class="setting-item">
+                    <div class="wallpaper-list-container">
+                      <div class="wallpaper-list-content">
+                        <div class="wallpaper-list" id="wallpaper-list"></div>
+                      </div>
+                      <div class="wallpaper-list-add">
+                        <button type="button" id="add-wallpaper-btn">上传</button>
+                        <input type="file" id="wallpaper-file-input" accept="image/*" style="display: none;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div id="wallpaper_url" style="display: none;">
+            <div class="wallpaper_container">
+              <div id="wallpaper_name" style="display: none;">
+                <div class="from_row">
+                  <div class="from_items">
+                    <input type="text" name="wallpaper-name" id="wallpaper-name" class="form-input" placeholder="请输入壁纸名称" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+              <div class="wallpaper-custom-container">
+                <div id="wallpaper_url" style="display: none;">
+                  <div class="from_row">
+                    <div class="from_items">
+                      <input type="text" name="wallpaper-url" id="wallpaper-url" class="form-input" placeholder="以 https 或 http 开头的 URL" autocomplete="off">
+                    </div>
+                  </div>
+                </div>
+                <div id="wallpaper_upload" style="display: none;">
+                  <div class="from_row">
+                    <div class="from_items">
+                      <input type="file" id="wallpaper-file" accept="image/*,video/*" style="display: none;">
+                      <div class="wallpaper-upload-btn" id="wallpaper-upload-btn">上传</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="wallpaper_color" style="display: none;">
               <div class="from_row">
                 <div class="from_items">
-                  <input type="text" name="wallpaper-url" id="wallpaper-url" placeholder="以 https 或 http 开头的 URL" autocomplete="off">
+                  <div class="color-input-container">
+                    <input type="text" name="wallpaper-color" id="wallpaper-color-input" class="form-input" placeholder="请输入16进制颜色值，如#ffffff" autocomplete="off" maxlength="7">
+                    <input type="color" id="wallpaper-color-picker" class="color-picker" value="#ffffff">
+                    <div class="color-picker-btn" id="color-picker-btn">调色</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -702,42 +706,40 @@ function createAboutContent() {
   return div;
 }
 
-// 初始化滚动进度指示器
+// 标签滚动指示器
 function initScrollProgressIndicators() {
   const tabsContainers = document.querySelectorAll('.set .tabs, .store .tabs, .plugin_set .tabs');
-  
+
   tabsContainers.forEach(container => {
-    // 如果已经存在进度指示器，则不再创建
+    // 如果已经存在指示器
+    // 则不再创建
     if (container.querySelector('.scroll-progress-indicator')) {
       return;
     }
-    
-    // 创建进度指示器
+
+    // 创建指示器
     const progressIndicator = document.createElement('div');
     progressIndicator.className = 'scroll-progress-indicator';
     container.appendChild(progressIndicator);
-    
+
     // 监听滚动事件
-    container.addEventListener('scroll', function() {
+    container.addEventListener('scroll', function () {
       const scrollWidth = container.scrollWidth;
       const clientWidth = container.clientWidth;
       const scrollLeft = container.scrollLeft;
-      
-      // 计算滚动进度百分比
       const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
-      
-      // 更新进度指示器宽度
+
       progressIndicator.style.width = Math.min(scrollPercentage, 100) + '%';
     });
-    
-    // 初始化时设置进度指示器
+
+    // 初始化
     const scrollWidth = container.scrollWidth;
     const clientWidth = container.clientWidth;
     const scrollLeft = container.scrollLeft;
     const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
     progressIndicator.style.width = Math.min(scrollPercentage, 100) + '%';
-    
-    // 如果内容不需要滚动，隐藏进度指示器
+
+    // 如果无需滚动，隐藏进度指示器
     if (scrollWidth <= clientWidth) {
       progressIndicator.style.display = 'none';
     }
@@ -747,8 +749,8 @@ function initScrollProgressIndicators() {
 // 生成设置
 document.addEventListener('DOMContentLoaded', function () {
   generateSettings();
-  
-  // 初始化滚动进度指示器
+
+  // 初始化标签滚动指示器
   setTimeout(() => {
     initScrollProgressIndicators();
   }, 100);

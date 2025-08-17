@@ -203,7 +203,7 @@ async function checkDependencies(dependencies) {
     }
 
     try {
-        const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+        const plugins = await getPluginsList();
 
         const details = {};
         let allDependenciesMet = true;
@@ -342,25 +342,116 @@ async function renderDependencies(container, dependencies, source = '') {
 }
 
 /**
+* 从 indexedDB 获取插件列表
+* @returns {Promise<Array>} 插件列表
+*/
+function getPluginsList() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('nitaiPageDB', 2);
+        
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('nitaiPage')) {
+                db.createObjectStore('nitaiPage', { keyPath: 'id' });
+            }
+        };
+        
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            const transaction = db.transaction('nitaiPage', 'readonly');
+            const store = transaction.objectStore('nitaiPage');
+            const getRequest = store.get('npp_plugins');
+            
+            getRequest.onsuccess = () => {
+                const result = getRequest.result;
+                const plugins = result ? result.data : [];
+                db.close();
+                resolve(plugins);
+            };
+            
+            getRequest.onerror = () => {
+                console.error('获取插件列表失败');
+                db.close();
+                reject();
+            };
+        };
+        
+        request.onerror = (event) => {
+            console.error('打开数据库失败: ' + event.target.error.message);
+            reject();
+        };
+    });
+}
+
+/**
+* 保存插件列表到 indexedDB
+* @param {Array} plugins - 插件列表
+* @returns {Promise<void>}
+*/
+function savePluginsList(plugins) {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('nitaiPageDB', 2);
+        
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('nitaiPage')) {
+                db.createObjectStore('nitaiPage', { keyPath: 'id' });
+            }
+        };
+        
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            const transaction = db.transaction('nitaiPage', 'readwrite');
+            const store = transaction.objectStore('nitaiPage');
+            const putRequest = store.put({ id: 'npp_plugins', data: plugins });
+            
+            putRequest.onsuccess = () => {
+                db.close();
+                resolve();
+            };
+            
+            putRequest.onerror = () => {
+                console.error('保存插件列表失败');
+                db.close();
+                reject();
+            };
+        };
+        
+        request.onerror = (event) => {
+            console.error('打开数据库失败: ' + event.target.error.message);
+            reject();
+        };
+    });
+}
+
+/**
 * 保存元数据
 * @param {Object} metadata - 元数据
 */
 function savePluginMetadata(metadata) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             // 验证metadata有效性
             if (!metadata || typeof metadata !== 'object' || !metadata.id) {
                 console.error('无效的插件: 缺少必要的id字段');
                 reject();
+                return;
             }
 
             // 获取列表
-            const pluginsStr = localStorage.getItem('npp_plugins') || '[]';
-            const plugins = JSON.parse(pluginsStr);
+            let plugins;
+            try {
+                plugins = await getPluginsList();
+            } catch (error) {
+                console.error('获取插件列表失败:', error);
+                reject();
+                return;
+            }
 
             if (!Array.isArray(plugins)) {
-                console.error('本地存储的插件数据格式无效，预期为数组');
+                console.error('插件数据格式无效，预期为数组');
                 reject();
+                return;
             }
 
             // 在数据库查找 NPP
@@ -386,12 +477,16 @@ function savePluginMetadata(metadata) {
             }
 
             // 元数据保存
-            localStorage.setItem('npp_plugins', JSON.stringify(plugins));
-            resolve();
+            try {
+                await savePluginsList(plugins);
+                resolve();
+            } catch (error) {
+                console.error('保存插件元数据失败:', error);
+                reject();
+            }
         } catch (error) {
-            reject(error);
             console.error('保存插件元数据失败:', error.message);
-            return;
+            reject();
         }
     });
 }
@@ -463,8 +558,8 @@ function getNpp(option) {
     return new Promise(async (resolve, reject) => {
         if (option.id) {
 
-            // 从 localStorage 获取元数据
-            const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+            // 从 indexedDB 获取元数据
+            const plugins = await getPluginsList();
             const metadata = plugins.find(p => p.id === option.id);
             if (!metadata) {
                 console.error('未找到元数据: ' + option.id);
@@ -681,7 +776,7 @@ async function checkUpdates(id, info = 'show') {
 
     if (id === 'all') {
         // 检查所有插件，使用顺序队列确保逐个询问
-        const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+        const plugins = await getPluginsList();
         for (const plugin of plugins) {
             await checkSinglePluginUpdate(plugin.id, 'hide');
         }
@@ -702,7 +797,7 @@ async function checkUpdates(id, info = 'show') {
 // 按指定顺序加载所有插件
 async function loadNpp() {
     // 顺序
-    const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+    const plugins = await getPluginsList();
     plugins.forEach(plugin => {
         if (plugin.id
             && plugin.time && plugin.type !== 'coreNpp') {
@@ -734,8 +829,8 @@ async function initCoreNpp() {
                 console.warn(`File ${fileName} is not a coreNpp plugin`);
                 continue;
             }
-            // 查找元数据 (localStorage)
-            const storedPlugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+            // 查找元数据 (indexedDB)
+            const storedPlugins = await getPluginsList();
             const existingPlugin = storedPlugins.find(p => p.id === metadata.id);
 
             if (existingPlugin) {
@@ -821,9 +916,9 @@ function initializaNppDB() {
 }
 
 // 拖动排序配置页面
-function showOrderConfigDialog() {
+async function showOrderConfigDialog() {
     const storePage = document.getElementById('storePage');
-    const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+    const plugins = await getPluginsList();
     if (plugins.length === 0) {
         console.error('没有可配置的插件');
         iziToast.show({
@@ -903,13 +998,13 @@ function showOrderConfigDialog() {
         $('#storeTabs').css('display', 'flex');
         $('.store-block').css('display', 'flex');
     });
-    saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener('click', async () => {
         // 收集排序
         const newOrder = Array.from(list.querySelectorAll('.plugin-item')).map(
             item => item.dataset.id
         );
         // 更新排序
-        const updatedPlugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+        const updatedPlugins = await getPluginsList();
         const pluginMap = updatedPlugins.reduce((acc, plugin) => {
             acc[plugin.id] = plugin;
             return acc;
@@ -924,8 +1019,8 @@ function showOrderConfigDialog() {
         );
         // 合并所有插件
         const finalPlugins = [...orderedPlugins, ...remainingPlugins];
-        // 保存至localStorage
-        localStorage.setItem('npp_plugins', JSON.stringify(finalPlugins));
+        // 保存至indexedDB
+        await savePluginsList(finalPlugins);
         // 关闭对话框
         storePage.removeChild(dialog);
         $('#storeTabs').css('display', 'flex');
@@ -1026,8 +1121,8 @@ async function installNpplication(url) {
             return;
         }
 
-        // 从 localStorage 获取现有插件列表
-        const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+        // 从 indexedDB 获取现有插件列表
+        const plugins = await getPluginsList();
         const existing = plugins.find(p => p.id === metadata.id);
         // 检查核心应用是否存在
         if (metadata.type === 'coreNpp' && !existing) {
@@ -1078,7 +1173,7 @@ async function installNpplication(url) {
 // 插件管理页面加载函数
 async function loadPluginManagementPage() {
     try {
-        const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
+        const plugins = await getPluginsList();
         // 获取商店源
         let storeSources = JSON.parse(localStorage.getItem('storeSources')) || storeSourcesDefault;
 
@@ -1287,7 +1382,7 @@ async function loadPluginManagementPage() {
                             buttons: [
                                 ['<button>确认</button>', async function (instance, toast) {
                                     instance.hide({
-                                        transitionOut: 'flipOutX',
+                                        transitionOut: 'fadeOutUp',
                                     }, toast, 'buttonName');
                                     // 核心插件禁止卸载
                                     if (localMetadata.type === 'coreNpp') {
@@ -1297,9 +1392,10 @@ async function loadPluginManagementPage() {
                                         });
                                         return;
                                     } else {
-                                        // 移除localStorage元数据
-                                        let plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]'); plugins = plugins.filter(p => p.id !== pluginId);
-                                        localStorage.setItem('npp_plugins', JSON.stringify(plugins));
+                                        // 移除indexedDB元数据
+                                        let plugins = await getPluginsList();
+                                        plugins = plugins.filter(p => p.id !== pluginId);
+                                        await savePluginsList(plugins);
                                         // 删除indexedDB文件
                                         const request = indexedDB.open('nppstore');
                                         request.onsuccess = (event) => {
@@ -1331,7 +1427,7 @@ async function loadPluginManagementPage() {
                                 }, true],
                                 ['<button>取消</button>', function (instance, toast) {
                                     instance.hide({
-                                        transitionOut: 'flipOutX',
+                                        transitionOut: 'fadeOutUp',
                                     }, toast, 'buttonName');
                                 }]
                             ]
