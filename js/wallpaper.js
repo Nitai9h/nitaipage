@@ -122,8 +122,14 @@ async function initWallpaerLoader() {
             $('.all-search').css('transform', 'translateY(0%)');
             $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
             $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
-            bg.close();
             showWelcomeMessage();
+            bg.onmessage = (event) => {
+                if (event.data === "bgImgLoadinged") {
+                    $('#bg-video').css({ 'opacity': '1', 'transform': 'scale(1)' });
+                    $('#bg').css({ 'opacity': '1', 'transform': 'scale(1)' });
+                    bg.close();
+                }
+            };
         }, remainingTime);
     }, 1500);
 
@@ -136,6 +142,8 @@ async function initWallpaerLoader() {
                 frameStyle.removeLoading();
                 $('.tool-all').css('transform', 'translateY(-120%)');
                 $('.tool-all').css('opacity', '1');
+                $('#bg-video').css({ 'opacity': '1', 'transform': 'scale(1)' });
+                $('#bg').css({ 'opacity': '1', 'transform': 'scale(1)' });
                 $('.all-search').css('transform', 'translateY(0%)');
                 $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
                 $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
@@ -146,13 +154,8 @@ async function initWallpaerLoader() {
     };
 }
 
-// 设置-壁纸初始化
-function setBgImgInit() {
-    const bg = new BroadcastChannel("bgLoad");
-
-    var bg_img = getBgImg();
-    var typeIndex = parseInt(bg_img["type"]) || 0;
-
+// 初始化壁纸设置状态
+function initWallpaperSettingsState(typeIndex) {
     // 根据已选项设置选中的 radio
     $(":input[name='wallpaper-type']").each(function (index) {
         if (index === typeIndex) {
@@ -203,83 +206,278 @@ function setBgImgInit() {
         $("#wallpaper_color").fadeOut(500);
         $("#wallpaper-list-setting").fadeOut(500);
     }
+}
+
+// 获取随机壁纸 URL
+function getWallpaperURL(typeIndex) {
+    if (typeIndex === 0) {
+        return './img/background5.webp';
+    } else if (typeIndex === 1) {
+        return getRandomDefaultWallpaperURL(); //随机默认壁纸
+    } else if (typeIndex < wallpaperOptions.length && wallpaperOptions[typeIndex].url) {
+        // 使用 wallpaperOptions 中的 url
+        return wallpaperOptions[typeIndex].url;
+    } else {
+        // 默认壁纸
+        return getRandomDefaultWallpaperURL(); // 随机默认壁纸
+    }
+}
+
+// 纯色背景处理
+function handleSolidColorBackground(bg) {
+    const savedColor = localStorage.getItem('solidColorBackground') || '#ffffff';
+    // 应用纯色背景
+    $('#bg').attr('src', '');
+    $('#bg').css({'opacity': '1', 'filter': 'var(--main-box-gauss-plus)', 'transition': 'ease 0.7s', 'background-color': savedColor });
+    bg.postMessage("bgImgLoadinged");
+    bg.close();
+}
+
+// 视频壁纸处理
+function setupVideoElement(videoElement, url, bg) {
+    // 检查视频 URL
+    if (!url) {
+        console.error('视频 URL 为空');
+        // 回退为默认壁纸
+        loadDefaultWallpaper(bg);
+        return;
+    }
+
+    // 添加唯一标识符
+    const videoId = 'video_' + Date.now();
+    videoElement.data('video-id', videoId);
+
+    videoElement.attr('src', url);
+    videoElement.attr('loop', true);
+    videoElement.attr('muted', true);
+    videoElement.attr('autoplay', true);
+    videoElement.css({ 'filter': 'blur(0px)', 'transition': 'ease 0.7s' });
+
+    // 加载超时
+    let loadTimeout = setTimeout(function () {
+        // 检查视频元素是否仍然有效
+        if (videoElement.data('video-id') === videoId) {
+            iziToast.message({
+                title: '加载超时',
+                message: '已加载默认壁纸',
+                timeout: 2000
+            });
+            loadDefaultWallpaper(bg);
+        }
+    }, 10000);
+
+    // 清除定时器
+    videoElement.on('loadeddata', function () {
+        if (videoElement.data('video-id') === videoId) {
+            clearTimeout(loadTimeout);
+        }
+    });
+
+    videoElement.on('error', function () {
+        if (videoElement.data('video-id') === videoId) {
+            clearTimeout(loadTimeout);
+        }
+    });
+
+    // 加载完成处理
+    videoElement.on('loadeddata', function () {
+        // 检查视频元素是否有效
+        if (videoElement.data('video-id') !== videoId) {
+            return;
+        }
+
+        this.play().catch(e => console.error('播放失败:' + e));
+        try {
+            if (bg && bg.postMessage) {
+                // 加载完成后播放
+                bg.postMessage("bgImgLoadinged");
+                bg.close();
+            }
+        } catch (e) {
+            console.error('与壁纸通信失败:' + e);
+        }
+    });
+
+    // 加载失败处理
+    videoElement.on('error', function () {
+        // 检查视频元素是否有效
+        if (videoElement.data('video-id') !== videoId) {
+            return;
+        }
+
+        console.error('视频加载失败' + this);
+        // 回退为默认壁纸
+        loadDefaultWallpaper(bg);
+    });
+}
+
+// 图片壁纸处理
+function setupImageElement(url, bg, saveToSession = true) {
+    $('#bg').attr('src', url);
+    if (saveToSession) {
+        sessionStorage.setItem('bgImageFinalURL', url);
+    }
+    const img = new Image();
+    img.onload = function () {
+        $('#bg').css({ 'filter': 'blur(0px)', 'transition': 'ease 0.7s' });
+        try {
+            if (bg && bg.postMessage) {
+                bg.postMessage("bgImgLoadinged");
+                bg.close();
+            }
+        } catch (e) {
+            console.error('与壁纸通信失败:' + e);
+        }
+    };
+    img.src = url;
+}
+
+// indexedDB 壁纸处理
+function handleIndexedDBMedia(mediaInfo, bg) {
+    if (mediaInfo && mediaInfo.url) {
+        // 检查是否是视频
+        if (mediaInfo.type && mediaInfo.type.startsWith('video/')) {
+            let videoElement = $('#bg-video');
+            if (videoElement.length === 0) {
+                videoElement = $('<video id="bg-video"></video>');
+                $('#bg').after(videoElement);
+            }
+
+            $('#bg').hide();
+            videoElement.show();
+
+            // 应用壁纸
+            setupVideoElement(videoElement, mediaInfo.url, bg);
+        } else {
+            $('#bg-video').hide();
+            $('#bg').show();
+
+            // 应用壁纸
+            setupImageElement(mediaInfo.url, bg);
+        }
+    } else {
+        console.error('未获取到壁纸文件');
+        iziToast.message({
+            title: '未获取到壁纸文件',
+            message: '已加载默认壁纸',
+            timeout: 2000
+        });
+        // 回退为默认壁纸
+        loadDefaultWallpaper(bg);
+    }
+}
+
+// URL 重定向处理
+function handleRedirectMedia(finalUrl, bg) {
+    // 检查是否是视频
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi'];
+    const isVideo = videoExtensions.some(ext => finalUrl.toLowerCase().includes(ext));
+
+    if (isVideo) {
+        let videoElement = $('#bg-video');
+        if (videoElement.length === 0) {
+            videoElement = $('<video id="bg-video"></video>');
+            $('#bg').after(videoElement);
+        }
+
+        $('#bg').hide();
+        videoElement.show();
+
+        // 应用壁纸
+        setupVideoElement(videoElement, finalUrl, bg);
+    } else {
+        $('#bg-video').hide();
+        $('#bg').show();
+
+        // 应用壁纸
+        setupImageElement(finalUrl, bg);
+    }
+}
+
+// 直接加载 URL (URL 重定向失败时)
+function handleOriginalImageLoad(pictureURL, bg) {
+    $('#bg').attr('src', pictureURL);
+    const img = new Image();
+    img.onload = function () {
+        $('#bg').css("cssText", "opacity: 1;filter: blur(0px);transition: ease 0.7s;");
+        sessionStorage.setItem('bgImageFinalURL', img.src);
+        try {
+            if (bg && bg.postMessage) {
+                bg.postMessage("bgImgLoadinged");
+                bg.close();
+            }
+        } catch (e) {
+            console.error('与壁纸通信失败:' + e);
+        }
+    };
+    img.src = pictureURL;
+}
+
+// 清理初始化元素
+function cleanupPreviousWallpaper() {
+    const videoElement = $('#bg-video');
+    if (videoElement.length > 0) {
+        videoElement.off(); // 移除事件监听器
+        videoElement.removeAttr('src');
+        videoElement.hide();
+    }
+
+    $('#bg').off(); // 移除事件监听器
+    $('#bg').removeAttr('src');
+    $('#bg').show();
+}
+
+// 设置-壁纸初始化
+function setBgImgInit() {
+    // 清理初始化元素
+    cleanupPreviousWallpaper();
+
+    const bg = new BroadcastChannel("bgLoad");
+
+    var bg_img = getBgImg();
+    var typeIndex = parseInt(bg_img["type"]) || 0;
+
+    // 初始化壁纸设置状态
+    initWallpaperSettingsState(typeIndex);
 
     bg.postMessage("bgImgLoadingStart");
 
-    // 根据已选项获取对应的 URL
-    var pictureURL;
-    if (typeIndex === 0) {
-        pictureURL = './img/background5.webp';
-    } else if (typeIndex === 1) {
-        pictureURL = getRandomDefaultWallpaperURL(); //随机默认壁纸
-    } else if (typeIndex === 2) {
-        const savedColor = localStorage.getItem('solidColorBackground') || '#ffffff';
-        // 应用纯色背景
-        $('#bg').attr('src', '');
-        $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;background-color: " + savedColor + ";");
-        bg.postMessage("bgImgLoadinged");
-        bg.close();
+    // 纯色背景处理
+    if (typeIndex === 2) {
+        handleSolidColorBackground(bg);
         return;
-    } else if (typeIndex < wallpaperOptions.length && wallpaperOptions[typeIndex].url) {
-        // 使用 wallpaperOptions 中的 url
-        pictureURL = wallpaperOptions[typeIndex].url;
-    } else {
-        // 默认壁纸
-        pictureURL = getRandomDefaultWallpaperURL(); // 随机默认壁纸
     }
+
+    // 获取壁纸 URL
+    var pictureURL = getWallpaperURL(typeIndex);
 
     // 检查是否是 indexedDB URL
     const mediaId = parseIndexedDBMediaUrl(pictureURL);
     if (mediaId) {
-        // 从 indexedDB 获取图片
+        // 从 indexedDB 获取文件
         getMediaFileFromDB(mediaId).then(mediaInfo => {
-            if (mediaInfo && mediaInfo.url) {
-                $('#bg').attr('src', mediaInfo.url);
-                sessionStorage.setItem('bgImageFinalURL', mediaInfo.url);
-                const img = new Image();
-                img.onload = function () {
-                    $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;");
-                    bg.postMessage("bgImgLoadinged");
-                    bg.close();
-                };
-                img.src = mediaInfo.url;
-            } else {
-                console.error('未获取到图片' + mediaId);
-                // 使用默认壁纸
-                loadDefaultWallpaper(bg);
-            }
+            handleIndexedDBMedia(mediaInfo, bg);
         }).catch(error => {
-            console.error('从 indexedDB 获取图片失败:' + error);
-            // 使用默认壁纸
+            console.error('从 indexedDB 获取文件失败:' + error);
+            iziToast.message({
+                title: '获取壁纸失败',
+                message: '已加载默认壁纸',
+                timer: 2000
+            });
+            // 回退为默认壁纸
             loadDefaultWallpaper(bg);
         });
-    } else if (typeIndex !== 2) {
+    } else {
         // 跟踪 API 重定向
         fetch(pictureURL)
             .then(response => {
                 const finalUrl = response.url;
-                $('#bg').attr('src', finalUrl)
-                sessionStorage.setItem('bgImageFinalURL', finalUrl);
-                const img = new Image();
-                img.onload = function () {
-                    $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;");
-                    bg.postMessage("bgImgLoadinged");
-                    bg.close();
-                };
-                img.src = finalUrl;
+                handleRedirectMedia(finalUrl, bg);
             })
             .catch(error => {
+                console.error('Failed to track media redirect:', error);
                 // 原始方法
-                $('#bg').attr('src', pictureURL)
-                console.error('Failed to track image redirect:', error);
-                const img = new Image();
-                img.onload = function () {
-                    $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;");
-                    sessionStorage.setItem('bgImageFinalURL', img.src);
-                    bg.postMessage("bgImgLoadinged");
-                    bg.close();
-                };
-                img.src = pictureURL;
+                handleOriginalImageLoad(pictureURL, bg);
             });
     }
 }
@@ -389,7 +587,7 @@ async function initWallpaperSettings() {
             // 应用颜色
             $('#bg').css('background-color', color);
             $('#bg').attr('src', '');
-            $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;background-color: " + color + ";");
+            $('#bg').css({ 'opacity': '1', 'filter': 'blur(0px)', 'transition': 'ease 0.7s' });
 
             iziToast.show({
                 message: '保存成功',
@@ -530,7 +728,7 @@ async function initWallpaperSettings() {
     $("#add-wallpaper-btn").click(function () {
         const tempFileInput = document.createElement('input');
         tempFileInput.type = 'file';
-        tempFileInput.accept = 'image/*';
+        tempFileInput.accept = 'image/*,video/*';
         tempFileInput.style.display = 'none';
 
         document.body.appendChild(tempFileInput);
@@ -610,7 +808,8 @@ async function initWallpaperSettings() {
 // 壁纸切换
 function changeWallpaper() {
     // 淡出效果
-    $('#bg').css("cssText", "opacity: 0;transform: scale(1.08);filter: blur(var(--main-box-gauss));transition: ease 0.3s;");
+    $('#bg').css("cssText", "opacity: 0;transform: scale(1);filter: blur(var(--main-box-gauss));transition: ease 0.3s;");
+    $('#bg-video').css("cssText", "opacity: 0;transform: scale(1);filter: blur(var(--main-box-gauss));transition: ease 0.3s;");
 
     setTimeout(() => {
         // 移除 onerror 事件处理器
@@ -619,9 +818,31 @@ function changeWallpaper() {
         $('#bg').attr('src', '');
         $('#bg').removeClass('error');
 
+        // 重置视频
+        const videoElement = $('#bg-video');
+        if (videoElement.length > 0) {
+            videoElement[0].pause();
+            videoElement.attr('src', '');
+            videoElement.hide();
+        }
+
+        $('#bg').show();
+
+        // 重新监听加载完成事件
+        const bg = new BroadcastChannel("bgLoad");
+
+        bg.onmessage = function (event) {
+            if (event.data === "bgImgLoadinged") {
+                $('#bg-video').css({ 'opacity': '1', 'transform': 'scale(1.08)', 'filter': 'var(--main-box-gauss-plus)', 'transition': 'ease 0.7s' });
+                $('#bg').css({ 'opacity': '1', 'transform': 'scale(1.08)', 'filter': 'var(--main-box-gauss-plus)', 'transition': 'ease 0.7s' });
+                bg.close();
+            }
+        };
+
+        bg.postMessage("bgImgLoadingStart");
+
         setBgImgInit();
 
-        // 添加 onerror 事件处理器
         var bg_img = getBgImg();
         var typeIndex = parseInt(bg_img["type"]) || 0;
         if (typeIndex !== 2) {
@@ -885,59 +1106,6 @@ async function loadWallpaperOptions() {
     }
 }
 
-// 从 indexedDB 获取壁纸列表
-async function getWallpaperOptionsFromDB() {
-    try {
-        const db = await initIndexedDB();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction([WALLPAPER_STORE_NAME], 'readonly');
-            const store = transaction.objectStore(WALLPAPER_STORE_NAME);
-            const request = store.get(WALLPAPER_KEY);
-
-            request.onsuccess = (event) => {
-                const result = event.target.result;
-                if (result && result.value) {
-                    resolve(result.value);
-                } else {
-                    resolve(null);
-                }
-            };
-
-            request.onerror = (event) => {
-                console.error('从 indexedDB 获取壁纸列表失败:' + event.target.error);
-                reject(event.target.error);
-            };
-        });
-    } catch (error) {
-        console.error('获取壁纸列表时加载数据库失败:' + error);
-        return null;
-    }
-}
-
-// 保存壁纸列表到 indexedDB
-async function saveWallpaperOptionsToDB(options) {
-    try {
-        const db = await initIndexedDB();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction([WALLPAPER_STORE_NAME], 'readwrite');
-            const store = transaction.objectStore(WALLPAPER_STORE_NAME);
-            const request = store.put({ id: WALLPAPER_KEY, value: options });
-
-            request.onsuccess = (event) => {
-                resolve(true);
-            };
-
-            request.onerror = (event) => {
-                console.error('保存壁纸列表到 indexedDB 失败:' + event.target.error);
-                reject(event.target.error);
-            };
-        });
-    } catch (error) {
-        console.error('保存壁纸列表时加载数据库失败:' + error);
-        return false;
-    }
-}
-
 // 从 indexedDB 获取壁纸列表保存的图片
 async function getWallpaperPicturesFromDB() {
     try {
@@ -1114,8 +1282,14 @@ function loadDefaultWallpaper(bg) {
     const img = new Image();
     img.onload = function () {
         $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 0.7s;");
-        bg.postMessage("bgImgLoadinged");
-        bg.close();
+        try {
+            if (bg && bg.postMessage) {
+                bg.postMessage("bgImgLoadinged");
+                bg.close();
+            }
+        } catch (e) {
+            console.error('与壁纸通信失败:' + e);
+        }
     };
     img.src = defaultPictureURL;
 }
@@ -1244,8 +1418,8 @@ async function saveWallpaperPicturesToDB(pictures) {
 async function addWallpaperToList(file) {
     try {
         // 验证类型
-        if (!file.type.startsWith('image/')) {
-            throw new Error('只支持图片');
+        if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+            throw new Error('仅支持图片或视频');
         }
 
         // 读取 Base64
@@ -1294,5 +1468,64 @@ async function removeWallpaperFromList(index) {
     } catch (error) {
         console.error('删除壁纸失败:' + error);
         throw error;
+    }
+}
+
+// 从 indexedDB 获取壁纸选项
+async function getWallpaperOptionsFromDB() {
+    try {
+        const db = await initIndexedDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([WALLPAPER_STORE_NAME], 'readonly');
+            const store = transaction.objectStore(WALLPAPER_STORE_NAME);
+            const request = store.get(WALLPAPER_KEY);
+
+            request.onsuccess = (event) => {
+                const result = event.target.result;
+                if (result && result.data) {
+                    resolve(result.data);
+                } else {
+                    resolve(null);
+                }
+            };
+
+            request.onerror = (event) => {
+                console.error('从 indexedDB 获取壁纸选项失败:' + event.target.error);
+                reject(event.target.error);
+            };
+        });
+    } catch (error) {
+        console.error('获取壁纸选项时加载数据库失败:' + error);
+        return null;
+    }
+}
+
+// 保存壁纸选项到 indexedDB
+async function saveWallpaperOptionsToDB(options) {
+    try {
+        const db = await initIndexedDB();
+        return new Promise((resolve, reject) => {
+            const dataRecord = {
+                id: WALLPAPER_KEY,
+                data: options,
+                saveTime: new Date().toISOString()
+            };
+
+            const transaction = db.transaction([WALLPAPER_STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(WALLPAPER_STORE_NAME);
+            const request = store.put(dataRecord);
+
+            request.onsuccess = (event) => {
+                resolve(true);
+            };
+
+            request.onerror = (event) => {
+                console.error('保存壁纸选项到 indexedDB 失败:' + event.target.error);
+                reject(event.target.error);
+            };
+        });
+    } catch (error) {
+        console.error('保存壁纸选项时加载数据库失败:' + error);
+        return false;
     }
 }

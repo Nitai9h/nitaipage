@@ -609,6 +609,7 @@ function openBox() {
     const mark = $(".mark");
     const toolAll = $(".tool-all");
     const bg = $('#bg');
+    const bgVideo = $('#bg-video');
     const iconFold = $("#fold");
     const searchContainer = $("#search-form-container");
     const pluginSet = $(".plugin_set");
@@ -618,6 +619,7 @@ function openBox() {
     toolAll.css({"transform": "translateY(-190%)", "scale": "0.9"});
     searchContainer.css("transform", "translateY(90%)");
     bg.css({ transform: 'scale(1.08)', filter: "var(--main-bg-blur)", transition: "ease 0.3s" });
+    bgVideo.css({ transform: 'scale(1.08)', filter: "var(--main-bg-blur)", transition: "ease 0.3s" });
     iconFold.addClass('active').removeClass('inactive');
     pluginSet.addClass('inactive').removeClass('active');
 }
@@ -631,6 +633,7 @@ function closeBox() {
     const mark = $(".mark");
     const toolAll = $(".tool-all");
     const bg = $('#bg');
+    const bgVideo = $('#bg-video');
     const iconFold = $("#fold");
     const searchContainer = $("#search-form-container");
     const pluginSet = $(".plugin_set");
@@ -640,6 +643,7 @@ function closeBox() {
     toolAll.css({"transform": "translateY(-120%)", "scale": "1"});
     searchContainer.css("transform", "translateY(0%)");
     bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.7s" });
+    bgVideo.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.7s" });
     iconFold.addClass('inactive').removeClass('active');
     pluginSet.addClass('inactive').removeClass('active');
 }

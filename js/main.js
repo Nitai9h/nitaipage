@@ -32,7 +32,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.1.5',
+    VERSION: 'v2.1.6',
 
     // 格式化 版本 信息
     formatUpdates(updates) {

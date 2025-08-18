@@ -554,7 +554,7 @@ function createWallpaperContent() {
                       </div>
                       <div class="wallpaper-list-add">
                         <button type="button" id="add-wallpaper-btn">上传</button>
-                        <input type="file" id="wallpaper-file-input" accept="image/*" style="display: none;">
+                        <input type="file" id="wallpaper-file-input" accept="image/*,video/*" style="display: none;">
                       </div>
                     </div>
                   </div>
