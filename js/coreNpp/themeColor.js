@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.3.1
+// @version    0.4.0
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -101,7 +101,8 @@ function createThemeSetting() {
     };
     document.head.appendChild(chromaScript);
 
-    $(document).ready(function () {
+    // 等待插件设置创建完成后再初始化设置
+    document.addEventListener('pluginSettingsTemplateReady', function () {
         createThemeSetting();
 
         // 初始化主题开关

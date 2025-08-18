@@ -348,37 +348,81 @@ async function renderDependencies(container, dependencies, source = '') {
 function getPluginsList() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open('nitaiPageDB', 2);
-        
+
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
             if (!db.objectStoreNames.contains('nitaiPage')) {
                 db.createObjectStore('nitaiPage', { keyPath: 'id' });
             }
         };
-        
+
         request.onsuccess = (event) => {
             const db = event.target.result;
             const transaction = db.transaction('nitaiPage', 'readonly');
             const store = transaction.objectStore('nitaiPage');
             const getRequest = store.get('npp_plugins');
-            
+
             getRequest.onsuccess = () => {
                 const result = getRequest.result;
-                const plugins = result ? result.data : [];
-                db.close();
-                resolve(plugins);
+                let plugins = result ? result.data : null;
+
+                // 从 localStorage 恢复插件列表 (兼容:v2.0.4)
+                if (plugins === null) {
+                    try {
+                        const localStorageData = localStorage.getItem('npp_plugins');
+                        if (localStorageData) {
+                            plugins = JSON.parse(localStorageData);
+                            // 将数据迁移到 indexedDB
+                            const saveTransaction = db.transaction('nitaiPage', 'readwrite');
+                            const saveStore = saveTransaction.objectStore('nitaiPage');
+                            const saveRequest = saveStore.put({ id: 'npp_plugins', data: plugins });
+
+                            saveRequest.onsuccess = () => {
+                                console.log('已从 localStorage 加载并迁移插件列表');
+                                db.close();
+                                resolve(plugins);
+                            };
+
+                            saveRequest.onerror = () => {
+                                console.warn('已从 localStorage 加载插件列表,但数据迁移失败');
+                                db.close();
+                                resolve(plugins);
+                            };
+                        } else {
+                            plugins = [];
+                            db.close();
+                            resolve(plugins);
+                        }
+                    } catch (error) {
+                        console.error('从 localStorage 读取插件列表失败:' + error);
+                        plugins = [];
+                        db.close();
+                        resolve(plugins);
+                    }
+                } else {
+                    db.close();
+                    resolve(plugins);
+                }
             };
-            
+
             getRequest.onerror = () => {
                 console.error('获取插件列表失败');
                 db.close();
                 reject();
             };
         };
-        
+
         request.onerror = (event) => {
             console.error('打开数据库失败: ' + event.target.error.message);
-            reject();
+            // 回退到使用 localStorage 加载插件列表
+            try {
+                const localStorageData = localStorage.getItem('npp_plugins');
+                const plugins = localStorageData ? JSON.parse(localStorageData) : [];
+                resolve(plugins);
+            } catch (error) {
+                console.error('从 localStorage 读取插件列表失败:' + error);
+                resolve([]);
+            }
         };
     });
 }
@@ -391,32 +435,32 @@ function getPluginsList() {
 function savePluginsList(plugins) {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open('nitaiPageDB', 2);
-        
+
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
             if (!db.objectStoreNames.contains('nitaiPage')) {
                 db.createObjectStore('nitaiPage', { keyPath: 'id' });
             }
         };
-        
+
         request.onsuccess = (event) => {
             const db = event.target.result;
             const transaction = db.transaction('nitaiPage', 'readwrite');
             const store = transaction.objectStore('nitaiPage');
             const putRequest = store.put({ id: 'npp_plugins', data: plugins });
-            
+
             putRequest.onsuccess = () => {
                 db.close();
                 resolve();
             };
-            
+
             putRequest.onerror = () => {
                 console.error('保存插件列表失败');
                 db.close();
                 reject();
             };
         };
-        
+
         request.onerror = (event) => {
             console.error('打开数据库失败: ' + event.target.error.message);
             reject();

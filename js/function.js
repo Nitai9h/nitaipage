@@ -173,7 +173,7 @@ function initializaNitaiPageDB() {
             // 验证对象
             const requiredStores = [PAGEDB_STORE, 'randomWallpaper', 'customWallpaper'];
             const missingStores = requiredStores.filter(store => !db.objectStoreNames.contains(store));
-            
+
             if (missingStores.length > 0) {
                 console.error('缺少必要的对象: ' + missingStores.join(', '));
                 reject();
@@ -615,7 +615,7 @@ function openBox() {
 
     content.addClass('box');
     mark.addClass('active').removeClass('inactive');
-    toolAll.css("transform", "translateY(-190%)");
+    toolAll.css({"transform": "translateY(-190%)", "scale": "0.9"});
     searchContainer.css("transform", "translateY(90%)");
     bg.css({ transform: 'scale(1.08)', filter: "var(--main-bg-blur)", transition: "ease 0.3s" });
     iconFold.addClass('active').removeClass('inactive');
@@ -637,7 +637,7 @@ function closeBox() {
 
     content.removeClass('box');
     mark.addClass('inactive').removeClass('active');
-    toolAll.css("transform", "translateY(-120%)");
+    toolAll.css({"transform": "translateY(-120%)", "scale": "1"});
     searchContainer.css("transform", "translateY(0%)");
     bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.7s" });
     iconFold.addClass('inactive').removeClass('active');
@@ -778,6 +778,9 @@ async function init() {
     // Npp插件加载
     initCoreNpp();
     loadNpp();
+
+    // 生成设置
+    await generatePluginSettings();
 
     // 应用管理加载
     loadPluginManagementPage()

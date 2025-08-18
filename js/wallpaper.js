@@ -657,6 +657,8 @@ function refreshWallpaperOptions() {
             // 长按显示删除按钮
             let pressTimer;
             let isLongPress = false;
+            let lastToggleTime = 0; // 记录切换时间
+            const COOLDOWN_TIME = 800; // 间隔时间 (ms)
 
             radioDiv.on('mousedown touchstart', function (e) {
                 // 排除删除按钮
@@ -667,12 +669,22 @@ function refreshWallpaperOptions() {
                 isLongPress = false;
                 pressTimer = setTimeout(function () {
                     isLongPress = true;
+                    const currentTime = Date.now();
+
+                    // 检查是否在间隔时间内
+                    if (currentTime - lastToggleTime < COOLDOWN_TIME) {
+                        return; // 在间隔时间内，不切换
+                    }
+
                     // 删除按钮显隐切换
                     if (radioDiv.hasClass('long-pressed')) {
                         radioDiv.removeClass('long-pressed');
                     } else {
                         radioDiv.addClass('long-pressed');
                     }
+
+                    // 更新切换时间
+                    lastToggleTime = currentTime;
                 }, 800); // 长按 0.8s
             });
 
@@ -702,12 +714,22 @@ function refreshWallpaperOptions() {
                     return;
                 }
 
+                const currentTime = Date.now();
+
+                // 检查是否在间隔时间内
+                if (currentTime - lastToggleTime < COOLDOWN_TIME) {
+                    return; // 在间隔时间内，不切换
+                }
+
                 // 按钮显隐切换
                 if (radioDiv.hasClass('long-pressed')) {
                     radioDiv.removeClass('long-pressed');
                 } else {
                     radioDiv.addClass('long-pressed');
                 }
+
+                // 更新切换时间
+                lastToggleTime = currentTime;
             });
 
             // 删除按钮点击

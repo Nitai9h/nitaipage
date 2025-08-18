@@ -326,12 +326,12 @@ img.error {
 
 /*时间上移*/
 .onsearch .tool-all {
-    transform: translateY(-160%) !important;
+    transform: translateY(-160%) scale(0.9) !important;
 }
 
 /*搜索引擎选择上移*/
 .onsearch .search-engine {
-    transform: translateY(-38%) !important;
+    transform: translateY(-38%) scale(0.9) !important;
 }
 
 
@@ -342,9 +342,10 @@ img.error {
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: translateY(-50%);
+    transform: translateY(-50%) scale(1);
     z-index: 1;
     transition: all 0.633s cubic-bezier(0.22, 1, 0.36, 1);
+    padding-bottom: 10px;
 }
 
 .time {
