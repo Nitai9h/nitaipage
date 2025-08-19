@@ -528,8 +528,15 @@ function createWallpaperContent() {
           </div>
           <div id="toggle-bg-cover" class="switch on"></div>
         </div>
+        <div class="switch-item tip_new_both" id="wallpaper-sound-option">
+          <div>
+            <span class="set_text"><big>壁纸音效通知&nbsp;</big><br></span>
+            <span class="set_text" style="color: gray;"><small>关闭后不会收到壁纸音效通知且关闭壁纸音效</small></span>
+          </div>
+          <div id="toggle-bg-video-sound" class="switch on"></div>
+        </div>
       </div>
-      <div class="set_tip">
+      <div class="set_tip set_tip_new">
         <span class="set_text_wallpaper">点击下方选项以切换壁纸，使用除默认壁纸以外的选项可能会导致页面载入缓慢</span>
         <span class="set_text_wallpaper" id="wallpaper_text">点击选项切换壁纸，部分壁纸源不支持动态颜色</span>
       </div>
@@ -546,7 +553,7 @@ function createWallpaperContent() {
                     </div>
                   `).join('')}
                 </div>
-                <div class="wallpaper-list-setting" id="wallpaper-list-setting" style="display: none;">
+                <div class="wallpaper-list-setting" id="wallpaper-list-setting">
                   <div class="setting-item">
                     <div class="wallpaper-list-container">
                       <div class="wallpaper-list-content">
@@ -562,7 +569,7 @@ function createWallpaperContent() {
               </div>
             </div>
             <div class="wallpaper_container">
-              <div id="wallpaper_name" style="display: none;">
+              <div id="wallpaper_name">
                 <div class="from_row">
                   <div class="from_items">
                     <input type="text" name="wallpaper-name" id="wallpaper-name" class="form-input" placeholder="请输入壁纸名称" autocomplete="off">
@@ -570,14 +577,14 @@ function createWallpaperContent() {
                 </div>
               </div>
               <div class="wallpaper-custom-container">
-                <div id="wallpaper_url" style="display: none;">
+                <div id="wallpaper_url">
                   <div class="from_row">
                     <div class="from_items">
                       <input type="text" name="wallpaper-url" id="wallpaper-url" class="form-input" placeholder="以 https 或 http 开头的 URL" autocomplete="off">
                     </div>
                   </div>
                 </div>
-                <div id="wallpaper_upload" style="display: none;">
+                <div id="wallpaper_upload">
                   <div class="from_row">
                     <div class="from_items">
                       <input type="file" id="wallpaper-file" accept="image/*,video/*" style="display: none;">
@@ -587,7 +594,7 @@ function createWallpaperContent() {
                 </div>
               </div>
             </div>
-            <div id="wallpaper_color" style="display: none;">
+            <div id="wallpaper_color">
               <div class="from_row">
                 <div class="from_items">
                   <div class="color-input-container">
@@ -600,7 +607,7 @@ function createWallpaperContent() {
             </div>
           </div>
         </div>
-        <div class="from_items button" id="wallpaper-button" style="display: none;">
+        <div class="from_items button" id="wallpaper-button">
           <div class="wallpaper_save">保存</div>
         </div>
       </div>

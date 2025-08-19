@@ -601,6 +601,9 @@ function showTime() {
 
 // 书签显示
 function openBox() {
+    $('body').removeClass("close");
+    $('body').addClass("open");
+
     if ($('#fold').hasClass("on")
         || window.matchMedia('(max-width: 260px)').matches) {
         hideTime();
@@ -608,42 +611,39 @@ function openBox() {
     const content = $("#content");
     const mark = $(".mark");
     const toolAll = $(".tool-all");
-    const bg = $('#bg');
-    const bgVideo = $('#bg-video');
     const iconFold = $("#fold");
     const searchContainer = $("#search-form-container");
     const pluginSet = $(".plugin_set");
 
     content.addClass('box');
     mark.addClass('active').removeClass('inactive');
-    toolAll.css({"transform": "translateY(-190%)", "scale": "0.9"});
-    searchContainer.css("transform", "translateY(90%)");
-    bg.css({ transform: 'scale(1.08)', filter: "var(--main-bg-blur)", transition: "ease 0.3s" });
-    bgVideo.css({ transform: 'scale(1.08)', filter: "var(--main-bg-blur)", transition: "ease 0.3s" });
+    toolAll.css({ "transform": "translateY(-190%)", "scale": "0.9" });
+    searchContainer.css("transform", "translateY(85%)");
     iconFold.addClass('active').removeClass('inactive');
     pluginSet.addClass('inactive').removeClass('active');
 }
 
 // 书签关闭
 function closeBox() {
-
+    $('body').removeClass("open");
+    $('body').addClass("close");
     showTime();
 
     const content = $("#content");
     const mark = $(".mark");
     const toolAll = $(".tool-all");
+    const iconFold = $("#fold");
     const bg = $('#bg');
     const bgVideo = $('#bg-video');
-    const iconFold = $("#fold");
     const searchContainer = $("#search-form-container");
     const pluginSet = $(".plugin_set");
 
     content.removeClass('box');
     mark.addClass('inactive').removeClass('active');
-    toolAll.css({"transform": "translateY(-120%)", "scale": "1"});
-    searchContainer.css("transform", "translateY(0%)");
-    bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.7s" });
-    bgVideo.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.7s" });
+    toolAll.css({ "transform": "translateY(-120%)", "scale": "1" });
+    searchContainer.css("transform", "translateY(-70%)");
+    bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.6s" });
+    bgVideo.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.6s" });
     iconFold.addClass('inactive').removeClass('active');
     pluginSet.addClass('inactive').removeClass('active');
 }
@@ -755,17 +755,6 @@ function hideQuick() {
 
 // 初始化各项已持久化的元素
 async function init() {
-    // 初始化日期显示和时钟闪烁状态
-    updateDateDisplay();
-    updateClockBlink();
-
-    // 搜索模糊效果加载
-    updateSearchBlur();
-    updateBlurPlusStyle();
-
-    // 初始化时钟数字切换动画
-    updateClockNumAnimation();
-
     // 数据库初始化
     initializaNitaiPageDB();
     initializaNppDB();
@@ -801,12 +790,6 @@ async function init() {
 
     // 初始化自定义壁纸
     await loadCustomWallpaperOptions();
-
-    // 壁纸初始化
-    setBgImgInit();
-
-    // 折叠状态
-    foldInit();
 
     // 加载商店数据
     loadStoreData();

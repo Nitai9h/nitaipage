@@ -28,7 +28,7 @@ $(document).ready(function () {
                 // 隐藏搜索建议
                 $("#keywords").hide();
                 //获取宽度
-                $(".search-engine").css("width", $('.sou').width() - 30);
+                $(".search-engine").css("width", $('.sou').width() + 40);
                 //出现动画
                 $(".search-engine").slideDown(160);
             }
@@ -58,18 +58,14 @@ $(document).ready(function () {
     });
 
     // Npp 设置打开
-    $(function () {
-        $("#entryPluginSettings").click(function () {
-            $(".set").addClass("inactive").removeClass("active");
-            $(".plugin_set").addClass("active").removeClass("inactive");
-        })
-    })
+    $("#entryPluginSettings").click(function () {
+        $(".set").addClass("inactive").removeClass("active");
+        $(".plugin_set").addClass("active").removeClass("inactive");
 
-    // Npp 设置关闭
-    $(function () {
+        // Npp 设置关闭
         $("#close-pluginSettings").click(function () {
             $(".set").addClass("active").removeClass("inactive");
-            $(".plugin_set").addClass("inactive").removeClass("active");
+            $(".plugin_set").removeClass("active").addClass("inactive");
         })
     })
 
@@ -795,6 +791,7 @@ $(document).ready(function () {
     localStorage.getItem('dateDisplay') === null && localStorage.setItem('dateDisplay', 'true');
     localStorage.getItem('clockBlink') === null && localStorage.setItem('clockBlink', 'true');
     localStorage.getItem('clockNumAnimation') === null && localStorage.setItem('clockNumAnimation', 'true');
+    localStorage.getItem('bgVideoSound') === null && localStorage.setItem('bgVideoSound', 'true');
 
     // 初始化开关状态
     $(document).ready(function () {
@@ -806,6 +803,7 @@ $(document).ready(function () {
         $('#toggle-date-display').toggleClass('on', localStorage.getItem('dateDisplay') === 'true');
         $('#toggle-clock-blink').toggleClass('on', localStorage.getItem('clockBlink') === 'true');
         $('#toggle-clock-num').toggleClass('on', localStorage.getItem('clockNumAnimation') === 'true');
+        $('#toggle-bg-video-sound').toggleClass('on', localStorage.getItem('bgVideoSound') === 'true');
     });
 
 
@@ -863,6 +861,13 @@ $(document).ready(function () {
         $(this).toggleClass('on', !isOn);
         localStorage.setItem('clockNumAnimation', $(this).hasClass('on'));
         updateClockNumAnimation();
+    });
+
+    $('#toggle-bg-video-sound').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('bgVideoSound', $(this).hasClass('on'));
+        updateBgVideoSound();
     });
 
 });

@@ -135,6 +135,14 @@ function updateClockNumAnimation() {
     }
 }
 
+function updateBgVideoSound() {
+    const isDisEnabled = localStorage.getItem('bgVideoSound') === 'false';
+    const videoElement = document.getElementById('bg-video');
+    if (videoElement) {
+        videoElement.muted = isDisEnabled;
+    }
+}
+
 const blurValue = localStorage.getItem('gaussianBlur') || '12px';
 document.documentElement.style.setProperty('--main-box-gauss', `${blurValue}px`);
 

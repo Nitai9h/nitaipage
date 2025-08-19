@@ -311,6 +311,30 @@ img.error {
     transition: 0.3s;
 }
 
+.open #bg {
+    transform: scale(1.08) !important;
+    filter: blur(var(--main-box-gauss)) !important;
+    transition: ease 0.5s !important;
+}
+
+.open #bg-video {
+    transform: scale(1.08) !important;
+    filter: blur(var(--main-box-gauss)) !important;
+    transition: ease 0.5s !important;
+}
+
+.close #bg {
+    transform: scale(1) !important;
+    filter: blur(0) !important;
+    transition: ease 0.5s !important;
+}
+
+.close #bg-video {
+    transform: scale(1) !important;
+    filter: blur(0) !important;
+    transition: ease 0.5s !important;
+}
+
 /*
 搜索框点击后更改样式
 */
@@ -324,6 +348,12 @@ img.error {
 
 /*背景模糊*/
 .onsearch #bg {
+    transform: scale(1.08) !important;
+    filter: blur(var(--main-box-gauss)) !important;
+    transition: ease 0.3s !important;
+}
+
+.onsearch #bg-video {
     transform: scale(1.08) !important;
     filter: blur(var(--main-box-gauss)) !important;
     transition: ease 0.3s !important;
@@ -350,7 +380,6 @@ img.error {
 .onsearch .search-engine {
     transform: translateY(-38%) scale(0.9) !important;
 }
-
 
 /*时间*/
 .tool-all {
@@ -513,7 +542,7 @@ img.error {
 }
 
 #search-form-container {
-    transform: translateY(0%);
+    transform: translateY(-70%);
 }
 
 .wd::-webkit-input-placeholder {
@@ -628,8 +657,8 @@ img.error {
 /*切换搜索引擎*/
 .search-engine {
     position: absolute;
-    margin-top: 10px;
-    margin-left: 5px;
+    margin-top: 2px;
+    margin-left: -30px;
     padding: 10px;
     color: var(--main-text-color);
     background-color: var(--main-background-color);
@@ -1128,6 +1157,7 @@ img.error {
     margin: 0px 20px 20px 20px;
     height: 316px;
     overflow: auto;
+    transition: all 0.3s;
 }
 
 .quick,
@@ -1261,6 +1291,7 @@ img.error {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: all 0.3s;
 }
 
 .set_blocks_content {
@@ -1440,6 +1471,7 @@ input::-webkit-input-placeholder {
 .se_list {
     height: 260px;
     overflow-y: auto;
+    transition: all 0.3s;
 }
 
 .quick_list_table,
@@ -1512,6 +1544,16 @@ input::-webkit-input-placeholder {
     align-items: center;
     gap: 10px;
     margin: 0px 5px;
+    opacity: 0;
+    transition: all 0.3s;
+    height: 0px;
+    pointer-events: none;
+}
+
+.wallpaper_container.show {
+    opacity: 1 !important;
+    height: 60px !important;
+    pointer-events: auto !important;
 }
 
 .wallpaper-custom-container {
@@ -1537,6 +1579,16 @@ input::-webkit-input-placeholder {
 
 #wallpaper-button {
     margin-top: 12px;
+    opacity: 0;
+    transition: all 0.3s;
+    height: 0px;
+    pointer-events: none;
+}
+
+#wallpaper-button.show {
+    opacity: 1 !important;
+    height: 40px !important;
+    pointer-events: auto !important;
 }
 
 #wallpaper_upload {
@@ -1605,6 +1657,7 @@ input::-webkit-input-placeholder {
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    padding: 0px 15px;
 }
 
 .color-picker-btn:hover {
@@ -1632,8 +1685,20 @@ input::-webkit-input-placeholder {
     margin: 0px 10px 0px 10px;
 }
 
+.wallpapers_content .set_blocks_content.hide div,
+.from_row_content #wallpaper div,
+.wallpaper-list-setting div {
+    height: 0px !important;
+}
+
+.from_row_content #wallpaper,
+.from_row_content #wallpaper div,
+.wallpaper-list-setting.show div {
+    height: auto !important;
+}
+
 .wallpaper-list-container {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .wallpaper-list {
@@ -1649,8 +1714,34 @@ input::-webkit-input-placeholder {
 .wallpaper-list-content {
     background: var(--main-background-color);
     border-radius: 8px;
-    max-height: 220px;
+    max-height: 230px;
     padding: 2px 0px;
+}
+
+.wallpaper-list-setting {
+    opacity: 0;
+    transition: all 0.3s;
+    height: 0px;
+    pointer-events: none;
+}
+
+.wallpaper-list-setting.show {
+    opacity: 1 !important;
+    height: 250px !important;
+    pointer-events: auto;
+}
+
+#wallpaper_color {
+    opacity: 0;
+    transition: all 0.3s;
+    height: 0px;
+    pointer-events: none;
+}
+
+#wallpaper_color.show {
+    opacity: 1 !important;
+    height: 50px !important;
+    pointer-events: auto;
 }
 
 .wallpaper-item {
@@ -1693,7 +1784,7 @@ input::-webkit-input-placeholder {
 }
 
 .wallpaper-list-add {
-    margin-top: 12px;
+    margin-top: 20px;
     display: flex;
     justify-content: center;
 }
@@ -1851,6 +1942,7 @@ input[type="radio"]+label:hover:active {
     background: var(--main-background-color);
     padding: 20px;
     border-radius: 8px;
+    transition: all 0.3s;
     flex-direction: column;
     box-shadow: var(--main-search-shadow);
     -webkit-box-shadow: var(--main-search-shadow);
@@ -2315,6 +2407,7 @@ input[type=range]::-ms-fill-lower {
 .panelContent {
     overflow-y: auto;
     margin: 0px 5px 0px 10px;
+    transition: all 0.3s;
 }
 
 .switch {
@@ -2375,6 +2468,17 @@ input[type=range]::-ms-fill-lower {
 
 .switch.disabled::before {
     background-color: var(--main-button-color);
+}
+
+#wallpaper-sound-option {
+    opacity: 0;
+    transition: all 0.3s ease;
+    height: 0px !important;
+}
+
+#wallpaper-sound-option.active {
+    opacity: 1;
+    height: auto !important;
 }
 
 .set_blocks_more {

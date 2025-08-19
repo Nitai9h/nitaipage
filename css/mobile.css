@@ -193,6 +193,24 @@
     .tab_text {
         padding: 0px 10px;
     }
+
+    .wallpaper_container {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0px !important;
+    }
+
+    .wallpaper_container.show {
+        height: 100px !important;
+    }
+
+    #wallpaper_name {
+        width: 100%;
+    }
+
+    .wallpaper-custom-container {
+        width: 100%;
+    }
 }
 
 /*小于450px时*/

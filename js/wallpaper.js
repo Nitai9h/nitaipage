@@ -106,6 +106,9 @@ async function initWallpaerLoader() {
     // 渲染壁纸列表
     await renderWallpaperList();
 
+    // 初始化并设置背景图片
+    setBgImgInit();
+
     const startTime = Date.now(); // 记录开始加载时间
 
     const bg = new BroadcastChannel("bgLoad");
@@ -165,20 +168,17 @@ function initWallpaperSettingsState(typeIndex) {
         }
     });
 
+    $("#wallpaper-list-setting").removeClass('show');
+    $("#wallpaper_color").removeClass('show');
+    $("#wallpaper-button").removeClass('show');
+    $(".wallpaper_container").removeClass('show');
+    $(".wallpapers_content .set_blocks_content").removeClass('hide');
+
     if (typeIndex === 0) {
-        $("#wallpaper-list-setting").fadeOut(500);
-        $("#wallpaper_color").fadeOut(500);
-        $("#wallpaper-button").fadeIn(500);
-        $("#wallpaper_url").fadeIn(500);
-        $("#wallpaper_name").fadeIn(500);
-        $("#wallpaper_upload").fadeIn(500);
+        $("#wallpaper-button").addClass('show');
+        $(".wallpaper_container").addClass('show');
     } else if (typeIndex === 1) {
-        $("#wallpaper_url").fadeOut(500);
-        $("#wallpaper-button").fadeOut(500);
-        $("#wallpaper_name").fadeOut(500);
-        $("#wallpaper_upload").fadeOut(500);
-        $("#wallpaper_color").fadeOut(500);
-        $("#wallpaper-list-setting").fadeIn(500);
+        $("#wallpaper-list-setting").addClass('show');
     } else if (typeIndex === 2) {
         // 移除 onerror 事件处理器
         // 避免触发 error
@@ -187,24 +187,15 @@ function initWallpaperSettingsState(typeIndex) {
         $('#bg').removeClass('error');
 
         // 纯色背景选项
-        $("#wallpaper_name").fadeOut(500);
-        $("#wallpaper_upload").fadeOut(500);
-        $("#wallpaper-list-setting").fadeOut(500);
-        $("#wallpaper_color").fadeIn(500);
-        $("#wallpaper-button").fadeIn(500);
-        $("#wallpaper_url").fadeOut(500);
+        $("#wallpaper_color").addClass('show');
+        $("#wallpaper-button").addClass('show');
 
         // 从 localStorage 读取保存的颜色
         const savedColor = localStorage.getItem('solidColorBackground') || '#ffffff';
         $('#wallpaper-color-input').val(savedColor);
         $('#wallpaper-color-picker').val(savedColor);
     } else {
-        $("#wallpaper_url").fadeOut(500);
-        $("#wallpaper-button").fadeOut(500);
-        $("#wallpaper_name").fadeOut(500);
-        $("#wallpaper_upload").fadeOut(500);
-        $("#wallpaper_color").fadeOut(500);
-        $("#wallpaper-list-setting").fadeOut(500);
+        $(".wallpapers_content .set_blocks_content").addClass('hide');
     }
 }
 
@@ -228,7 +219,7 @@ function handleSolidColorBackground(bg) {
     const savedColor = localStorage.getItem('solidColorBackground') || '#ffffff';
     // 应用纯色背景
     $('#bg').attr('src', '');
-    $('#bg').css({'opacity': '1', 'filter': 'var(--main-box-gauss-plus)', 'transition': 'ease 0.7s', 'background-color': savedColor });
+    $('#bg').css({ 'opacity': '1', 'filter': 'var(--main-box-gauss-plus)', 'transition': 'ease 0.7s', 'background-color': savedColor });
     bg.postMessage("bgImgLoadinged");
     bg.close();
 }
@@ -249,7 +240,7 @@ function setupVideoElement(videoElement, url, bg) {
 
     videoElement.attr('src', url);
     videoElement.attr('loop', true);
-    videoElement.attr('muted', true);
+    videoElement.attr('muted', false);
     videoElement.attr('autoplay', true);
     videoElement.css({ 'filter': 'blur(0px)', 'transition': 'ease 0.7s' });
 
@@ -286,7 +277,42 @@ function setupVideoElement(videoElement, url, bg) {
             return;
         }
 
-        this.play().catch(e => console.error('播放失败:' + e));
+        const hasSeenInitialPrompt = localStorage.getItem('wallpaperSoundPromptShown') === 'true';
+        const isEnabled = localStorage.getItem('bgVideoSound') === 'true';
+
+        if (isEnabled && !hasSeenInitialPrompt) {
+            iziToast.show({
+                timeout: 8000,
+                message: '已开启壁纸音效，是否现在打开声音?',
+                position: 'bottomCenter',
+                transitionIn: 'bounceInUp',
+                transitionOut: 'fadeOutDown',
+                transitionInMobile: 'fadeInUp',
+                transitionOutMobile: 'fadeOutDown',
+                buttons: [
+                    ['<button>确定</button>', (instance, toast) => {
+                        this.muted = false;
+                        this.play();
+                        instance.hide({ transitionOut: 'fadeOutDown' }, toast, 'button');
+                    }, true],
+                    ['<button>取消</button>', (instance, toast) => {
+                        this.muted = true;
+                        this.play();
+                        instance.hide({ transitionOut: 'fadeOutDown' }, toast, 'button');
+                    }]
+                ]
+            });
+            localStorage.setItem('wallpaperSoundPromptShown', 'true');
+        }
+
+        this.play().catch(e => {
+            console.error('播放失败:' + e);
+            if (hasSeenInitialPrompt && isEnabled) {
+                this.muted = true;
+                this.play();
+            }
+        });
+
         try {
             if (bg && bg.postMessage) {
                 // 加载完成后播放
@@ -343,6 +369,8 @@ function handleIndexedDBMedia(mediaInfo, bg) {
                 $('#bg').after(videoElement);
             }
 
+            $('#wallpaper-sound-option').addClass('active');
+
             $('#bg').hide();
             videoElement.show();
 
@@ -379,6 +407,8 @@ function handleRedirectMedia(finalUrl, bg) {
             videoElement = $('<video id="bg-video"></video>');
             $('#bg').after(videoElement);
         }
+
+        $('#wallpaper-sound-option').addClass('active');
 
         $('#bg').hide();
         videoElement.show();
@@ -422,6 +452,7 @@ function cleanupPreviousWallpaper() {
         videoElement.hide();
     }
 
+    $('#wallpaper-sound-option').removeClass('active');
     $('#bg').off(); // 移除事件监听器
     $('#bg').removeAttr('src');
     $('#bg').show();
@@ -530,28 +561,13 @@ async function initWallpaperSettings() {
 
         if (index === 0) {
             $('#wallpaper_text').html("添加壁纸项");
-            $("#wallpaper_url").fadeIn(500);
-            $("#wallpaper-button").fadeIn(500);
-            $("#wallpaper_name").fadeIn(500);
-            $("#wallpaper_upload").fadeIn(500);
-            $("#wallpaper_color").fadeOut(500);
         } else if (index === 2) {
             $('#wallpaper_text').html("纯色背景");
-            $("#wallpaper_color").fadeIn(500);
-            $("#wallpaper-button").fadeIn(500);
-            $("#wallpaper_url").fadeOut(500);
-            $("#wallpaper_name").fadeOut(500);
-            $("#wallpaper_upload").fadeOut(500);
             iziToast.show({
                 message: '切换成功',
                 timeout: 2000
             });
         } else {
-            $("#wallpaper_url").fadeOut(500);
-            $("#wallpaper-button").fadeOut(500);
-            $("#wallpaper_name").fadeOut(500);
-            $("#wallpaper_upload").fadeOut(500);
-            $("#wallpaper_color").fadeOut(500);
             iziToast.show({
                 message: '切换成功',
                 timeout: 2000
@@ -728,7 +744,7 @@ async function initWallpaperSettings() {
     $("#add-wallpaper-btn").click(function () {
         const tempFileInput = document.createElement('input');
         tempFileInput.type = 'file';
-        tempFileInput.accept = 'image/*,video/*';
+        tempFileInput.accept = 'image/*';
         tempFileInput.style.display = 'none';
 
         document.body.appendChild(tempFileInput);
@@ -736,6 +752,15 @@ async function initWallpaperSettings() {
         tempFileInput.addEventListener('change', async function () {
             const file = this.files[0];
             if (file) {
+                if (!file.type.startsWith('image/')) {
+                    iziToast.show({
+                        message: '随机壁纸仅支持图片文件',
+                        timeout: 2000
+                    });
+                    document.body.removeChild(this);
+                    return;
+                }
+
                 try {
                     await addWallpaperToList(file);
                     renderWallpaperList();

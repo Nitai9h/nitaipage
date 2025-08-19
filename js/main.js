@@ -19,6 +19,20 @@ $(function () {
         layout: '1'
     });
 
+    // 初始化日期显示和时钟闪烁状态
+    updateDateDisplay();
+    updateClockBlink();
+
+    // 搜索模糊效果加载
+    updateSearchBlur();
+    updateBlurPlusStyle();
+
+    // 折叠状态
+    foldInit();
+
+    // 初始化时钟数字切换动画
+    updateClockNumAnimation();
+
     // 初始化 (持久化元素加载)
     init();
 })
@@ -32,7 +46,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.1.6',
+    VERSION: 'v2.1',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
