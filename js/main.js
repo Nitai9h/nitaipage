@@ -1,3 +1,42 @@
+$(function () {
+    // 加载动画
+    frameStyle.createLoading();
+
+    // 获取时间
+    t = setTimeout(time, 1000);
+
+    iziToast.settings({
+        timeout: 3000,
+        progressBar: false,
+        close: false,
+        closeOnEscape: true,
+        position: 'topCenter',
+        transitionIn: 'bounceInDown',
+        transitionOut: 'fadeOutUp',
+        transitionInMobile: 'fadeInDown',
+        transitionOutMobile: 'fadeOutUp',
+        displayMode: 'replace',
+        layout: '1'
+    });
+
+    // 初始化日期显示和时钟闪烁状态
+    updateDateDisplay();
+    updateClockBlink();
+
+    // 搜索模糊效果加载
+    updateSearchBlur();
+    updateBlurPlusStyle();
+
+    // 折叠状态
+    foldInit();
+
+    // 初始化时钟数字切换动画
+    updateClockNumAnimation();
+
+    // 初始化 (持久化元素加载)
+    init();
+})
+
 // 控制台信息
 const VersionInfo = {
     // 常量
@@ -7,7 +46,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.0.4',
+    VERSION: 'v2.1',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -67,76 +106,9 @@ const VersionInfo = {
 
 //加载完成后执行
 window.addEventListener('load', async function () {
-    // 加载动画
-    frameStyle.createLoading();
-    const startTime = Date.now(); // 记录开始加载时间
-
-    // 初始控制台展示
-    VersionInfo.displayVersionInfo();
-    await searchData();
-    // 版本信息
-    if (typeof VersionInfo !== 'undefined' && VersionInfo.VERSION) {
-        $(".power").append(`${VersionInfo.VERSION}`);
-    }
-
-    // 数据库初始化
-    initializaNitaiPageDB();
-    initializaNppDB();
-
-    // 初始化 tabs 横向滚动和自动隐藏
     setupTabsScrolling('.set .tabs');
-    setupTabsScrolling('.store #storePage .tabs');
+    setupTabsScrolling('#storePage .tabs');
     setupTabsScrolling('.plugin_set .tabs');
-
-    // 初始化 (持久化元素加载)
-    init();
-
-    const bg = new BroadcastChannel("bgLoad");
-    let loadTimeout;
-
-    // 设置加载超时定时器
-    loadTimeout = setTimeout(() => {
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = Math.max(0, 300 - elapsedTime);
-        setTimeout(() => {
-            frameStyle.removeLoading();
-            $('.tool-all').css('transform', 'translateY(-120%)');
-            $('.all-search').css('transform', 'translateY(0%)');
-            $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
-            $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
-            bg.close();
-            showWelcomeMessage();
-        }, remainingTime);
-    }, 1500);
-
-    bg.onmessage = (event) => {
-        if (event.data === "bgImgLoadinged") {
-            clearTimeout(loadTimeout);
-            const elapsedTime = Date.now() - startTime;
-            const remainingTime = Math.max(0, 300 - elapsedTime);
-            setTimeout(() => {
-                frameStyle.removeLoading();
-                $('.tool-all').css('transform', 'translateY(-120%)');
-                $('.all-search').css('transform', 'translateY(0%)');
-                $('#section').css("cssText", "opacity: 1;transition: ease 1.5s;");
-                $('.cover').css("cssText", "opacity: 1;transition: ease 1.5s;");
-                bg.close();
-                showWelcomeMessage();
-            }, remainingTime);
-        }
-    };
-
-    iziToast.settings({
-        timeout: 3000,
-        progressBar: false,
-        close: false,
-        closeOnEscape: true,
-        position: 'topCenter',
-        transitionIn: 'bounceInDown',
-        transitionOut: 'flipOutX',
-        displayMode: 'replace',
-        layout: '1'
-    });
 }, false)
 
 // 进入问候

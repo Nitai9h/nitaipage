@@ -51,6 +51,8 @@
     background: var(--main-background-color);
     border-radius: 8px;
     transition: all 0.2s ease;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .plugin-item:hover {
@@ -351,6 +353,8 @@
     background: var(--main-background-color);
     border-radius: 8px;
     transition: 0.3s;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .plugin_item:hover {
@@ -439,6 +443,10 @@
     height: 100%;
 }
 
+.pluginMainConts {
+    position: relative;
+}
+
 /* 排序库样式 */
 .sortable-ghost {
     opacity: 0.5;
@@ -473,6 +481,8 @@
     justify-content: center;
     align-items: center;
     transition: 0.3s;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 #entryPluginSettings:active,
@@ -508,6 +518,8 @@
     padding: 10px;
     --border-color: rgba(255, 255, 255, 0.1);
     margin-right: 5px;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .store_sources_header {
@@ -556,11 +568,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
     margin-bottom: 10px;
     background: var(--main-background-color);
     border-radius: 8px;
     transition: 0.3s;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
 .store_source_item:hover {

@@ -154,19 +154,28 @@ const PAGEDB_STORE = 'nitaiPage';
 */
 function initializaNitaiPageDB() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open(PAGEDB_NAME, 1);
+        const request = indexedDB.open(PAGEDB_NAME, 2);
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
             if (!db.objectStoreNames.contains(PAGEDB_STORE)) {
                 db.createObjectStore(PAGEDB_STORE, { keyPath: 'id' });
             }
+            if (!db.objectStoreNames.contains('randomWallpaper')) {
+                db.createObjectStore('randomWallpaper', { keyPath: 'id', autoIncrement: true });
+            }
+            if (!db.objectStoreNames.contains('customWallpaper')) {
+                db.createObjectStore('customWallpaper', { keyPath: 'id', autoIncrement: true });
+            }
         };
         request.onsuccess = (event) => {
             const db = event.target.result;
-            // 验证
-            if (!db.objectStoreNames.contains(PAGEDB_STORE)) {
-                console.error('缺少必要的对象存储: ' + PAGEDB_STORE);
+            // 验证对象
+            const requiredStores = [PAGEDB_STORE, 'randomWallpaper', 'customWallpaper'];
+            const missingStores = requiredStores.filter(store => !db.objectStoreNames.contains(store));
+
+            if (missingStores.length > 0) {
+                console.error('缺少必要的对象: ' + missingStores.join(', '));
                 reject();
                 return;
             }
@@ -257,32 +266,6 @@ function getSeDefault() {
     return se_default ? se_default : "1";
 }
 
-//背景图片
-var bg_img_preinstall = {
-    "type": "1", // 1:使用主题默认的背景图片 2:关闭背景图片 3:使用自定义的背景图片
-    "path": "", //自定义图片
-};
-
-// 获取背景图片
-function getBgImg() {
-    var bg_img_local = localStorage.getItem('bg_img');
-    if (bg_img_local && bg_img_local !== "{}") {
-        return JSON.parse(bg_img_local);
-    } else {
-        setBgImg(bg_img_preinstall);
-        return bg_img_preinstall;
-    }
-}
-
-// 设置背景图片
-function setBgImg(bg_img) {
-    if (bg_img) {
-        localStorage.setItem('bg_img', JSON.stringify(bg_img));
-        return true;
-    }
-    return false;
-}
-
 // 初始化折叠状态
 function foldInit() {
     var foldValue = localStorage.getItem('foldTime');
@@ -293,86 +276,6 @@ function foldInit() {
         $("#icon-fold").attr("class", "iconfont icon-fold");
     }
 }
-
-// 设置-壁纸
-function setBgImgInit() {
-    const bg = new BroadcastChannel("bgLoad");
-
-    var bg_img = getBgImg();
-    $(":input[name='wallpaper-type'][value='" + bg_img["type"] + "']").prop("checked", true);
-    if (bg_img["type"] === "6") {
-        $("#wallpaper-url").val(bg_img["path"]);
-        $("#wallpaper-button").fadeIn(100);
-        $("#wallpaper_url").fadeIn(100);
-    } else {
-        $("#wallpaper_url").fadeOut(300);
-        $("#wallpaper-button").fadeOut(300);
-    }
-
-    switch (bg_img["type"]) {
-        case "1":
-            var pictures = new Array();
-            pictures[0] = './img/background1.webp';
-            pictures[1] = './img/background2.webp';
-            pictures[2] = './img/background3.webp';
-            pictures[3] = './img/background4.webp';
-            pictures[4] = './img/background5.webp';
-            pictures[5] = './img/background6.webp';
-            pictures[6] = './img/background7.webp';
-            pictures[7] = './img/background8.webp';
-            pictures[8] = './img/background9.webp';
-            pictures[9] = './img/background10.webp';
-            var rd = Math.floor(Math.random() * 10);
-            var pictureURL = pictures[rd]; //随机默认壁纸
-            break;
-        case "2":
-            var pictureURL = 'https://bing.biturl.top/?resolution=UHD&format=image'; //必应每日 4K
-            break;
-        case "3":
-            var pictureURL = 'https://bing.biturl.top/?resolution=1920&format=image'; //必应每日 1080P
-            break;
-        case "4":
-            var pictureURL = 'https://v.api.aa1.cn/api/api-fj-2/index.php'; //随机风景
-            break;
-        case "5":
-            var pictureURL = 'https://www.loliapi.com/acg'; //随机二次元
-            break;
-        case "6":
-            var pictureURL = bg_img["path"]; //自定义
-            break;
-        default:
-            var pictureURL = localStorage.getItem('bgImage'); // 插件接口
-    }
-    bg.postMessage("bgImgLoadingStart");
-    // 跟踪API重定向
-    fetch(pictureURL)
-        .then(response => {
-            const finalUrl = response.url;
-            $('#bg').attr('src', finalUrl)
-            sessionStorage.setItem('bgImageFinalURL', finalUrl);
-            const img = new Image();
-            img.onload = function () {
-                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 1.2s;");
-                bg.postMessage("bgImgLoadinged");
-                bg.close();
-            };
-            img.src = finalUrl;
-        })
-        .catch(error => {
-            // 原始方法
-            $('#bg').attr('src', pictureURL)
-            console.error('Failed to track image redirect:', error);
-            const img = new Image();
-            img.onload = function () {
-                $('#bg').css("cssText", "opacity: 1;transform: scale(1);filter: blur(0px);transition: ease 1.2s;");
-                sessionStorage.setItem('bgImageFinalURL', img.src);
-                bg.postMessage("bgImgLoadinged");
-                bg.close();
-            };
-            img.src = pictureURL;
-        });
-};
-
 // 搜索框高亮
 function focusWd() {
     $("body").addClass("onsearch");
@@ -600,7 +503,10 @@ function download(filename, text) {
 
 // 隐藏时钟
 function hideTime() {
-    $(".tool-all").hide();
+    $(".tool-all").css({
+        "opacity": "0",
+        "pointer-events": "none"
+    });
     $(".set").css({
         "margin-top": "0px",
         "max-height": "480px",
@@ -646,7 +552,10 @@ function hideTime() {
 
 // 显示时钟
 function showTime() {
-    $(".tool-all").show();
+    $(".tool-all").css({
+        "opacity": "1",
+        "pointer-events": "unset"
+    });
     $(".set").css({
         "margin-top": "180px",
         "max-height": "400px",
@@ -692,52 +601,56 @@ function showTime() {
 
 // 书签显示
 function openBox() {
-    if ($('#fold').attr("class") === "entry-items on"
+    $('body').removeClass("close");
+    $('body').addClass("open");
+
+    if ($('#fold').hasClass("on")
         || window.matchMedia('(max-width: 260px)').matches) {
         hideTime();
     }
     const content = $("#content");
     const mark = $(".mark");
     const toolAll = $(".tool-all");
-    const bg = $('#bg');
     const iconFold = $("#fold");
     const searchContainer = $("#search-form-container");
     const pluginSet = $(".plugin_set");
 
     content.addClass('box');
-    mark.css("display", "flex");
-    toolAll.css("transform", "translateY(-190%)");
-    searchContainer.css("transform", "translateY(90%)");
-    bg.css({ transform: 'scale(1.08)', filter: "var(--main-bg-blur)", transition: "ease 0.3s" });
-    iconFold.css("display", "flex");
-    pluginSet.css("display", "none");
+    mark.addClass('active').removeClass('inactive');
+    toolAll.css({ "transform": "translateY(-190%)", "scale": "0.9" });
+    searchContainer.css("transform", "translateY(85%)");
+    iconFold.addClass('active').removeClass('inactive');
+    pluginSet.addClass('inactive').removeClass('active');
 }
 
 // 书签关闭
 function closeBox() {
-
+    $('body').removeClass("open");
+    $('body').addClass("close");
     showTime();
 
     const content = $("#content");
     const mark = $(".mark");
     const toolAll = $(".tool-all");
-    const bg = $('#bg');
     const iconFold = $("#fold");
+    const bg = $('#bg');
+    const bgVideo = $('#bg-video');
     const searchContainer = $("#search-form-container");
     const pluginSet = $(".plugin_set");
 
     content.removeClass('box');
-    mark.css("display", "none");
-    toolAll.css("transform", "translateY(-120%)");
-    searchContainer.css("transform", "translateY(0%)");
-    bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 1.2s" });
-    iconFold.css("display", "none");
-    pluginSet.css("display", "none");
+    mark.addClass('inactive').removeClass('active');
+    toolAll.css({ "transform": "translateY(-120%)", "scale": "1" });
+    searchContainer.css("transform", "translateY(-70%)");
+    bg.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.6s" });
+    bgVideo.css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 0.6s" });
+    iconFold.addClass('inactive').removeClass('active');
+    pluginSet.addClass('inactive').removeClass('active');
 }
 
 // 打开设置
 function openSet() {
-    if ($("#fold").attr("class") === "entry-items on") {
+    if ($("#fold").hasClass("on")) {
         hideTime();
     }
 
@@ -750,33 +663,16 @@ function openSet() {
     //更改设置图标
     $("#icon-menu").attr("class", "iconfont icon-home");
 
-    // .set元素过渡动画
-    $("set").css({ display: "flex", opacity: 0, transition: "opacity 0.3s" });
-    setTimeout(() => $("set").css({ opacity: 1 }), 10);
-    // .mark元素过渡动画
-    $("mark").css({ opacity: 0, transition: "opacity 0.3s" });
-    setTimeout(() => $("mark").css({ display: "none" }), 300);
-    $(".mark").css({
-        "display": "none",
-    });
-    $(".store").css({
-        "display": "none",
-    });
-    $(".set").css({
-        "display": "flex",
-    });
-    $(".plugin_set").css({
-        "display": "none",
-    });
-    $("#fold").css({
-        "display": "flex",
-        "transition": "all 0.3s"
-    });
+    // 使用新的类切换动画
+    $(".mark").addClass('inactive').removeClass('active');
+    $(".store").addClass('inactive').removeClass('active');
+    $(".set").addClass('active').removeClass('inactive');
+    $(".plugin_set").addClass('inactive').removeClass('active');
 }
 
 // 关闭设置
 function closeSet() {
-    if ($("#fold").attr("class") === "entry-items on") {
+    if ($("#fold").hasClass("on")) {
         showTime();
     }
 
@@ -787,19 +683,8 @@ function closeSet() {
     //更改设置图标
     $("#icon-menu").attr("class", "iconfont icon-settings");
 
-    $(".set").css({
-        "display": "none",
-    });
-    $(".plugin_set").css({
-        "display": "none",
-    });
-    $("#fold").css({
-        "display": "none",
-        "transition": "all 0.3s"
-    });
-    // .store元素过渡动画
-    $("store").css({ opacity: 0, transition: "opacity 0.3s" });
-    setTimeout(() => $("store").css({ display: "none" }), 300);
+    $(".set").addClass('inactive').removeClass('active');
+    $(".plugin_set").addClass('inactive').removeClass('active');
 
     // 刷新主页数据
     seList();
@@ -808,7 +693,7 @@ function closeSet() {
 
 // 商店显示
 function openStore() {
-    if ($("#fold").attr("class") === "entry-items on") {
+    if ($("#fold").hasClass("on")) {
         hideTime();
     }
 
@@ -821,27 +706,15 @@ function openStore() {
     //更改商店图标
     $("#icon-store").attr("class", "iconfont icon-home");
 
-    $(".mark").css({
-        "display": "none",
-    });
-    $(".store").css({
-        "display": "flex",
-    });
-    $(".set").css({
-        "display": "none",
-    });
-    $(".plugin_set").css({
-        "display": "none",
-    });
-    $("#fold").css({
-        "display": "flex",
-        "transition": "all 0.3s"
-    });
+    $(".mark").addClass('inactive').removeClass('active');
+    $(".store").addClass('active').removeClass('inactive');
+    $(".set").addClass('inactive').removeClass('active');
+    $(".plugin_set").addClass('inactive').removeClass('active');
 }
 
 // 商店关闭
 function closeStore() {
-    if ($("#fold").attr("class") === "entry-items on") {
+    if ($("#fold").hasClass("on")) {
         showTime();
     }
 
@@ -853,13 +726,7 @@ function closeStore() {
     $("#icon-store").attr("class", "iconfont icon-store");
 
     //隐藏商店
-    $('.store').css({
-        "display": "none",
-    });
-    $("#fold").css({
-        "display": "none",
-        "transition": "all 0.3s"
-    });
+    $('.store').addClass('inactive').removeClass('active');
 }
 
 //显示设置搜索引擎列表
@@ -888,25 +755,28 @@ function hideQuick() {
 
 // 初始化各项已持久化的元素
 async function init() {
+    // 数据库初始化
+    initializaNitaiPageDB();
+    initializaNppDB();
+
     // 搜索框数据加载
-    await searchData();
+    searchData();
 
     // 搜索引擎列表加载
-    await seList();
+    seList();
 
     // 快捷方式数据加载
-    await quickData();
+    quickData();
 
     // Npp插件加载
-    await initCoreNpp();
-    await loadNpp();
+    initCoreNpp();
+    loadNpp();
+
+    // 生成设置
+    await generatePluginSettings();
 
     // 应用管理加载
-    await loadPluginManagementPage()
-
-    // 搜索模糊效果加载
-    updateSearchBlur();
-    updateBlurPlusStyle();
+    loadPluginManagementPage()
 
     // 滑块显示监听器
     addSliderValueListeners();
@@ -914,17 +784,27 @@ async function init() {
     // 壁纸遮罩加载
     updateBgCover();
 
-    // 壁纸数据加载
-    setBgImgInit();
+    // 壁纸加载
+    initWallpaerLoader();
+    await initWallpaperSettings();
 
-    // 折叠状态
-    foldInit();
+    // 初始化自定义壁纸
+    await loadCustomWallpaperOptions();
 
     // 加载商店数据
     loadStoreData();
 
     // 检查更新
     checkUpdates('all', 'hide');
+
+    // 初始控制台展示
+    VersionInfo.displayVersionInfo();
+    await searchData();
+
+    // 版本信息
+    if (typeof VersionInfo !== 'undefined' && VersionInfo.VERSION) {
+        $(".power").append(`${VersionInfo.VERSION}`);
+    }
 }
 
 // 或取信息 JSON
@@ -1118,16 +998,54 @@ function importIndexedDBData(indexedDBData) {
 function setupTabsScrolling(selector) {
     $(function () {
         const tabs = $(selector);
-        let scrollTimer;
 
         if (!tabs.length) return;
 
-        // 自动隐藏滚动条
-        tabs.on('scroll', function () {
-            tabs.removeClass('scrollbar-hidden');
-            clearTimeout(scrollTimer);
-            scrollTimer = setTimeout(() => tabs.addClass('scrollbar-hidden'), 1500);
+        // 为每个 tabs 创建容器并添加左右箭头元素
+        tabs.each(function () {
+            const $tab = $(this);
+            const $container = $('<div class="tabs-container"></div>');
+            const $leftArrow = $('<div class="scroll-arrow-left"><i class="iconfont icon-right_button"></i></div>');
+            const $rightArrow = $('<div class="scroll-arrow-right"><i class="iconfont icon-left_button"></i></div>');
+
+            // 将 tabs 插入到容器中
+            $tab.wrap($container);
+            // 添加箭头
+            $tab.parent().append($leftArrow, $rightArrow);
         });
+
+        // 更新箭头显示状态
+        function updateArrowVisibility($tab) {
+            const scrollLeft = $tab.scrollLeft();
+            const scrollWidth = $tab[0].scrollWidth;
+            const clientWidth = $tab[0].clientWidth;
+
+            // 计算滚动百分比
+            const scrollPercentage = scrollWidth > clientWidth ? (scrollLeft / (scrollWidth - clientWidth)) * 100 : 0;
+
+            // 更新 CSS 变量
+            $tab.css('--scrollbar', scrollPercentage + '%');
+
+            // 获取包装容器
+            const $container = $tab.parent();
+
+            // 根据滚动状态调整箭头显示
+            if (scrollPercentage >= 98) {
+                // 滚动到最右侧，隐藏右侧箭头
+                $container.removeClass('can-scroll-right').addClass('can-scroll-left');
+            } else if (scrollPercentage <= 2) {
+                // 滚动到最左侧，隐藏左侧箭头
+                $container.removeClass('can-scroll-left').addClass('can-scroll-right');
+            } else {
+                // 两箭头都显示
+                $container.addClass('can-scroll-left can-scroll-right');
+            }
+
+            // 无需滚动
+            if (scrollWidth <= clientWidth) {
+                $container.removeClass('can-scroll-left can-scroll-right');
+            }
+        }
 
         // 横向滚动支持
         tabs.on('wheel', function (e) {
@@ -1135,11 +1053,25 @@ function setupTabsScrolling(selector) {
             $(this).scrollLeft($(this).scrollLeft() + e.originalEvent.deltaY);
         });
 
-        // 初始隐藏
-        setTimeout(() => tabs.addClass('scrollbar-hidden'), 1500);
+        // 滚动事件监听
+        tabs.on('scroll', function () {
+            updateArrowVisibility($(this));
+        });
+
+        // 初始化箭头状态
+        tabs.each(function () {
+            updateArrowVisibility($(this));
+        });
+
+        // 响应式
+        // 窗口大小改变时重新检查箭头状态
+        $(window).on('resize', function () {
+            tabs.each(function () {
+                updateArrowVisibility($(this));
+            });
+        });
     });
 }
-
 
 function showWelcomeMessage() {
     //用户欢迎
@@ -1456,7 +1388,7 @@ function updateTimeStyle(size, weight, opacity, width) {
 // 更新日期样式
 function updateDateStyle(size, weight, opacity, width) {
     // 转换滑块值
-    const baseFontSize = 1.05; // 基础字体大小
+    const baseFontSize = 1.15; // 基础字体大小
     const maxIncrease = 5; // 最大增加 5rem
     const fontSize = baseFontSize + (size / 100) * maxIncrease; // 计算字体大小
     const fontWeight = 100 + (weight / 100) * 800; // 100-900
@@ -1481,58 +1413,35 @@ function updateMainStyle(blur, weight) {
     document.documentElement.style.setProperty('--main-box-gauss', `${blurValue}px`);
 }
 
-// 显示通知弹窗
-// 计数器
-let announcementCounter = 0;
+/** 
+ * 显示通知弹窗
+ * \n 也可以换行，但建议使用<br>
+ * @param {string} title - 通知标题
+ * @param {string} content - 通知内容
+ * @param {string} buttonText - 关闭按钮文本
+ */
 function showAnnouncement(title, content, buttonText = '关闭') {
-    // 唯一 ID
-    announcementCounter++;
-    const uniqueId = 'announcement_container_' + announcementCounter;
+    // \n 换行
+    const formattedContent = content ? content.replace(/\n/g, '<br>') : '暂无内容';
 
-    // 创建弹窗容器
-    const announcementContainer = document.createElement('div');
-    announcementContainer.className = 'announcement_container';
-    announcementContainer.id = uniqueId;
-
-    // 标题
-    const announcementTitle = document.createElement('h2');
-    announcementTitle.textContent = title || '通知';
-    announcementContainer.appendChild(announcementTitle);
-
-    // 内容
-    const announcementContent = document.createElement('div');
-    announcementContent.className = 'announcement_content';
-    announcementContent.textContent = content || '暂无内容';
-    announcementContainer.appendChild(announcementContent);
-
-    // 关闭
-    const closeButton = document.createElement('button');
-    closeButton.textContent = buttonText || '关闭';
-    closeButton.addEventListener('click', function () {
-        announcementCounter--;
-        $('#' + uniqueId).remove();
-        setTimeout(() => {
-            $('#' + uniqueId).remove();
-        }, 300);
-        if (announcementCounter == '0') {
-            frameStyle.fadeOut('guassianCover', 300, 0);
-            frameStyle.fadeOut('blackCover', 300, 0);
-            $('#bg').css({ transform: 'scale(1)', filter: "blur(0px)", transition: "ease 1.2s" });
-            setTimeout(() => {
-                $('#guassianCover').remove();
-                $('#blackCover').remove();
-            }, 300);
-        }
-    });
-    announcementContainer.appendChild(closeButton);
-
-    document.body.appendChild(announcementContainer);
-
-    frameStyle.guassianCover(uniqueId, 10, 0);
-    frameStyle.blackCover(uniqueId);
-    frameStyle.fadeIn('guassianCover', 300, 0);
-    frameStyle.fadeIn('blackCover', 300, 0);
-    $('#bg').css({ transform: 'scale(1.08)', filter: "blur(var(--main-box-gauss))", transition: "ease 0.3s" });
+    // 使用iziToast显示通知
+    iziToast.show({
+        title: title || '通知',
+        message: formattedContent,
+        position: 'center',
+        timeout: false,
+        close: false,
+        overlay: true,
+        transitionIn: 'fadeIn',
+        transitionOut: 'fadeOut',
+        transitionInMobile: 'fadeIn',
+        transitionOutMobile: 'fadeOut',
+        buttons: [
+            ['<button>' + buttonText + '</button>', function (instance, toast) {
+                instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+            }, true]
+        ],
+    })
 }
 
 function getExtensionUrl() {

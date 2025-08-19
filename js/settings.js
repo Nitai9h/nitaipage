@@ -30,45 +30,6 @@ const shortcuts = [
   { id: 2, name: '知乎', icon: 'iconbook-edit' }
 ];
 
-const wallpaperOptions = [
-  {
-    id: 'radio1',
-    value: '1',
-    label: '默认',
-    className: ''
-  },
-  {
-    id: 'radio2',
-    value: '2',
-    label: '必应 4K',
-    className: ''
-  },
-  {
-    id: 'radio3',
-    value: '3',
-    label: '必应 1080P',
-    className: ''
-  },
-  {
-    id: 'radio4',
-    value: '4',
-    label: '风景',
-    className: ''
-  },
-  {
-    id: 'radio5',
-    value: '5',
-    label: '二次元',
-    className: ''
-  },
-  {
-    id: 'radio6',
-    value: '6',
-    label: '自定义',
-    className: ''
-  }
-];
-
 const backupOptions = [
   {
     title: '导入',
@@ -143,6 +104,14 @@ function createPanelContent() {
     <div class="set_blocks">
       <div class="panelContent">
         <div class="slider-container">
+          <div class="tip_new_ac">
+            <div>
+              <span class="set_text">
+                <i class="iconfont icon-tab mobile"></i>
+                <big>时间与日期&nbsp;</big>
+              </span>
+            </div>
+          </div>
           <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
             <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
@@ -152,7 +121,6 @@ function createPanelContent() {
               <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider">
                 <span class="slider-value" id="font-size-slider-value" data-slider="font-size-slider">0</span>
-
               </div>
             </div>
             <div class="tip_new_both advancedSetting tip_new_slider">
@@ -200,7 +168,7 @@ function createPanelContent() {
             <div class="tip_new_both advancedSetting tip_new_slider">
               <div>
                 <span class="set_text"><big>日期宽度&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小 (12.5px)</small></span>
+                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
               </div>
               <div class="slider-container">
                 <input type="range" class="slider" min="0" max="100" value="0" id="font-width-date">
@@ -228,48 +196,21 @@ function createPanelContent() {
               </div>
             </div>
           </div>
-        </div>
-        <div class="global-settings">
           <div class="set_tip set_tip_new">
-            <div class="tip_new_both tip_new_slider">
+            <div class="switch-item tip_new_both" style="align-items: center;">
               <div>
-                <span class="set_text"><big>全局字重&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                <span class="set_text"><big>日期显示&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否显示日期</small></span>
               </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
-                <span class="slider-value" id="main-font-weight-value" data-slider="main-font-weight">50</span>
-              </div>
-            </div>
-          <div class="tip_new_both tip_new_slider">
-            <div>
-              <span class="set_text"><big>全局模糊度&nbsp;</big><br></span>
-              <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
-            </div>
-            <div class="slider-container">
-              <input type="range" class="slider" min="0" max="100" value="50" id="main-box-gauss">
-              <span class="slider-value" id="main-box-gauss-value" data-slider="main-box-gauss">50</span>
-            </div>
-          </div>
-        </div>
-        <div class="switch-container">
-          <div class="set_tip set_tip_new">
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
-              </div>
-              <div id="toggle-search-blur" class="switch"></div>
+              <div id="toggle-date-display" class="switch"></div>
             </div>
             <div class="switch-item tip_new_both">
               <div>
-                <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
+                <span class="set_text"><big>缺位补零&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
               </div>
-              <div id="toggle-blur-plus" class="switch"></div>
+              <div id="toggle-zero-padding" class="switch"></div>
             </div>
-          </div>
-          <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both" style="align-items: center;">
               <div>
                 <span class="set_text"><big>时钟制式&nbsp;</big><br></span>
@@ -281,19 +222,67 @@ function createPanelContent() {
           <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both">
               <div>
-                <span class="set_text"><big>缺位补零&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
+                <span class="set_text"><big>时钟闪烁&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否闪烁时钟指示器</small></span>
               </div>
-              <div id="toggle-zero-padding" class="switch"></div>
+              <div id="toggle-clock-blink" class="switch"></div>
             </div>
-          </div>
-          <div class="set_tip set_tip_new">
             <div class="switch-item tip_new_both">
               <div>
-                <span class="set_text"><big>壁纸遮罩&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用壁纸遮罩</small></span>
+                <span class="set_text"><big>时钟动效&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>是否启用时钟数字切换动效</small></span>
               </div>
-              <div id="toggle-bg-cover" class="switch"></div>
+              <div id="toggle-clock-num" class="switch"></div>
+            </div>
+          </div>
+        </div>
+        <div class="global-settings">
+          <div class="tip_new_ac">
+            <div>
+              <span class="set_text">
+                <i class="iconfont icon-tab mobile"></i>
+                <big>页面设置&nbsp;</big>
+              </span>
+            </div>
+          </div>
+          <div class="switch-container">
+            <div class="set_tip set_tip_new">
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
+                </div>
+                <div id="toggle-blur-plus" class="switch"></div>
+              </div>
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+                </div>
+                <div id="toggle-search-blur" class="switch"></div>
+              </div>
+              <div class="tip_new_both tip_new_slider">
+                <div>
+                  <span class="set_text"><big>全局模糊度&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="50" id="main-box-gauss">
+                  <span class="slider-value" id="main-box-gauss-value" data-slider="main-box-gauss">50</span>
+                </div>
+              </div>
+            </div>
+            <div class="set_tip set_tip_new">
+              <div class="tip_new_both tip_new_slider">
+                <div>
+                  <span class="set_text"><big>全局字重&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
+                  <span class="slider-value" id="main-font-weight-value" data-slider="main-font-weight">50</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -531,10 +520,25 @@ function createWallpaperContent() {
   div.className = 'mainConts';
   div.innerHTML = `
     <div class="set_blocks wallpapers_content">
-      <div class="set_tip">
+      <div class="set_tip set_tip_new">
+        <div class="switch-item tip_new_both">
+          <div>
+            <span class="set_text"><big>壁纸遮罩&nbsp;</big><br></span>
+            <span class="set_text" style="color: gray;"><small>是否启用壁纸遮罩</small></span>
+          </div>
+          <div id="toggle-bg-cover" class="switch on"></div>
+        </div>
+        <div class="switch-item tip_new_both" id="wallpaper-sound-option">
+          <div>
+            <span class="set_text"><big>壁纸音效通知&nbsp;</big><br></span>
+            <span class="set_text" style="color: gray;"><small>关闭后不会收到壁纸音效通知且关闭壁纸音效</small></span>
+          </div>
+          <div id="toggle-bg-video-sound" class="switch on"></div>
+        </div>
+      </div>
+      <div class="set_tip set_tip_new">
         <span class="set_text_wallpaper">点击下方选项以切换壁纸，使用除默认壁纸以外的选项可能会导致页面载入缓慢</span>
-        <span class="set_text_wallpaper">不建议使用以主色调为白色的壁纸，会导致本站部分元素无法辨认</span>
-        <span class="set_text_wallpaper" id="wallpaper_text">请点击选项以查看各项说明，高亮项为选中，选中后刷新页面以生效</span>
+        <span class="set_text_wallpaper" id="wallpaper_text">点击选项切换壁纸，部分壁纸源不支持动态颜色</span>
       </div>
       <div class="set_blocks_content">
         <div class="from_container">
@@ -542,25 +546,68 @@ function createWallpaperContent() {
             <div class="from_row">
               <div class="from_row_content">
                 <div id="wallpaper">
-                  ${wallpaperOptions.map(option => `
-                    <div class="form-radio ${option.className}">
-                      <input type="radio" id="${option.id}" class="set-wallpaper ${option.value === '5' ? 'wallpaper-custom' : ''}" name="wallpaper-type" value="${option.value}" style="display: none;">
-                      <label class="form-radio-label" for="${option.id}">${option.label}</label>
+                  ${wallpaperOptions.map((option, index) => `
+                    <div class="form-radio">
+                      <input type="radio" id="radio${index}" class="set-wallpaper ${index === 0 ? 'wallpaper-custom' : ''}" name="wallpaper-type" value="${index}" style="display: none;">
+                      <label class="form-radio-label" for="radio${index}">${option.label}</label>
                     </div>
                   `).join('')}
                 </div>
+                <div class="wallpaper-list-setting" id="wallpaper-list-setting">
+                  <div class="setting-item">
+                    <div class="wallpaper-list-container">
+                      <div class="wallpaper-list-content">
+                        <div class="wallpaper-list" id="wallpaper-list"></div>
+                      </div>
+                      <div class="wallpaper-list-add">
+                        <button type="button" id="add-wallpaper-btn">上传</button>
+                        <input type="file" id="wallpaper-file-input" accept="image/*,video/*" style="display: none;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div id="wallpaper_url" style="display: none;">
+            <div class="wallpaper_container">
+              <div id="wallpaper_name">
+                <div class="from_row">
+                  <div class="from_items">
+                    <input type="text" name="wallpaper-name" id="wallpaper-name" class="form-input" placeholder="请输入壁纸名称" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+              <div class="wallpaper-custom-container">
+                <div id="wallpaper_url">
+                  <div class="from_row">
+                    <div class="from_items">
+                      <input type="text" name="wallpaper-url" id="wallpaper-url" class="form-input" placeholder="以 https 或 http 开头的 URL" autocomplete="off">
+                    </div>
+                  </div>
+                </div>
+                <div id="wallpaper_upload">
+                  <div class="from_row">
+                    <div class="from_items">
+                      <input type="file" id="wallpaper-file" accept="image/*,video/*" style="display: none;">
+                      <div class="wallpaper-upload-btn" id="wallpaper-upload-btn">上传</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="wallpaper_color">
               <div class="from_row">
                 <div class="from_items">
-                  <input type="text" name="wallpaper-url" id="wallpaper-url" placeholder="以 https 或 http 开头的 URL" autocomplete="off">
+                  <div class="color-input-container">
+                    <input type="text" name="wallpaper-color" id="wallpaper-color-input" class="form-input" placeholder="请输入16进制颜色值，如#ffffff" autocomplete="off" maxlength="7">
+                    <input type="color" id="wallpaper-color-picker" class="color-picker" value="#ffffff">
+                    <div class="color-picker-btn" id="color-picker-btn">调色</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="from_items button" id="wallpaper-button" style="display: none;">
+        <div class="from_items button" id="wallpaper-button">
           <div class="wallpaper_save">保存</div>
         </div>
       </div>
@@ -578,6 +625,14 @@ function createMoreContent() {
       <div class="entry-pluginSettings set_tip">
         <span class="set_text">Npplication</span>
         <div id="entryPluginSettings">设置</div>
+      </div>
+      <div class="tip_new_ac">
+        <div>
+          <span class="set_text">
+            <i class="iconfont icon-tab mobile"></i>
+            <big>数据设置&nbsp;</big>
+          </span>
+        </div>
       </div>
       <div class="data_backup">
         ${backupOptions.map(option => `
@@ -617,7 +672,7 @@ function createAboutContent() {
             <div class="dropdown-content" id="versionDropdownContent"></div>
           </div>
         </div>
-        <div class="update_logs" id="update_logs">
+        <div class="update_logs" id="update_logs" translate="none">
           <div id="updateLog"></div>
         </div>
       </div>
@@ -658,7 +713,52 @@ function createAboutContent() {
   return div;
 }
 
+// 标签滚动指示器
+function initScrollProgressIndicators() {
+  const tabsContainers = document.querySelectorAll('.set .tabs, .store .tabs, .plugin_set .tabs');
+
+  tabsContainers.forEach(container => {
+    // 如果已经存在指示器
+    // 则不再创建
+    if (container.querySelector('.scroll-progress-indicator')) {
+      return;
+    }
+
+    // 创建指示器
+    const progressIndicator = document.createElement('div');
+    progressIndicator.className = 'scroll-progress-indicator';
+    container.appendChild(progressIndicator);
+
+    // 监听滚动事件
+    container.addEventListener('scroll', function () {
+      const scrollWidth = container.scrollWidth;
+      const clientWidth = container.clientWidth;
+      const scrollLeft = container.scrollLeft;
+      const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+
+      progressIndicator.style.width = Math.min(scrollPercentage, 100) + '%';
+    });
+
+    // 初始化
+    const scrollWidth = container.scrollWidth;
+    const clientWidth = container.clientWidth;
+    const scrollLeft = container.scrollLeft;
+    const scrollPercentage = (scrollLeft / (scrollWidth - clientWidth)) * 100;
+    progressIndicator.style.width = Math.min(scrollPercentage, 100) + '%';
+
+    // 如果无需滚动，隐藏进度指示器
+    if (scrollWidth <= clientWidth) {
+      progressIndicator.style.display = 'none';
+    }
+  });
+}
+
 // 生成设置
 document.addEventListener('DOMContentLoaded', function () {
   generateSettings();
+
+  // 初始化标签滚动指示器
+  setTimeout(() => {
+    initScrollProgressIndicators();
+  }, 100);
 });

@@ -1,14 +1,14 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.3.0
+// @version    0.4.0
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
 // @type    coreNpp
 // @time    head
 // @icon    https://nitai-images.pages.dev/nitaiPage/themeColor.svg
-// @foreced    true
+// @forced    true
 // @setting    true
 // @screen    [`https://nitai-images.pages.dev/nitaiPage/store/themeColor_screen.webp`]
 // ==/Npplication==
@@ -101,7 +101,8 @@ function createThemeSetting() {
     };
     document.head.appendChild(chromaScript);
 
-    $(document).ready(function () {
+    // 等待插件设置创建完成后再初始化设置
+    document.addEventListener('pluginSettingsTemplateReady', function () {
         createThemeSetting();
 
         // 初始化主题开关
@@ -214,7 +215,7 @@ function applyThemeColors(originalColors) {
         document.documentElement.style.setProperty('--main-input-text-placeholder-color', chroma(textColor).alpha(0.43).hex());
 
         // 壁纸遮罩
-        document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(.8)');
+        document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(0.90)');
 
     } catch (error) {
         console.error('应用主题颜色时出错:', error);
@@ -264,7 +265,7 @@ function applyWhiteTheme() {
     document.documentElement.style.setProperty('--main-input-text-placeholder-color', '#ffffff70');
 
     // 壁纸遮罩
-    document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(.8)');
+    document.documentElement.style.setProperty('--main-bg-blur', 'blur(calc(var(--main-box-gauss) * 0.666)) brightness(0.90)');
 }
 
 /**

@@ -1,12 +1,17 @@
 // 生成设置页面 HTML
-function generatePluginSettings() {
+async function generatePluginSettings() {
   const container = document.querySelector('.plugin_set');
   container.id = 'plugin_set';
 
   // 获取插件列表
-  const plugins = JSON.parse(localStorage.getItem('npp_plugins') || '[]');
-  // 筛选注册了设置页面的插件
-  const settingPlugins = plugins.filter(plugin => plugin.setting === 'true');
+  let settingPlugins = [];
+  try {
+    const plugins = await getPluginsList();
+    // 筛选注册了设置页面的插件
+    settingPlugins = plugins.filter(plugin => plugin.setting === 'true');
+  } catch (error) {
+    console.error('获取插件列表失败:', error);
+  }
 
   // 模板页面
   const tabs = [
@@ -63,7 +68,7 @@ function generatePluginSettings() {
   // 创建插件 mainConts
   settingPlugins.forEach((plugin, index) => {
     const pluginContent = document.createElement('div');
-    pluginContent.className = `mainConts ${index === 0 ? 'selected' : ''}`;
+    pluginContent.className = `mainConts pluginMainConts ${index === 0 ? 'selected' : ''}`;
     pluginContent.dataset.value = plugin.id;
     contents.appendChild(pluginContent);
   });
@@ -92,10 +97,9 @@ function generatePluginSettings() {
     }
   });
 
+  // 通知插件设置已创建完成
+  const event = new CustomEvent('pluginSettingsTemplateReady');
+  document.dispatchEvent(event);
+
   return container;
 }
-
-// 生成设置
-document.addEventListener('DOMContentLoaded', function () {
-  generatePluginSettings();
-});

@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    高级设置
 // @id    advancedSettings
-// @version    1.0.3
+// @version    1.0.4
 // @updateUrl    https://nfdb.nitai.us.kg/advancedSettings.js
 // @description    用于开关高级设置
 // @author    Nitai
@@ -50,7 +50,8 @@ function createAdvancedSettingSwitch() {
 }
 
 (function () {
-    $(document).ready(function () {
+    // 等待插件设置创建完成后再初始化设置
+    document.addEventListener('pluginSettingsTemplateReady', function () {
         // 初始化设置开关
         createAdvancedSettingSwitch();
 

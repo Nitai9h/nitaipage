@@ -29,6 +29,7 @@
     <script rel="text/javascript" src="./js/modules/sortable.min.js"></script>
     <!-- JavaScript -->
     <script type="text/javascript" src="./js/style.js"></script>
+    <script type="text/javascript" src="./js/wallpaper.js"></script>
     <script type="text/javascript" src="./js/function.js"></script>
     <script type="text/javascript" src="./js/element.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>
@@ -43,6 +44,7 @@
     <!-- 背景图片 -->
     <div class="bg-all">
         <img id="bg" onerror="this.classList.add('error');"></img>
+        <video id="bg-video" loop="loop" muted="true" autoplay="autoplay">您的浏览器不支持视频播放</video>
         <div class="cover"></div>
     </div>
     <!-- 主体内容 -->
@@ -67,7 +69,7 @@
                     </div>
                 </div>
                 <!-- 捷径 -->
-                <div class="mark animate__animated animate__zoomIn" style="display: none;">
+                <div class="mark inactive">
                     <div class="tab">
                         <div class="tab-item active" style="width: 100%;">
                             <span class="tab_text">捷径</span>
@@ -86,13 +88,13 @@
                     <div class="entry-right"></div>
                 </div>
                 <!-- 商店 -->
-                <div class="store animate__animated animate__zoomIn" style="display: none;">
+                <div class="store inactive">
                 </div>
                 <!-- 设置 -->
-                <div class="set animate__animated animate__zoomIn" style="display: none;">
+                <div class="set inactive">
                 </div>
                 <!-- NPP 设置 -->
-                <div class="plugin_set animate__animated animate__zoomIn" style="display: none;">
+                <div class="plugin_set inactive">
                 </div>
             </div>
         </div>

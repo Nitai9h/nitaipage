@@ -51,6 +51,14 @@
         height: 310px !important;
     }
 
+    .tip_new_ac {
+        flex-direction: column !important;
+    }
+
+    .tip_new_ac .set_text big {
+        position: static !important;
+    }
+
 }
 
 /* 大于720px时*/
@@ -60,7 +68,7 @@
     }
 
     .mobile {
-        display: block !important;
+        display: inline-flex !important;
     }
 }
 
@@ -175,7 +183,7 @@
         margin: 10px 20px 0px 20px;
     }
 
-    .announcement_container {
+    .iziToast-wrapper.iziToast-wrapper-center .iziToast-capsule {
         min-width: 80%;
         max-width: 80%;
         min-height: 80%;
@@ -184,6 +192,24 @@
 
     .tab_text {
         padding: 0px 10px;
+    }
+
+    .wallpaper_container {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0px !important;
+    }
+
+    .wallpaper_container.show {
+        height: 100px !important;
+    }
+
+    #wallpaper_name {
+        width: 100%;
+    }
+
+    .wallpaper-custom-container {
+        width: 100%;
     }
 }
 
