@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.4.0
+// @version    0.4.1
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -171,8 +171,9 @@ function createThemeSetting() {
 })();
 
 function applyThemeColors(originalColors) {
-    // 获取背景颜色
-    const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--main-background-color') || '#ffffff';
+    resetThemeColors();
+    // 获取默认背景颜色
+    const bgColor = '#00000040';
 
     // 计算每个颜色的对比度
     const colorsWithContrast = originalColors.map(color => {

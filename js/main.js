@@ -46,7 +46,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.1(8)',
+    VERSION: 'v2.1(9)',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -108,7 +108,6 @@ const VersionInfo = {
 window.addEventListener('load', async function () {
     setupTabsScrolling('.set .tabs');
     setupTabsScrolling('#storePage .tabs');
-    setupTabsScrolling('.plugin_set .tabs');
 }, false)
 
 // 进入问候

@@ -897,7 +897,8 @@ function refreshWallpaperOptions() {
 
         // 限定删除
         if (index > 1 && index !== 2) {
-            const deleteBtn = $(`<div class="delete-wallpaper" data-index="${index}"><i class="iconfont icon-delete"></i></div>`);
+            const deleteBtn = $(`<div class="delete-wallpaper" style="height: 24px !important;" data-index="${index}"><i class="iconfont icon-delete"></i></div>`);
+
             radioDiv.append(deleteBtn);
 
             // 长按显示删除按钮

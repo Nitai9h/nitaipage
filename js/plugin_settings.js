@@ -100,6 +100,8 @@ async function generatePluginSettings() {
   // 通知插件设置已创建完成
   const event = new CustomEvent('pluginSettingsTemplateReady');
   document.dispatchEvent(event);
+  // 设置滑块滚动
+  setupTabsScrolling('.plugin_set .tabs');
 
   return container;
 }
