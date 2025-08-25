@@ -792,6 +792,7 @@ $(document).ready(function () {
     localStorage.getItem('clockBlink') === null && localStorage.setItem('clockBlink', 'true');
     localStorage.getItem('clockNumAnimation') === null && localStorage.setItem('clockNumAnimation', 'true');
     localStorage.getItem('bgVideoSound') === null && localStorage.setItem('bgVideoSound', 'true');
+    localStorage.getItem('footerDisplay') === null && localStorage.setItem('footerDisplay', 'true');
 
     // 初始化开关状态
     $(document).ready(function () {
@@ -804,6 +805,7 @@ $(document).ready(function () {
         $('#toggle-clock-blink').toggleClass('on', localStorage.getItem('clockBlink') === 'true');
         $('#toggle-clock-num').toggleClass('on', localStorage.getItem('clockNumAnimation') === 'true');
         $('#toggle-bg-video-sound').toggleClass('on', localStorage.getItem('bgVideoSound') === 'true');
+        $('#toggle-footer-display').toggleClass('on', localStorage.getItem('footerDisplay') === 'true');
     });
 
 
@@ -868,6 +870,13 @@ $(document).ready(function () {
         $(this).toggleClass('on', !isOn);
         localStorage.setItem('bgVideoSound', $(this).hasClass('on'));
         updateBgVideoSound();
+    });
+
+    $('#toggle-footer-display').on('click', function () {
+        const isOn = $(this).hasClass('on');
+        $(this).toggleClass('on', !isOn);
+        localStorage.setItem('footerDisplay', $(this).hasClass('on'));
+        updateFooterDisplay();
     });
 
 });
