@@ -23,6 +23,9 @@ $(function () {
     updateDateDisplay();
     updateClockBlink();
 
+    //初始化页脚信息
+    updateFooterDisplay();
+
     // 搜索模糊效果加载
     updateSearchBlur();
     updateBlurPlusStyle();
@@ -46,7 +49,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.1(9)',
+    VERSION: 'v2.2(1)',
 
     // 格式化 版本 信息
     formatUpdates(updates) {

@@ -1453,13 +1453,30 @@ input {
     background: var(--main-input-color);
 }
 
+textarea {
+    font-size: 0.95rem;
+    outline: none;
+    border-radius: 8px;
+    padding: 10px;
+    border: none;
+    background: var(--main-input-color);
+    resize: vertical;
+    min-height: 100px;
+    font-family: var(--font-family), sans-serif;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
 input:hover,
-input:active {
+input:active,
+textarea:hover,
+textarea:active {
     box-shadow: var(--main-search-hover-shadow);
 }
 
 input::-webkit-input-placeholder,
-input::-webkit-input-placeholder {
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
     color: var(--main-input-text-placeholder-color);
 }
 
@@ -1468,7 +1485,8 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
-input::-webkit-input-placeholder {
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
     color: var(--main-text-color);
 }
 

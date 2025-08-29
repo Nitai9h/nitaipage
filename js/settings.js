@@ -284,6 +284,15 @@ function createPanelContent() {
                 </div>
               </div>
             </div>
+            <div class="set_tip set_tip_new">
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>显示页脚&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否显示页脚</small></span>
+                </div>
+                <div id="toggle-footer-display" class="switch"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

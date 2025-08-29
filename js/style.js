@@ -135,6 +135,15 @@ function updateClockNumAnimation() {
     }
 }
 
+function updateFooterDisplay() {
+    const isDisEnabled = localStorage.getItem('footerDisplay') === 'false';
+    if (isDisEnabled) {
+        $('.foot').css('opacity', '0');
+    } else {
+        $('.foot').css('opacity', '1');
+    }
+}
+
 function updateBgVideoSound() {
     const isDisEnabled = localStorage.getItem('bgVideoSound') === 'false';
     const videoElement = document.getElementById('bg-video');

@@ -860,7 +860,8 @@ async function initCoreNpp() {
     // coreNpp 会触发 (npplication.js:490) 在 indexedDB 内未找到内容的提示，可以忽略
     const coreNppFiles = [
         'themeColor.js',
-        'advancedSettings.js'
+        'advancedSettings.js',
+        'customStyle.js'
     ];
 
     for (const fileName of coreNppFiles) {
