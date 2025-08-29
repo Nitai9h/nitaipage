@@ -34,6 +34,14 @@
     justify-content: center;
 }
 
+.pluginMainConts {
+    height: 100%;
+}
+
+.pluginMainConts .set_tip {
+    height: min-content;
+}
+
 /* 插件列表 */
 .plugin-list {
     list-style: none;
