@@ -556,7 +556,7 @@ function createWallpaperContent() {
               <div class="from_row_content">
                 <div id="wallpaper">
                   ${wallpaperOptions.map((option, index) => `
-                    <div class="form-radio">
+                    <div class="form-radio" ${index !== 0 && index !== 1 && index !== 2 ? 'translate="none"' : ''}>
                       <input type="radio" id="radio${index}" class="set-wallpaper ${index === 0 ? 'wallpaper-custom' : ''}" name="wallpaper-type" value="${index}" style="display: none;">
                       <label class="form-radio-label" for="radio${index}">${option.label}</label>
                     </div>

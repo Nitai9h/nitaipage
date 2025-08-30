@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    高级设置
 // @id    advancedSettings
-// @version    1.0.4
+// @version    1.0.5
 // @updateUrl    https://nfdb.nitai.us.kg/advancedSettings.js
 // @description    用于开关高级设置
 // @author    Nitai
@@ -105,12 +105,20 @@ function createAdvancedSettingSwitch() {
 
 //加载完成后执行
 window.addEventListener('load', function () {
+    var style = document.createElement('style');
     if (!isAdvancedSettingEnabled()) {
-        var style = document.createElement('style');
         style.textContent = '.advancedSetting { display: none !important; }';
         document.head.appendChild(style);
         setInterval(() => {
             document.querySelectorAll('.advancedSetting').forEach(function (el) {
+                el.remove();
+            });
+        }, 10000);
+    } else {
+        style.textContent = '.unAdvancedSetting { display: none !important; }';
+        document.head.appendChild(style);
+        setInterval(() => {
+            document.querySelectorAll('.unAdvancedSetting').forEach(function (el) {
                 el.remove();
             });
         }, 10000);

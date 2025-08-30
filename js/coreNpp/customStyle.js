@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    自定义样式
 // @id    customStyle
-// @version    1.0.0
+// @version    1.1.0
 // @updateUrl    https://nfdb.nitai.us.kg/customStyle.js
 // @description    用户可以自定义CSS
 // @author    Nitai
@@ -21,13 +21,21 @@ function createCustomStyleSetting() {
         const customStyleDiv = document.createElement('div');
         customStyleDiv.id = 'customStyle_setting';
         customStyleDiv.className = 'set_tip set_tip_new';
-        customStyleDiv.style = 'width: 100%';
         customStyleDiv.innerHTML = `
                 <style>
+                .customStyle-container > .set_tip {
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 5px;
+                    margin: 0px;
+                    background-color: unset;
+                    padding: 0px;
+                }
                 #customStyle_setting {
-                    width: 100%;
-                    height: -webkit-fill-available;
-                    height: -moz-available;
+                    width: -webkit-fill-available;
+                    width: -moz-available;
+                    max-height: -webkit-fill-available;
+                    max-height: -moz-available;
                 }
                 .customStyle-container {
                     display: flex;
@@ -44,7 +52,7 @@ function createCustomStyleSetting() {
                     gap: 5px;
                 }
                 .customStyle-textarea {
-                    min-height: 20px;
+                    min-height: 40px;
                     padding: 10px;
                     border-radius: 8px;
                     background: var(--main-background-color);
@@ -86,12 +94,19 @@ function createCustomStyleSetting() {
                 }
                 </style>
                 <div class="customStyle-container">
-                    <div>
+                    <div class="set_tip">
+                        <i class="iconfont icon-act" style="font-size: 32px;"></i>
+                        <span class="set_text">
+                            这是一个危险的操作，请不要填入不被信任的样式，这样可能会导致隐私泄露、布局错乱等。
+                            <span class="unAdvancedSetting">如要使用，请开启高级设置。</span>
+                        </span>
+                    </div>
+                    <div class="advancedSetting">
                         <span class="set_text"><big>自定义CSS&nbsp;</big><br></span>
                         <span class="set_text" style="color: gray;"><small>添加自定义CSS样式</small></span>
                         <textarea id="customCSS" class="customStyle-textarea" placeholder="在此粘贴 CSS 样式..."></textarea>
                     </div>
-                    <div class="customStyle-buttons">
+                    <div class="customStyle-buttons advancedSetting">
                         <button id="resetCustomStyle" class="customStyle-button">重置</button>
                         <button id="saveCustomStyle" class="customStyle-button">保存</button>
                     </div>
@@ -132,12 +147,20 @@ function removeCustomCSS() {
         $(document).on('click', '#saveCustomStyle', function () {
             const cssText = $('#customCSS').val();
             localStorage.setItem('customCSS', cssText);
+            iziToast.show({
+                message: '保存成功',
+                timeout: 2000
+            });
             applyCustomCSS(cssText);
         });
 
         $(document).on('click', '#resetCustomStyle', function () {
             $('#customCSS').val('');
             localStorage.removeItem('customCSS');
+            iziToast.show({
+                message: '重置成功',
+                timeout: 2000
+            });
             removeCustomCSS();
         });
     });
@@ -149,4 +172,3 @@ function removeCustomCSS() {
         }
     });
 })();
-

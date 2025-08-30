@@ -32,8 +32,8 @@
     --date-font-size: 1.15rem;
     --date-font-weight: 400;
     --date-opacity: 1;
-    --date-width: 12.5px;
-    --date-display-opacity: 1;
+    --date-width: 13.5px;
+    --date-display-opacity: var(--date-opacity);
     --date-display-margin: 0px;
     --clock-blink-animation: fadenum 4s infinite;
     --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
@@ -419,8 +419,8 @@ img.error {
     font-weight: var(--time-font-weight);
     color: var(--main-text-color);
     text-shadow: var(--main-text-shadow);
-    min-width: var(--time-width);
-    max-width: var(--time-width);
+    min-width: var(--time-width) !important;
+    max-width: var(--time-width) !important;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
@@ -437,8 +437,8 @@ img.error {
     text-align: center;
     color: var(--main-text-color);
     text-shadow: var(--main-text-shadow);
-    min-width: var(--date-width);
-    max-width: var(--date-width);
+    min-width: var(--date-width) !important;
+    max-width: var(--date-width) !important;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
@@ -1465,6 +1465,13 @@ textarea {
     font-family: var(--font-family), sans-serif;
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+textarea::-webkit-resizer {
+    background: var(--border-bottom-color-hover);
+    border-radius: 8px 0px 10px 0px;
+    width: 10px;
+    height: 10px;
 }
 
 input:hover,

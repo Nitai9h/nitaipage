@@ -82,18 +82,18 @@ function time() {
 function updateSearchBlur() {
     const isDisEnabled = localStorage.getItem('searchBlur') === 'false';
     if (isDisEnabled) {
-        document.documentElement.style.setProperty('--search-blur', 'blur(0px)');
+        $('html').css('--search-blur', 'blur(0px)');
     } else {
-        document.documentElement.style.setProperty('--search-blur', 'var(--main-box-gauss-plus)');
+        $('html').css('--search-blur', 'var(--main-box-gauss-plus)');
     }
 }
 
 function updateBlurPlusStyle() {
     const isEnabled = localStorage.getItem('blurPlus') === 'true';
     if (isEnabled) {
-        document.documentElement.style.setProperty('--main-box-gauss-plus', 'blur(calc(var(--main-box-gauss) * 1.533))');
+        $('html').css('--main-box-gauss-plus', 'blur(calc(var(--main-box-gauss) * 1.533))');
     } else {
-        document.documentElement.style.setProperty('--main-box-gauss-plus', 'blur(var(--main-box-gauss))');
+        $('html').css('--main-box-gauss-plus', 'blur(var(--main-box-gauss))');
     }
 }
 
@@ -109,29 +109,35 @@ function updateBgCover() {
 function updateDateDisplay() {
     const isDisEnabled = localStorage.getItem('dateDisplay') === 'false';
     if (isDisEnabled) {
-        document.documentElement.style.setProperty('--date-display-opacity', '0');
-        document.documentElement.style.setProperty('--date-display-margin', '-12px');
+        $('html').css({
+            '--date-display-opacity': '0',
+            '--date-display-margin': '-12px'
+        });
+        $('#toggle_date').hide();
     } else {
-        document.documentElement.style.setProperty('--date-display-opacity', '1');
-        document.documentElement.style.setProperty('--date-display-margin', '0px');
+        $('html').css({
+            '--date-display-opacity': 'var(--date-opacity)',
+            '--date-display-margin': '0px'
+        });
+        $('#toggle_date').show();
     }
 }
 
 function updateClockBlink() {
     const isDisEnabled = localStorage.getItem('clockBlink') === 'false';
     if (isDisEnabled) {
-        document.documentElement.style.setProperty('--clock-blink-animation', 'none');
+        $('html').css('--clock-blink-animation', 'none');
     } else {
-        document.documentElement.style.setProperty('--clock-blink-animation', 'fadenum 2s infinite');
+        $('html').css('--clock-blink-animation', 'fadenum 2s infinite');
     }
 }
 
 function updateClockNumAnimation() {
     const isDisEnabled = localStorage.getItem('clockNumAnimation') === 'false';
     if (isDisEnabled) {
-        document.documentElement.style.setProperty('--clock-num-animation-enabled', 'paused');
+        $('html').css('--clock-num-animation-enabled', 'paused');
     } else {
-        document.documentElement.style.setProperty('--clock-num-animation-enabled', 'running');
+        $('html').css('--clock-num-animation-enabled', 'running');
     }
 }
 
@@ -153,7 +159,7 @@ function updateBgVideoSound() {
 }
 
 const blurValue = localStorage.getItem('gaussianBlur') || '12px';
-document.documentElement.style.setProperty('--main-box-gauss', `${blurValue}px`);
+$('html').css('--main-box-gauss', `${blurValue}px`);
 
 var frameStyle = frameStyle || {}; // 定义一个命名空间
 

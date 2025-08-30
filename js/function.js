@@ -1393,7 +1393,7 @@ function updateDateStyle(size, weight, opacity, width) {
     const fontSize = baseFontSize + (size / 100) * maxIncrease; // 计算字体大小
     const fontWeight = 100 + (weight / 100) * 800; // 100-900
     const opacityValue = opacity / 100; // 0-1
-    const fontWidth = 12.5 + (width / 100) * 50; // 12.5-62.5
+    const fontWidth = 13.5 + (width / 100) * 50; // 13.5-63.5
 
     // 更新 CSS
     document.documentElement.style.setProperty('--date-font-size', `${fontSize}rem`);
