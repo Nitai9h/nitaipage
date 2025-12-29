@@ -1068,6 +1068,13 @@ function renderWallpaperList() {
         deleteBtn.innerHTML = '<i class="iconfont icon-delete"></i>';
 
         deleteBtn.addEventListener('click', async () => {
+            if (wallpaperPictures.length <= 1) {
+                iziToast.show({
+                    message: '请至少保留一张壁纸',
+                    timeout: 2000
+                });
+                return;
+            }
             // 弹出二次确认对话框
             iziToast.show({
                 message: '确定删除?',
@@ -1476,10 +1483,6 @@ async function addWallpaperToList(file) {
 // 从随机图片列表删除图片
 async function removeWallpaperFromList(index) {
     try {
-        if (wallpaperPictures.length <= 1) {
-            throw new Error('列表中至少保留一张图片');
-        }
-
         if (index < 0 || index >= wallpaperPictures.length) {
             throw new Error('无效壁纸索引');
         }
