@@ -1305,7 +1305,7 @@ img.error {
     margin: 10px 10px 10px 10px;
     height: 430px;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start
 }
 
 .set_blocks_content .se_add_preinstall,
@@ -2026,12 +2026,52 @@ input[type="radio"]+label:hover:active {
 }
 
 .tip_new_ac .set_text .iconfont {
-    font-size: 27px;
-    font-weight: 900 !important;
+    font-size: 25px;
+    transition: all 0.3s ease;
+    margin-left: 5px;
+}
+
+.tip_new_ac .set_text {
+    cursor: pointer;
+}
+
+.tip_new_ac .set_text:hover i,
+.tip_new_ac .set_text:hover big {
+    color: var(--main-input-text-placeholder-color);
+}
+
+.tip_new_ac .set_text:active i,
+.tip_new_ac .set_text:active big {
+    color: var(--main-input-color);
+    transform: scale(0.98);
+}
+
+.tip_new_ac .set_text .iconfont.on {
+    transform: rotate(-90deg);
+}
+
+/* 设置项折叠状态 */
+.tip_new_setting {
+    overflow: hidden;
+    max-height: 0px;
+    opacity: 0;
+    transition: max-height 0.2s ease-out, opacity 0.5s cubic-bezier(0, 0.23, 0.58, 1);
+}
+
+.set_blocks.set_blocks_content.set_blocks_more .tip_new_setting.expanded {
+    overflow: unset;
+}
+
+/* 设置项展开状态 */
+.tip_new_setting.expanded {
+    max-height: 2000px;
+    opacity: 1;
+    transition: max-height 0.5s ease-in, opacity 0.2s cubic-bezier(0, 0.23, 0.58, 1);
+    ;
 }
 
 .tip_new_ac .set_text big {
-    left: 30px;
+    left: 45px;
     position: absolute;
 }
 
@@ -2444,9 +2484,13 @@ input[type=range]::-ms-fill-lower {
 }
 
 .panelContent {
+    height: 340px;
     overflow-y: auto;
     margin: 0px 5px 0px 10px;
     transition: all 0.3s;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .switch {

@@ -107,132 +107,134 @@ function createPanelContent() {
           <div class="tip_new_ac">
             <div>
               <span class="set_text">
-                <i class="iconfont icon-tab mobile"></i>
+                <i class="iconfont icon-folding mobile"></i>
                 <big>时间与日期&nbsp;</big>
               </span>
             </div>
           </div>
-          <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
-            <div class="tip_new_both advancedSetting tip_new_slider">
-              <div>
-                <span class="set_text"><big>时间大小&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+          <div class="tip_new_setting">
+            <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
+              <div class="tip_new_both advancedSetting tip_new_slider">
+                <div>
+                  <span class="set_text"><big>时间大小&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider">
+                  <span class="slider-value" id="font-size-slider-value" data-slider="font-size-slider">0</span>
+                </div>
               </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider">
-                <span class="slider-value" id="font-size-slider-value" data-slider="font-size-slider">0</span>
+              <div class="tip_new_both advancedSetting tip_new_slider">
+                <div>
+                  <span class="set_text"><big>时间宽度&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="0" id="font-width-time">
+                  <span class="slider-value" id="font-width-time-value" data-slider="font-width-time">0</span>
+                </div>
               </div>
-            </div>
-            <div class="tip_new_both advancedSetting tip_new_slider">
-              <div>
-                <span class="set_text"><big>时间宽度&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+              <div class="tip_new_both tip_new_slider">
+                <div>
+                  <span class="set_text"><big>时间粗细&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-slider">
+                  <span class="slider-value" id="font-thick-value" data-slider="font-thick-slider">50</span>
+                </div>
               </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-width-time">
-                <span class="slider-value" id="font-width-time-value" data-slider="font-width-time">0</span>
-              </div>
-            </div>
-            <div class="tip_new_both tip_new_slider">
-              <div>
-                <span class="set_text"><big>时间粗细&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
-              </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-slider">
-                <span class="slider-value" id="font-thick-value" data-slider="font-thick-slider">50</span>
-              </div>
-            </div>
-            <div class="tip_new_both tip_new_slider">
-              <div>
-                <span class="set_text"><big>时间透明度&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
-              </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-slider">
-                <span class="slider-value" id="font-opacity-slider-value" data-slider="font-opacity-slider">0</span>
-              </div>
-            </div>
-          </div>
-          <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
-            <div class="tip_new_both advancedSetting tip_new_slider">
-              <div>
-                <span class="set_text"><big>日期大小&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
-              </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date">
-                <span class="slider-value" id="font-size-date-value" data-slider="font-size-date">0</span>
+              <div class="tip_new_both tip_new_slider">
+                <div>
+                  <span class="set_text"><big>时间透明度&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-slider">
+                  <span class="slider-value" id="font-opacity-slider-value" data-slider="font-opacity-slider">0</span>
+                </div>
               </div>
             </div>
-            <div class="tip_new_both advancedSetting tip_new_slider">
-              <div>
-                <span class="set_text"><big>日期宽度&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+            <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
+              <div class="tip_new_both advancedSetting tip_new_slider">
+                <div>
+                  <span class="set_text"><big>日期大小&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date">
+                  <span class="slider-value" id="font-size-date-value" data-slider="font-size-date">0</span>
+                </div>
               </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-width-date">
-                <span class="slider-value" id="font-width-date-value" data-slider="font-width-date">0</span>
+              <div class="tip_new_both advancedSetting tip_new_slider">
+                <div>
+                  <span class="set_text"><big>日期宽度&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="0" id="font-width-date">
+                  <span class="slider-value" id="font-width-date-value" data-slider="font-width-date">0</span>
+                </div>
+              </div>
+              <div class="tip_new_both tip_new_slider">
+                <div>
+                  <span class="set_text"><big>日期粗细&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-date">
+                  <span class="slider-value" id="font-thick-date-value" data-slider="font-thick-date">50</span>
+                </div>
+              </div>
+              <div class="tip_new_both tip_new_slider">
+                <div>
+                  <span class="set_text"><big>日期透明度&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
+                </div>
+                <div class="slider-container">
+                  <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-date">
+                  <span class="slider-value" id="font-opacity-date-value" data-slider="font-opacity-date">0</span>
+                </div>
               </div>
             </div>
-            <div class="tip_new_both tip_new_slider">
-              <div>
-                <span class="set_text"><big>日期粗细&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+            <div class="set_tip set_tip_new">
+              <div class="switch-item tip_new_both" style="align-items: center;">
+                <div>
+                  <span class="set_text"><big>日期显示&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否显示日期</small></span>
+                </div>
+                <div id="toggle-date-display" class="switch"></div>
               </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-date">
-                <span class="slider-value" id="font-thick-date-value" data-slider="font-thick-date">50</span>
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>缺位补零&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
+                </div>
+                <div id="toggle-zero-padding" class="switch"></div>
+              </div>
+              <div class="switch-item tip_new_both" style="align-items: center;">
+                <div>
+                  <span class="set_text"><big>时钟制式&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否使用 12 小时制</small></span>
+                </div>
+                <div id="toggle-time-format" class="switch"></div>
               </div>
             </div>
-            <div class="tip_new_both tip_new_slider">
-              <div>
-                <span class="set_text"><big>日期透明度&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
+            <div class="set_tip set_tip_new">
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>时钟闪烁&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否闪烁时钟指示器</small></span>
+                </div>
+                <div id="toggle-clock-blink" class="switch"></div>
               </div>
-              <div class="slider-container">
-                <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-date">
-                <span class="slider-value" id="font-opacity-date-value" data-slider="font-opacity-date">0</span>
+              <div class="switch-item tip_new_both">
+                <div>
+                  <span class="set_text"><big>时钟动效&nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>是否启用时钟数字切换动效</small></span>
+                </div>
+                <div id="toggle-clock-num" class="switch"></div>
               </div>
-            </div>
-          </div>
-          <div class="set_tip set_tip_new">
-            <div class="switch-item tip_new_both" style="align-items: center;">
-              <div>
-                <span class="set_text"><big>日期显示&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否显示日期</small></span>
-              </div>
-              <div id="toggle-date-display" class="switch"></div>
-            </div>
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>缺位补零&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
-              </div>
-              <div id="toggle-zero-padding" class="switch"></div>
-            </div>
-            <div class="switch-item tip_new_both" style="align-items: center;">
-              <div>
-                <span class="set_text"><big>时钟制式&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否使用 12 小时制</small></span>
-              </div>
-              <div id="toggle-time-format" class="switch"></div>
-            </div>
-          </div>
-          <div class="set_tip set_tip_new">
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>时钟闪烁&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否闪烁时钟指示器</small></span>
-              </div>
-              <div id="toggle-clock-blink" class="switch"></div>
-            </div>
-            <div class="switch-item tip_new_both">
-              <div>
-                <span class="set_text"><big>时钟动效&nbsp;</big><br></span>
-                <span class="set_text" style="color: gray;"><small>是否启用时钟数字切换动效</small></span>
-              </div>
-              <div id="toggle-clock-num" class="switch"></div>
             </div>
           </div>
         </div>
@@ -240,57 +242,59 @@ function createPanelContent() {
           <div class="tip_new_ac">
             <div>
               <span class="set_text">
-                <i class="iconfont icon-tab mobile"></i>
+                <i class="iconfont icon-folding mobile"></i>
                 <big>页面设置&nbsp;</big>
               </span>
             </div>
           </div>
-          <div class="switch-container">
-            <div class="set_tip set_tip_new">
-              <div class="switch-item tip_new_both">
-                <div>
-                  <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
+          <div class="tip_new_setting">
+            <div class="switch-container">
+              <div class="set_tip set_tip_new">
+                <div class="switch-item tip_new_both">
+                  <div>
+                    <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
+                  </div>
+                  <div id="toggle-blur-plus" class="switch"></div>
                 </div>
-                <div id="toggle-blur-plus" class="switch"></div>
-              </div>
-              <div class="switch-item tip_new_both">
-                <div>
-                  <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+                <div class="switch-item tip_new_both">
+                  <div>
+                    <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+                  </div>
+                  <div id="toggle-search-blur" class="switch"></div>
                 </div>
-                <div id="toggle-search-blur" class="switch"></div>
-              </div>
-              <div class="tip_new_both tip_new_slider">
-                <div>
-                  <span class="set_text"><big>全局模糊度&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
-                </div>
-                <div class="slider-container">
-                  <input type="range" class="slider" min="0" max="100" value="50" id="main-box-gauss">
-                  <span class="slider-value" id="main-box-gauss-value" data-slider="main-box-gauss">50</span>
-                </div>
-              </div>
-            </div>
-            <div class="set_tip set_tip_new">
-              <div class="tip_new_both tip_new_slider">
-                <div>
-                  <span class="set_text"><big>全局字重&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
-                </div>
-                <div class="slider-container">
-                  <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
-                  <span class="slider-value" id="main-font-weight-value" data-slider="main-font-weight">50</span>
+                <div class="tip_new_both tip_new_slider">
+                  <div>
+                    <span class="set_text"><big>全局模糊度&nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                  </div>
+                  <div class="slider-container">
+                    <input type="range" class="slider" min="0" max="100" value="50" id="main-box-gauss">
+                    <span class="slider-value" id="main-box-gauss-value" data-slider="main-box-gauss">50</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="set_tip set_tip_new">
-              <div class="switch-item tip_new_both">
-                <div>
-                  <span class="set_text"><big>显示页脚&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否显示页脚</small></span>
+              <div class="set_tip set_tip_new">
+                <div class="tip_new_both tip_new_slider">
+                  <div>
+                    <span class="set_text"><big>全局字重&nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                  </div>
+                  <div class="slider-container">
+                    <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
+                    <span class="slider-value" id="main-font-weight-value" data-slider="main-font-weight">50</span>
+                  </div>
                 </div>
-                <div id="toggle-footer-display" class="switch"></div>
+              </div>
+              <div class="set_tip set_tip_new">
+                <div class="switch-item tip_new_both">
+                  <div>
+                    <span class="set_text"><big>显示页脚&nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>是否显示页脚</small></span>
+                  </div>
+                  <div id="toggle-footer-display" class="switch"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -638,22 +642,24 @@ function createMoreContent() {
       <div class="tip_new_ac">
         <div>
           <span class="set_text">
-            <i class="iconfont icon-tab mobile"></i>
+            <i class="iconfont icon-folding mobile"></i>
             <big>数据设置&nbsp;</big>
           </span>
         </div>
       </div>
-      <div class="data_backup">
-        ${backupOptions.map(option => `
-          <div class="data_backup_tip set_tip">
-            <div>
-              <span class="set_text"><big>${option.title}&nbsp;</big><br></span>
-              <span class="set_text" style="color: gray;"><small>${option.description}</small></span>
+      <div class="tip_new_setting">
+        <div class="data_backup">
+          ${backupOptions.map(option => `
+            <div class="data_backup_tip set_tip">
+              <div>
+                <span class="set_text"><big>${option.title}&nbsp;</big><br></span>
+                <span class="set_text" style="color: gray;"><small>${option.description}</small></span>
+              </div>
+              <div class="but-ordinary" id="${option.buttonId}">${option.buttonText}</div>
             </div>
-            <div class="but-ordinary" id="${option.buttonId}">${option.buttonText}</div>
-          </div>
-        `).join('')}
-        <input type="file" id="my_data_file" style="display: none;" accept=".json">
+          `).join('')}
+          <input type="file" id="my_data_file" style="display: none;" accept=".json">
+        </div>
       </div>
     </div>
   `;
@@ -770,4 +776,18 @@ document.addEventListener('DOMContentLoaded', function () {
   setTimeout(() => {
     initScrollProgressIndicators();
   }, 100);
+
+  // 设置项折叠
+  $('.tip_new_ac .set_text').on('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const $this = $(this);
+    const $tipNewSetting = $this.closest('.tip_new_ac').next('.tip_new_setting');
+
+    if ($tipNewSetting.length) {
+      $tipNewSetting.toggleClass('expanded');
+      $this.find('.icon-folding').toggleClass('on');
+    }
+  });
 });

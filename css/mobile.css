@@ -259,7 +259,8 @@
         bottom: 40px !important;
     }
 
-    .set_blocks {
+    .set_blocks,
+    .panelContent {
         height: 390px !important;
     }
 

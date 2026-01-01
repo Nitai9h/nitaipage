@@ -545,6 +545,9 @@ function hideTime() {
     $(".set_blocks").css({
         "height": "420px"
     });
+    $(".panelContent").css({
+        "height": "420px"
+    });
     $(".plugin_set .contents").css({
         "height": "420px"
     });
@@ -592,6 +595,9 @@ function showTime() {
         "height": "260px"
     });
     $(".set_blocks").css({
+        "height": "340px"
+    });
+    $(".panelContent").css({
         "height": "340px"
     });
     $(".plugin_set .contents").css({

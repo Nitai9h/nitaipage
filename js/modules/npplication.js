@@ -1686,7 +1686,7 @@ function showPluginDetails(pluginWithMetadata) {
                     <div id="dependencies-container" translate="none"></div>
                     <h3>截图</h3>
                     <div class="screenshots" translate="none">
-                        ${(() => {
+                    ${(() => {
             const screenshots = pluginWithMetadata.screen || pluginWithMetadata.screenshots || [];
             if (screenshots.length === 0) {
                 return '<div class="no-screenshots">暂时没有截图</div>';
@@ -1694,8 +1694,8 @@ function showPluginDetails(pluginWithMetadata) {
             return (Array.isArray(screenshots) ? screenshots : [screenshots])
                 .flatMap(shot => shot.toString().split(',').map(url => url.trim().replace(/[\[\]]/g, '')))
                 .map(url => `
-                                <a href="${url.trim().startsWith('http') ? url.trim() : cleanUrl(url)}" target="_blank"><img src="${url.trim().startsWith('http') ? url.trim() : cleanUrl(url)}" alt="截图" class="screenshot-img"></a>
-                            `).join('');
+                        <a href="${url.trim().startsWith('http') ? url.trim() : cleanUrl(url)}" target="_blank"><img src="${url.trim().startsWith('http') ? url.trim() : cleanUrl(url)}" alt="截图" class="screenshot-img"></a>
+                    `).join('');
         })()}
                     </div>
                 </div>
