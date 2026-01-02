@@ -846,6 +846,10 @@ img.error {
     opacity: 0.95;
 }
 
+.con:has(.entry-items.active.on) .tab>.content.product {
+    height: 400px;
+}
+
 /* 滚动条 */
 .set .tabs::-webkit-scrollbar,
 .store .tabs::-webkit-scrollbar,
@@ -1000,11 +1004,11 @@ img.error {
 }
 
 .store-block {
-    height: 86%;
+    height: 81%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin: 0px 20px 0px 20px;
+    margin: 20px 20px 0px 20px;
 }
 
 .store-item {
@@ -1409,6 +1413,11 @@ img.error {
     -moz-animation: fade 0.5s;
     -o-animation: fade 0.5s;
     -ms-animation: fade 0.5s;
+}
+
+.se_add_preinstall,
+.se_add_preinstalls {
+    margin-top: 20px;
 }
 
 /*表单内容*/
@@ -2033,6 +2042,28 @@ input[type="radio"]+label:hover:active {
 
 .tip_new_ac .set_text {
     cursor: pointer;
+    position: relative;
+}
+
+.tip_new_ac .set_text::after {
+    content: '';
+    position: absolute;
+    width: 80%;
+    height: 3px;
+    background: var(--main-input-text-placeholder-color);
+    transition: 0.3s ease;
+    border-radius: 2px;
+    bottom: -5px;
+    left: 47%;
+    transform: translate(-50%, -50%);
+}
+
+.tip_new_ac .set_text:hover::after {
+    width: 100%;
+}
+
+.tip_new_ac.expanded .set_text::after {
+    width: 40%;
 }
 
 .tip_new_ac .set_text:hover i,
@@ -2047,6 +2078,10 @@ input[type="radio"]+label:hover:active {
 }
 
 .tip_new_ac .set_text .iconfont.on {
+    transform: rotate(0deg);
+}
+
+.tip_new_ac .set_text .iconfont {
     transform: rotate(-90deg);
 }
 
@@ -2120,6 +2155,16 @@ input[type="radio"]+label:hover:active {
     opacity: 0.8;
     font-size: small;
     text-shadow: var(--main-text-shadow);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.power>.commit,
+.set_tip_about>.set_text>#infoCommit {
+    color: var(--main-input-text-placeholder-color);
 }
 
 /*弹窗样式*/
@@ -2569,6 +2614,11 @@ input[type=range]::-ms-fill-lower {
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
+    height: 330px !important;
+}
+
+.con:has(.entry-items.active.on) .set_blocks.set_blocks_content.set_blocks_more {
+    height: 410px !important;
 }
 
 .data_backup_tip {

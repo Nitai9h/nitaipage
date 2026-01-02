@@ -778,15 +778,20 @@ document.addEventListener('DOMContentLoaded', function () {
   }, 100);
 
   // 设置项折叠
+  $('.tip_new_setting').addClass('expanded');
+  $('.tip_new_ac .icon-folding').addClass('on');
+  $('.tip_new_ac').addClass('expanded');
   $('.tip_new_ac .set_text').on('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
 
     const $this = $(this);
     const $tipNewSetting = $this.closest('.tip_new_ac').next('.tip_new_setting');
+    const $tipNewAc = $this.closest('.tip_new_ac');
 
     if ($tipNewSetting.length) {
       $tipNewSetting.toggleClass('expanded');
+      $tipNewAc.toggleClass('expanded');
       $this.find('.icon-folding').toggleClass('on');
     }
   });

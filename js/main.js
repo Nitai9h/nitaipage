@@ -49,7 +49,8 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.3.1',
+    VERSION: 'v2.3.2',
+    COMMIT: '',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -70,6 +71,7 @@ const VersionInfo = {
             const currentVersionInfo = this.findVersionInfo(data.versions);
 
             if (currentVersionInfo) {
+                this.COMMIT = currentVersionInfo.commit;
                 this.logVersionInfo(currentVersionInfo, data.link);
                 return currentVersionInfo;
             } else {
@@ -90,6 +92,7 @@ const VersionInfo = {
         const linkContent = this.formatLinks(links);
         const content = `
     更新日期：${versionInfo.date}
+    本次提交：${this.COMMIT}
     更新内容：
     ${this.formatUpdates(versionInfo.updates)}
 

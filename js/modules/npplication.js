@@ -1251,7 +1251,12 @@ async function loadPluginManagementPage() {
                 </div>
 
                 <div class='plugin_management'>
-                    <h3>Npplication 列表</h3> 
+                    <div class='plugin_management_header'>
+                        <h3>Npplications</h3>
+                        <button class='toggle_plugin_list'>
+                            <i class='iconfont icon-folding'></i>
+                        </button>
+                    </div>
                     <div class='plugin_list_table'>`;
 
         // 生成插件列表
@@ -1287,6 +1292,17 @@ async function loadPluginManagementPage() {
             manageContent.innerHTML = html;
             requestAnimationFrame(() => {
                 checkStoreContent('manageContent', plugins.length === 0);
+
+                // Npplication 列表折叠
+                const $togglePluginBtn = $('.toggle_plugin_list', manageContent);
+                const $pluginContent = $('.plugin_list_table', manageContent);
+                if ($togglePluginBtn.length && $pluginContent.length) {
+                    $togglePluginBtn.on('click', function () {
+                        $pluginContent.toggleClass('expanded');
+                        const isExpanded = $pluginContent.hasClass('expanded');
+                        $(this).html(isExpanded ? '<i class="iconfont icon-unfolding"></i>' : '<i class="iconfont icon-folding"></i>');
+                    });
+                }
             });
         }
 
@@ -1674,19 +1690,47 @@ function showPluginDetails(pluginWithMetadata) {
                     <img src="${cleanUrl(pluginWithMetadata.icon)}" alt="${pluginWithMetadata.name}" class="detail-icon">
                         <div class="detail-title">
                             <h2 translate="none">${pluginWithMetadata.name || 'Unknown'}</h2>
-                            <p>版本: <span translate="none">${pluginWithMetadata.version || 'Unknown'}</span> | 作者: <span translate="none">${pluginWithMetadata.author || 'Unknown'}</span></p>
+                            <div class="detail-source">
+                                <p translate="none">版本: ${pluginWithMetadata.version || 'Unknown'}</p>
+                                <p class="sourceNonCritical">|</p>
+                                <p translate="none">作者: ${pluginWithMetadata.author || 'Unknown'}</p>
+                            </div>
                             <p translate="none">NID: ${pluginWithMetadata.id || 'Unknown'}</p>
-                            <p>来源:<span translate="none"> ${pluginWithMetadata.source}</span></p>
+                            <div class="detail-source">
+                                <p>来源:
+                                    ${pluginWithMetadata.source === 'https://nfdb.nitai.us.kg/nitaiPage/store' ? '<p class="sourceSign">官方源</p>' : ''}
+                                    ${pluginWithMetadata.source === 'https://nfdb.nitai.us.kg/nitaiPage/store' ? '<p class="sourceNonCritical">[' + pluginWithMetadata.source + ']</p>' : pluginWithMetadata.source}
+                                </p>
+                            </div>
                     </div>
                 </div>
                 <div class="plugin-detail-body">
-                    <h3>描述</h3>
-                    <p translate="none">${pluginWithMetadata.description}</p>
-                    <h3>依赖</h3>
-                    <div id="dependencies-container" translate="none"></div>
-                    <h3>截图</h3>
-                    <div class="screenshots" translate="none">
-                    ${(() => {
+                    <div class="detail-section">
+                        <div class="detail-header">
+                            <i class="iconfont icon-folding on"></i>
+                            <h3>描述</h3>
+                        </div>
+                        <div class="detail-content expanded">
+                            <p translate="none">${pluginWithMetadata.description}</p>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-header">
+                            <i class="iconfont icon-folding on"></i>
+                            <h3>依赖</h3>
+                        </div>
+                        <div class="detail-content expanded">
+                            <div id="dependencies-container" translate="none"></div>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-header">
+                            <i class="iconfont icon-folding"></i>
+                            <h3>截图</h3>
+                        </div>
+                        <div class="detail-content">
+                            <div class="screenshots" translate="none">
+                        ${(() => {
             const screenshots = pluginWithMetadata.screen || pluginWithMetadata.screenshots || [];
             if (screenshots.length === 0) {
                 return '<div class="no-screenshots">暂时没有截图</div>';
@@ -1694,9 +1738,11 @@ function showPluginDetails(pluginWithMetadata) {
             return (Array.isArray(screenshots) ? screenshots : [screenshots])
                 .flatMap(shot => shot.toString().split(',').map(url => url.trim().replace(/[\[\]]/g, '')))
                 .map(url => `
-                        <a href="${url.trim().startsWith('http') ? url.trim() : cleanUrl(url)}" target="_blank"><img src="${url.trim().startsWith('http') ? url.trim() : cleanUrl(url)}" alt="截图" class="screenshot-img"></a>
-                    `).join('');
+                            <a href="${url.trim().startsWith('http') ? url.trim() : cleanUrl(url)}" target="_blank"><img src="${url.trim().startsWith('http') ? url.trim() : cleanUrl(url)}" alt="截图" class="screenshot-img"></a>
+                        `).join('');
         })()}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1748,7 +1794,21 @@ function showPluginDetails(pluginWithMetadata) {
     dialogContain.className = 'dialog-container';
 
     // 加载依赖项详细页
-    showDependencyDetailsDialog().catch(error => {
+    showDependencyDetailsDialog().then(() => {
+        $('.detail-header', dialog).on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const $this = $(this);
+            const $content = $this.next('.detail-content');
+            const $icon = $this.find('.icon-folding');
+
+            if ($content.length) {
+                $content.toggleClass('expanded');
+                $icon.toggleClass('on');
+            }
+        });
+    }).catch(error => {
         iziToast.show({
             timeout: 3000,
             message: '加载插件时出错'

@@ -59,6 +59,10 @@
         position: static !important;
     }
 
+    .plugin_management_header h3,
+    .store_sources_header h3 {
+        margin-left: 0px !important;
+    }
 }
 
 /* 大于720px时*/
@@ -69,6 +73,14 @@
 
     .mobile {
         display: inline-flex !important;
+    }
+
+    .tip_new_ac .set_text::after {
+        display: none;
+    }
+
+    .tip_new_ac .set_text {
+        position: unset;
     }
 }
 

@@ -507,48 +507,21 @@ function hideTime() {
         "opacity": "0",
         "pointer-events": "none"
     });
-    $(".set").css({
+    $(".set, .mark, .store, .plugin_set").css({
         "margin-top": "0px",
         "max-height": "480px",
-        "height": "480px",
-    });
-    $(".mark").css({
-        "margin-top": "0px",
-        "max-height": "480px",
-        "height": "480px",
-    });
-    $(".store").css({
-        "margin-top": "0px",
-        "max-height": "480px",
-        "height": "480px",
-    });
-    $(".plugin_set").css({
-        "margin-top": "0px",
-        "max-height": "480px",
-        "height": "480px",
+        "height": "480px"
     });
     $(".order-dialog .dialog-content").css({
         "height": "490px !important"
     });
-    $(".dialog-content").css({
-        "height": "390px"
-    })
-    $(".storeContent").css({
+    $(".dialog-content, .storeContent").css({
         "height": "390px"
     });
-    $(".se_list").css({
+    $(".se_list, .quick_list").css({
         "height": "340px"
     });
-    $(".quick_list").css({
-        "height": "340px"
-    });
-    $(".set_blocks").css({
-        "height": "420px"
-    });
-    $(".panelContent").css({
-        "height": "420px"
-    });
-    $(".plugin_set .contents").css({
+    $(".set_blocks, .panelContent, .plugin_set .contents").css({
         "height": "420px"
     });
 }
@@ -559,48 +532,21 @@ function showTime() {
         "opacity": "1",
         "pointer-events": "unset"
     });
-    $(".set").css({
+    $(".set, .mark, .store, .plugin_set").css({
         "margin-top": "180px",
         "max-height": "400px",
-        "height": "400px",
-    });
-    $(".mark").css({
-        "margin-top": "180px",
-        "max-height": "400px",
-        "height": "400px",
-    });
-    $(".store").css({
-        "margin-top": "180px",
-        "max-height": "400px",
-        "height": "400px",
-    });
-    $(".plugin_set").css({
-        "margin-top": "180px",
-        "max-height": "400px",
-        "height": "400px",
+        "height": "400px"
     });
     $(".order-dialog .dialog-content").css({
         "height": "390px !important"
     });
-    $(".dialog-content").css({
+    $(".dialog-content, .storeContent").css({
         "height": "310px"
     });
-    $(".storeContent").css({
-        "height": "310px"
-    });
-    $(".se_list").css({
+    $(".se_list, .quick_list").css({
         "height": "260px"
     });
-    $(".quick_list").css({
-        "height": "260px"
-    });
-    $(".set_blocks").css({
-        "height": "340px"
-    });
-    $(".panelContent").css({
-        "height": "340px"
-    });
-    $(".plugin_set .contents").css({
+    $(".set_blocks, .panelContent, .plugin_set .contents").css({
         "height": "340px"
     });
 }
@@ -804,12 +750,14 @@ async function init() {
     checkUpdates('all', 'hide');
 
     // 初始控制台展示
-    VersionInfo.displayVersionInfo();
+    await VersionInfo.displayVersionInfo();
     await searchData();
 
     // 版本信息
     if (typeof VersionInfo !== 'undefined' && VersionInfo.VERSION) {
-        $(".power").append(`${VersionInfo.VERSION}`);
+        $(".power").append(`
+            ${VersionInfo.VERSION} <div class="commit">(${VersionInfo.COMMIT})</div>
+        `);
     }
 }
 

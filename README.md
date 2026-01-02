@@ -65,13 +65,7 @@ http-server -p 11123 -o
 
 可通过[地址](https://dev-www.nitai.us.kg)访问最新提交的更改
 
-# 鸣谢
-
----
-
-* [imsyy](https://www.imsyy.top/)
-* [青柠起始页](https://limestart.cn/)
-* [sou2](https://github.com/yeetime/sou2/)
+# 技术栈
 
 * [iziToast](https://izitoast.marcelodolza.com/)
 * [Iconfont](https://www.iconfont.cn/)
@@ -80,6 +74,14 @@ http-server -p 11123 -o
 * [js-cookies](https://github.com/js-cookie/js-cookie)
 * [chroma](https://github.com/gka/chroma.js)
 
+# API
+
 * [Bing : https://bing.biturl.top](https://bing.biturl.top)
 * [随机风景 : https://tu.ltyuanfang.cn/api/fengjing.php](https://tu.ltyuanfang.cn/api/fengjing.php)
 * [随机二次元 : https://www.loliapi.com/acg](https://www.loliapi.com/acg)
+
+# 鸣谢
+
+* [imsyy](https://www.imsyy.top/)
+* [青柠起始页](https://limestart.cn/)
+* [sou2](https://github.com/yeetime/sou2/)
