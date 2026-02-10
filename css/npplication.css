@@ -85,56 +85,66 @@
 
 #storeContent .plugin-item {
     cursor: pointer;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
 }
 
-/* 依赖项 */
-.dependencies-list {
+/* 插件间关联 */
+.plugin-relation-list {
     margin-top: 15px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.plugin-item.dependency-item {
+.plugin-item.plugin-relation-item {
     padding: 10px;
     background-color: var(--main-background-color);
     cursor: pointer;
 }
 
-.plugin-item.dependency-item:hover {
+.plugin-item.plugin-relation-item:hover {
     background-color: var(--main-background-hover-color);
 }
 
-.dependency-item.satisfied .status {
+.plugin-relation-item.satisfied .status {
     color: #4CAF50;
 }
 
-.dependency-item.warning .status {
+.plugin-relation-item.warning .status {
     color: #FF9800;
 }
 
-.dependency-item.error .status {
+.plugin-relation-item.error .status {
     color: #F44336;
 }
 
-.dependency-item.failed .status {
+.plugin-relation-item.failed .status {
     color: #FFC107;
 }
 
-.plugin-item.dependency-item.satisfied {
+.plugin-relation-item.info .status {
+    color: #2196F3;
+}
+
+.plugin-item.plugin-relation-item.satisfied {
     border: 1px solid #4CAF50;
 }
 
-.plugin-item.dependency-item.warning {
+.plugin-item.plugin-relation-item.warning {
     border: 1px solid #FF9800;
 }
 
-.plugin-item.dependency-item.error {
+.plugin-item.plugin-relation-item.error {
     border: 1px solid #F44336;
 }
 
-.plugin-item.dependency-item.failed {
+.plugin-item.plugin-relation-item.failed {
     border: 1px solid #FFC107;
+}
+
+.plugin-item.plugin-relation-item.info {
+    border: 1px solid #2196F3;
 }
 
 /* 插件图标 */
@@ -221,6 +231,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
+    padding: 20px;
 }
 
 .detail-header {
@@ -286,6 +297,7 @@
     overflow: hidden;
     max-height: 0;
     opacity: 0;
+    padding: 0px 20px;
     transition: max-height 0.2s ease-out, opacity 0.5s cubic-bezier(0, 0.23, 0.58, 1);
 }
 
@@ -395,7 +407,7 @@
     overflow-x: hidden;
     height: 310px;
     width: 100%;
-    margin: 20px 20px 0;
+    margin-right: 10px;
 }
 
 /* 对话框容器 */
@@ -443,6 +455,138 @@
 
 #manageContent {
     gap: 10px
+}
+
+.store-loading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    backdrop-filter: var(--main-box-gauss-plus);
+    -webkit-backdrop-filter: var(--main-box-gauss-plus);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--main-text-color);
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+    transition: opacity 0.5s ease, max-height 0.5s ease;
+}
+
+.store-loading.fade-out {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    animation: fadeOut 0.3s ease forwards;
+}
+
+.store-loading-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--main-button-color);
+    border-top-color: var(--main-text-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.store-loading.success .store-loading-spinner,
+.store-loading.error .store-loading-spinner {
+    display: none;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.store-loading-icon {
+    display: none;
+    font-size: 14px;
+}
+
+.store-loading.success .store-loading-icon.iconfont.icon-right1 {
+    display: inline-block;
+    animation: successFlash 0.5s ease;
+}
+
+.store-loading.error .store-loading-icon.iconfont.icon-wrong {
+    display: inline-block;
+    animation: successFlash 0.5s ease;
+}
+
+@keyframes successFlash {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* 插件详情页全屏loading */
+.details-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--main-background-color);
+    z-index: 100;
+    border-radius: 8px;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.details-loading-overlay.fade-out {
+    opacity: 1;
+    animation: fadeOut 0.3s ease forwards;
+}
+
+.details-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--main-button-color);
+    border-top-color: var(--main-text-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.details-loading-text {
+    margin-top: 15px;
+    color: var(--main-text-color);
+    font-size: 0.9rem;
+    opacity: 0.8;
 }
 
 /* 插件管理 */

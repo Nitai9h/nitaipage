@@ -1023,7 +1023,7 @@ img.error {
 
 .store .store-item .content,
 .plugin_set .store-item .content {
-    margin: 20px 20px 0px 20px;
+    margin: 0px 10px 0px 0px;
     width: -webkit-fill-available;
 }
 
@@ -2049,8 +2049,8 @@ input[type="radio"]+label:hover:active {
     content: '';
     position: absolute;
     width: 80%;
-    height: 3px;
-    background: var(--main-input-text-placeholder-color);
+    height: 2px;
+    background: var(--main-text-form-hover-color);
     transition: 0.3s ease;
     border-radius: 2px;
     bottom: -5px;

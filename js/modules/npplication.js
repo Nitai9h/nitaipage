@@ -135,6 +135,7 @@ async function extractMetadata(url) {
             forceUpdate: metadata.forced || 'false',
             setting: metadata.setting || 'false',
             dependencies: metadata.dependencies || '',
+            associations: metadata.associations || '',
         };
     } catch (error) {
         console.error(error);
@@ -191,6 +192,54 @@ function parseDependencies(dependenciesStr) {
 }
 
 /**
+ * 解析关联项字符串为对象
+ * @param {string} associationsStr - 关联项字符串
+ * @returns {Object} 关联项对象; 键为 URL,值为版本要求
+ */
+function parseAssociations(associationsStr) {
+    try {
+        // 移除前后的括号和空格
+        const cleanStr = associationsStr.trim().replace(/^\[|\]$/g, '');
+        if (!cleanStr) {
+            return {};
+        }
+
+        // 分割多个关联项
+        const assocEntries = cleanStr.split(',').map(entry => entry.trim());
+        const associations = {};
+
+        // 解析每个关联项
+        assocEntries.forEach(entry => {
+            // 标准格式 [`url`:`version`]
+            let match = entry.match(/`\s*([^`]+?)\s*`\s*:\s*`\s*([^`]+?)\s*`/);
+            let assocUrl = null;
+            let version = 'Latest'; // 默认Latest
+
+            // 标准格式
+            if (match && match.length >= 3) {
+                assocUrl = match[1].trim().replace(/`/g, '');
+                version = match[2].trim().replace(/`/g, '');
+            } else {
+                // [`URL`]
+                match = entry.match(/`\s*([^`]+?)\s*`/);
+                if (match && match.length >= 2) {
+                    assocUrl = match[1].trim().replace(/`/g, '');
+                } else {
+                    console.warn('无法解析的关联项:' + entry);
+                    return;
+                }
+            }
+
+            associations[assocUrl] = version;
+        });
+        return associations;
+    } catch (error) {
+        console.error('关联项解析失败:' + error);
+        return {};
+    }
+}
+
+/**
  * 检查依赖项状态
  * @param {Object} dependencies - 依赖项对象; 键为 URL,值为版本要求
  * @returns {Promise<{status: boolean, details: Object}>} - 对象; 包含整体状态和每个依赖项状态
@@ -221,6 +270,12 @@ async function checkDependencies(dependencies) {
                     continue;
                 }
 
+                // Latest: 解析远程版本
+                let actualRequiredVersion = requiredVersion;
+                if (requiredVersion.toLowerCase() === 'latest') {
+                    actualRequiredVersion = depMetadata.version;
+                }
+
                 // 检查依赖项是否已安装
                 const installedPlugin = plugins.find(p => p.id === depMetadata.id);
                 if (!installedPlugin) {
@@ -235,7 +290,7 @@ async function checkDependencies(dependencies) {
                 }
 
                 // 检查版本
-                const versionCompare = compareVersions(installedPlugin.version, requiredVersion);
+                const versionCompare = compareVersions(installedPlugin.version, actualRequiredVersion);
 
                 if (versionCompare < 0) {
                     details[depUrl] = {
@@ -270,6 +325,86 @@ async function checkDependencies(dependencies) {
 }
 
 /**
+ * 检查关联项状态
+ * @param {Object} associations - 关联项对象; 键为 URL,值为版本要求
+ * @returns {Promise<{details: Object}>} - 对象; 包含每个关联项状态
+ */
+async function checkAssociations(associations) {
+
+    // 无关联项
+    if (!associations || Object.keys(associations).length === 0) {
+        return { details: {} };
+    }
+
+    try {
+        const plugins = await getPluginsList();
+
+        const details = {};
+
+        // 检查每个关联项
+        for (const [assocUrl, requiredVersion] of Object.entries(associations)) {
+
+            try {
+                // 获取关联项的元数据
+                const assocMetadata = await extractMetadata(assocUrl);
+                if (!assocMetadata || !assocMetadata.id) {
+                    console.error('无法获取关联项有效元数据:' + assocUrl);
+                    details[assocUrl] = { status: 'failed', message: '获取关联项信息失败' };
+                    continue;
+                }
+
+                // Latest: 解析远程版本
+                let actualRequiredVersion = requiredVersion;
+                if (requiredVersion.toLowerCase() === 'latest') {
+                    actualRequiredVersion = assocMetadata.version;
+                }
+
+                // 检查关联项是否已安装
+                const installedPlugin = plugins.find(p => p.id === assocMetadata.id);
+                if (!installedPlugin) {
+                    details[assocUrl] = {
+                        status: 'not_installed',
+                        message: '可安装',
+                        requiredVersion: requiredVersion,
+                        metadata: assocMetadata
+                    };
+                    continue;
+                }
+
+                // 检查版本
+                const versionCompare = compareVersions(installedPlugin.version, actualRequiredVersion);
+
+                if (versionCompare < 0) {
+                    details[assocUrl] = {
+                        status: 'version_mismatch',
+                        message: '有更版本可用',
+                        installedVersion: installedPlugin.version,
+                        requiredVersion: requiredVersion,
+                        metadata: assocMetadata
+                    };
+                } else {
+                    details[assocUrl] = {
+                        status: 'satisfied',
+                        message: '已安装',
+                        installedVersion: installedPlugin.version,
+                        requiredVersion: requiredVersion,
+                        metadata: assocMetadata
+                    };
+                }
+            } catch (error) {
+                console.error('检查关联项失败:' + assocUrl, error);
+                details[assocUrl] = { status: 'failed', message: '检查关联项时出错' };
+            }
+        }
+
+        return { details: details };
+    } catch (error) {
+        console.error('关联项检查过程中发生错误:', error);
+        return { details: {} };
+    }
+}
+
+/**
  * 加载依赖项
  * @param {HTMLElement} container - 需要依赖项的插件容器
  * @param {Object} dependencies - 依赖项对象
@@ -278,17 +413,17 @@ async function checkDependencies(dependencies) {
 async function renderDependencies(container, dependencies, source = '') {
 
     if (!dependencies || Object.keys(dependencies).length === 0) {
-        container.innerHTML = '<p>无需依赖项</p>';
-        return { status: true };
+        container.innerHTML = '';
+        return { status: true, details: {}, hasContent: false };
     }
 
     try {
         const dependencyCheckResult = await checkDependencies(dependencies);
         const details = dependencyCheckResult.details;
 
-        let html = '<div class="dependencies-list">';
+        let html = '<div class="plugin-relation-list">';
         if (Object.keys(details).length === 0) {
-            html += '<p>无需依赖项</p>';
+            html += '';
         } else {
             for (const [depUrl, depDetails] of Object.entries(details)) {
                 const metadata = depDetails.metadata || {};
@@ -298,13 +433,14 @@ async function renderDependencies(container, dependencies, source = '') {
                             depDetails.status === 'not_installed' ? 'error' : 'failed';
 
                 html += `
-                    <div class="plugin-item dependency-item ${statusClass}" data-url="${depUrl}">
+                    <div class="plugin-item plugin-relation-item ${statusClass}" data-url="${depUrl}">
                         <img src="${metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg'}" alt="${metadata.name || '依赖项'}" class="plugin-icon">
                         <div class="plugin-info">
                             <strong translate="none">${metadata.name || depUrl}</strong>
-                            <p translate="none">${metadata.description || 'Unknown'}</p>
-                            <p>所需版本: <span translate="none">${depDetails.requiredVersion || 'Latest'}</span>
-                            <span translate="none">${depDetails.installedVersion ? `| 已安装版本: <span translate="none">${depDetails.installedVersion}</span>` : ''}</p>
+                            <div class="detail-source">
+                                <p>所需版本: <span translate="none">${depDetails.requiredVersion || 'Latest'}</span>
+                                <span translate="none">${depDetails.installedVersion ? `<p class="sourceNonCritical">|</p> <p>已安装: <span translate="none">${depDetails.installedVersion}</span></p>` : ''}</p>
+                            </div>
                             <p class="status" translate="none">${depDetails.message}</p>
                         </div>
                     </div>
@@ -315,9 +451,27 @@ async function renderDependencies(container, dependencies, source = '') {
         container.innerHTML = html;
 
         // 依赖点击
-        container.querySelectorAll('.dependency-item').forEach(item => {
+        container.querySelectorAll('.plugin-relation-item').forEach(item => {
             item.addEventListener('click', async () => {
                 const depUrl = item.dataset.url;
+
+                if (window._currentDialogContent) {
+                    window._currentDialogContent.style.filter = 'blur(3px)';
+                }
+
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.className = 'details-loading-overlay';
+                loadingOverlay.innerHTML = `
+                    <div class="details-loading-spinner"></div>
+                    <div class="details-loading-text">加载中...</div>
+                `;
+                if (window._currentDialogContain) {
+                    const dialog = window._currentDialogContain.querySelector('.details-dialog');
+                    if (dialog) {
+                        dialog.appendChild(loadingOverlay);
+                    }
+                }
+
                 try {
                     const metadata = await extractMetadata(depUrl);
                     if (metadata) {
@@ -325,6 +479,12 @@ async function renderDependencies(container, dependencies, source = '') {
                     }
                 } catch (error) {
                     console.error('打开依赖项详情失败:' + error);
+                    if (loadingOverlay && loadingOverlay.parentNode) {
+                        loadingOverlay.remove();
+                    }
+                    if (window._currentDialogContent) {
+                        window._currentDialogContent.style.filter = '';
+                    }
                     iziToast.show({
                         timeout: 3000,
                         message: '读取依赖项时出错'
@@ -333,11 +493,108 @@ async function renderDependencies(container, dependencies, source = '') {
             });
         });
 
-        return dependencyCheckResult;
+        return { ...dependencyCheckResult, hasContent: Object.keys(details).length > 0 };
     } catch (error) {
         console.error('渲染依赖项失败:', error);
-        container.innerHTML = '<p>加载失败,请尝试重载</p>';
-        return { status: false, details: {} };
+        container.innerHTML = '';
+        return { status: false, details: {}, hasContent: false };
+    }
+}
+
+/**
+ * 加载关联项
+ * @param {HTMLElement} container - 需要关联项的插件容器
+ * @param {Object} associations - 关联项对象
+ * @param {string} source - 插件来源
+ */
+async function renderAssociations(container, associations, source = '') {
+
+    if (!associations || Object.keys(associations).length === 0) {
+        container.innerHTML = '';
+        return { details: {}, hasContent: false };
+    }
+
+    try {
+        const associationCheckResult = await checkAssociations(associations);
+        const details = associationCheckResult.details;
+
+        let html = '<div class="plugin-relation-list">';
+        if (Object.keys(details).length === 0) {
+            html += '';
+        } else {
+            for (const [assocUrl, assocDetails] of Object.entries(details)) {
+                const metadata = assocDetails.metadata || {};
+                const statusClass =
+                    assocDetails.status === 'satisfied' ? 'satisfied' :
+                        assocDetails.status === 'version_mismatch' ? 'info' :
+                            assocDetails.status === 'not_installed' ? 'info' : 'failed';
+
+                html += `
+                    <div class="plugin-item plugin-relation-item ${statusClass}" data-url="${assocUrl}">
+                        <img src="${metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg'}" alt="${metadata.name || '关联项'}" class="plugin-icon">
+                        <div class="plugin-info">
+                            <strong translate="none">${metadata.name || assocUrl}</strong>
+                            <div class="detail-source">
+                                <p>推荐版本: <span translate="none">${assocDetails.requiredVersion || 'Latest'}</span>
+                                <span translate="none">${assocDetails.installedVersion ? `<p class="sourceNonCritical">|</p> <p>已安装: <span translate="none">${assocDetails.installedVersion}</span></p>` : ''}</p>
+                            </div>
+                                <p class="status" translate="none">${assocDetails.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        html += '</div>';
+        container.innerHTML = html;
+
+        // 关联项点击
+        container.querySelectorAll('.plugin-relation-item').forEach(item => {
+            item.addEventListener('click', async () => {
+                const assocUrl = item.dataset.url;
+
+                if (window._currentDialogContent) {
+                    window._currentDialogContent.style.filter = 'blur(3px)';
+                }
+
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.className = 'details-loading-overlay';
+                loadingOverlay.innerHTML = `
+                    <div class="details-loading-spinner"></div>
+                    <div class="details-loading-text">加载中...</div>
+                `;
+                if (window._currentDialogContain) {
+                    const dialog = window._currentDialogContain.querySelector('.details-dialog');
+                    if (dialog) {
+                        dialog.appendChild(loadingOverlay);
+                    }
+                }
+
+                try {
+                    const metadata = await extractMetadata(assocUrl);
+                    if (metadata) {
+                        showPluginDetails({ url: assocUrl, ...metadata, source: source });
+                    }
+                } catch (error) {
+                    console.error('打开关联项详情失败:' + error);
+                    if (loadingOverlay && loadingOverlay.parentNode) {
+                        loadingOverlay.remove();
+                    }
+                    if (window._currentDialogContent) {
+                        window._currentDialogContent.style.filter = '';
+                    }
+                    iziToast.show({
+                        timeout: 3000,
+                        message: '读取关联项时出错'
+                    });
+                }
+            });
+        });
+
+        return { ...associationCheckResult, hasContent: Object.keys(details).length > 0 };
+    } catch (error) {
+        console.error('渲染关联项失败:', error);
+        container.innerHTML = '';
+        return { details: {}, hasContent: false };
     }
 }
 
@@ -1254,10 +1511,10 @@ async function loadPluginManagementPage() {
                     <div class='plugin_management_header'>
                         <h3>Npplications</h3>
                         <button class='toggle_plugin_list'>
-                            <i class='iconfont icon-folding'></i>
+                            <i class='iconfont icon-unfolding'></i>
                         </button>
                     </div>
-                    <div class='plugin_list_table'>`;
+                    <div class='plugin_list_table expanded'>`;
 
         // 生成插件列表
         for (const plugin of plugins) {
@@ -1613,11 +1870,12 @@ function renderStoreTabs(categories) {
         tab.addEventListener('click', () => {
             document.querySelectorAll('#storeTabs .tab-items').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            renderPlugins(window.storeData[key] || []);
 
             $('#storeContent').css('display', 'flex');
             $('#manageContent').css('display', 'none');
             $('.store-button').css('display', 'none');
+
+            renderPlugins(window.storeData[key] || []);
         });
 
         tabsContainer.appendChild(tab);
@@ -1628,19 +1886,38 @@ async function renderPlugins(pluginsArray) {
     const contentContainer = document.getElementById('storeContent');
     if (!contentContainer) return;
 
-    // 渲染状态
-    if (window._renderingStorePlugins) return;
-    window._renderingStorePlugins = true;
-
     contentContainer.innerHTML = '';
 
-    // 创建中止控制
+    contentContainer.style.animation = 'none';
+    contentContainer.offsetHeight;
+    contentContainer.style.animation = 'fadeIn 0.45s ease';
+
+    const loadingElement = document.createElement('div');
+    loadingElement.className = 'store-loading';
+    loadingElement.innerHTML = `
+        <div class="store-loading-spinner"></div>
+        <i class="store-loading-icon iconfont icon-right1"></i>
+        <i class="store-loading-icon iconfont icon-wrong"></i>
+        <span class="store-loading-text">正在加载...</span>
+    `;
+    contentContainer.appendChild(loadingElement);
+
+    const pluginsContainer = document.createElement('div');
+    pluginsContainer.className = 'store-plugins-container';
+    contentContainer.appendChild(pluginsContainer);
+
+    window._renderingStorePlugins = true;
+
     const controller = new AbortController();
     window._lastStoreController?.abort();
     window._lastStoreController = controller;
 
-    pluginsArray.forEach(async (plugin) => {
-        if (controller.signal.aborted) return;
+    let loadedCount = 0;
+    let hasError = false;
+    const totalPlugins = pluginsArray.length;
+
+    for (const plugin of pluginsArray) {
+        if (controller.signal.aborted) break;
         try {
             const metadata = await extractMetadata(plugin.url);
             const pluginWithMetadata = {
@@ -1652,6 +1929,7 @@ async function renderPlugins(pluginsArray) {
 
             const pluginItem = document.createElement('div');
             pluginItem.className = 'plugin-item';
+            pluginItem.style.animationDelay = `${loadedCount * 0.05}s`;
             pluginItem.innerHTML = `
                     <img src="${cleanUrl(pluginWithMetadata.icon || '')}" alt="${pluginWithMetadata.name || '插件'}" class="plugin-icon">
                     <div class="plugin-info">
@@ -1661,17 +1939,41 @@ async function renderPlugins(pluginsArray) {
                 `;
 
             if (!controller.signal.aborted) {
-                contentContainer.appendChild(pluginItem);
+                pluginsContainer.appendChild(pluginItem);
             }
             pluginItem.addEventListener('click', () => showPluginDetails(pluginWithMetadata));
+
+            loadedCount++;
         } catch (error) {
             if (error.name !== 'AbortError') {
                 console.error(`加载插件失败: ${plugin.url}`, error);
+                hasError = true;
             }
+            loadedCount++;
         }
-    });
+    }
 
     window._renderingStorePlugins = false;
+
+    const loadingText = loadingElement.querySelector('.store-loading-text');
+    if (hasError) {
+        loadingElement.classList.add('error');
+        loadingText.textContent = '加载失败！';
+    } else {
+        loadingElement.classList.add('success');
+        loadingText.textContent = '已加载完成！';
+    }
+
+    if (!hasError) {
+        setTimeout(() => {
+            loadingElement.classList.add('fade-out');
+            setTimeout(() => {
+                if (loadingElement.parentNode) {
+                    loadingElement.remove();
+                }
+            }, 500);
+        }, 2000);
+    }
 }
 
 function showPluginDetails(pluginWithMetadata) {
@@ -1682,8 +1984,19 @@ function showPluginDetails(pluginWithMetadata) {
 
     // 创建详情对话框
     const page = document.getElementById('storePage');
+    const dialogContain = document.createElement('div');
+    dialogContain.className = 'dialog-container';
+
     const dialog = document.createElement('div');
     dialog.className = 'details-dialog';
+
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'details-loading-overlay';
+    loadingOverlay.innerHTML = `
+        <div class="details-loading-spinner"></div>
+        <div class="details-loading-text">加载中...</div>
+    `;
+
     dialog.innerHTML = `
             <div class="dialog-content">
                 <div class="plugin-detail-header">
@@ -1725,6 +2038,15 @@ function showPluginDetails(pluginWithMetadata) {
                     </div>
                     <div class="detail-section">
                         <div class="detail-header">
+                            <i class="iconfont icon-folding on"></i>
+                            <h3>关联</h3>
+                        </div>
+                        <div class="detail-content expanded">
+                            <div id="associations-container" translate="none"></div>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-header">
                             <i class="iconfont icon-folding"></i>
                             <h3>截图</h3>
                         </div>
@@ -1732,9 +2054,6 @@ function showPluginDetails(pluginWithMetadata) {
                             <div class="screenshots" translate="none">
                         ${(() => {
             const screenshots = pluginWithMetadata.screen || pluginWithMetadata.screenshots || [];
-            if (screenshots.length === 0) {
-                return '<div class="no-screenshots">暂时没有截图</div>';
-            }
             return (Array.isArray(screenshots) ? screenshots : [screenshots])
                 .flatMap(shot => shot.toString().split(',').map(url => url.trim().replace(/[\[\]]/g, '')))
                 .map(url => `
@@ -1748,18 +2067,46 @@ function showPluginDetails(pluginWithMetadata) {
             </div>
         `;
 
-    const btn = document.createElement('div');
-    btn.className = 'dialog-btn';
-    btn.innerHTML = `
-            <div class="dialog-cancel">返回</div>
-            <div class="dialog-install" data-plugin-url="${cleanUrl(pluginWithMetadata.url)}">安装</div>
-        `;
+    dialog.appendChild(loadingOverlay);
+    dialogContain.appendChild(dialog);
+    page.appendChild(dialogContain);
 
-    // 依赖项详细页
+    const dialogContent = dialog.querySelector('.dialog-content');
+    dialogContent.style.filter = 'blur(3px)';
+
+    window._currentDialogContent = dialogContent;
+    window._currentDialogContain = dialogContain;
+
     async function showDependencyDetailsDialog() {
         const dependencies = parseDependencies(pluginWithMetadata.dependencies || '');
         const dependenciesContainer = dialog.querySelector('#dependencies-container');
+        const dependenciesSection = dialog.querySelector('#dependencies-container').closest('.detail-section');
         const dependencyCheckResult = await renderDependencies(dependenciesContainer, dependencies, pluginWithMetadata.source || '');
+
+        const associations = parseAssociations(pluginWithMetadata.associations || '');
+        const associationsContainer = dialog.querySelector('#associations-container');
+        const associationsSection = dialog.querySelector('#associations-container').closest('.detail-section');
+        const associationCheckResult = await renderAssociations(associationsContainer, associations, pluginWithMetadata.source || '');
+
+        if (loadingOverlay && loadingOverlay.parentNode) {
+            loadingOverlay.remove();
+        }
+
+        dialogContent.style.filter = '';
+
+        if (!dependencyCheckResult.hasContent && dependenciesSection) {
+            dependenciesSection.style.display = 'none';
+        }
+        if (!associationCheckResult.hasContent && associationsSection) {
+            associationsSection.style.display = 'none';
+        }
+
+        // 截图处理
+        const screenshots = pluginWithMetadata.screen || pluginWithMetadata.screenshots || [];
+        const screenshotsSection = dialog.querySelector('.screenshots').closest('.detail-section');
+        if (screenshots.length === 0 && screenshotsSection) {
+            screenshotsSection.style.display = 'none';
+        }
 
         // 按钮
         const btn = document.createElement('div');
@@ -1785,16 +2132,8 @@ function showPluginDetails(pluginWithMetadata) {
             });
         }
 
-        dialogContain.appendChild(dialog);
         dialogContain.appendChild(btn);
-        page.appendChild(dialogContain);
-    }
 
-    const dialogContain = document.createElement('div');
-    dialogContain.className = 'dialog-container';
-
-    // 加载依赖项详细页
-    showDependencyDetailsDialog().then(() => {
         $('.detail-header', dialog).on('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -1808,7 +2147,12 @@ function showPluginDetails(pluginWithMetadata) {
                 $icon.toggleClass('on');
             }
         });
-    }).catch(error => {
+    }
+
+    showDependencyDetailsDialog().catch(error => {
+        if (loadingOverlay && loadingOverlay.parentNode) {
+            loadingOverlay.remove();
+        }
         iziToast.show({
             timeout: 3000,
             message: '加载插件时出错'
