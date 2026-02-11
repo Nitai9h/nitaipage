@@ -1,13 +1,78 @@
-#manageContent,
-.store-button,
-.store-item,
-.dialog-content,
-#storeContent {
-    animation: fade;
-    -webkit-animation: fade 0.45s;
-    -moz-animation: fade 0.45s;
-    -o-animation: fade 0.45s;
-    -ms-animation: fade 0.45s;
+/* 动画 */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes successFlash {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+}
+
+#storePage {
+    width: 100%;
+    height: 100%;
+}
+
+.pluginMainConts {
+    height: 100%;
+    position: relative;
+}
+
+.pluginMainConts .set_tip {
+    height: min-content;
+}
+
+.mainCont.selected,
+.store-item.productss {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+#manageContent {
+    gap: 10px;
+}
+
+.store .store-item .content {
+    display: none;
+}
+
+#noPluginSetting {
+    font-size: 2vw;
+    height: 100%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* 对话框基础样式 */
@@ -25,21 +90,88 @@
     z-index: 9999;
 }
 
-/* 布局样式 */
-.mainCont.selected,
-.store-item.productss {
+/* 对话框容器 */
+.dialog-container {
+    width: 100%;
+    height: 100%;
     display: flex;
+    justify-content: space-around;
     flex-direction: column;
     flex-wrap: nowrap;
+}
+
+.dialog-btn {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
     justify-content: center;
 }
 
-.pluginMainConts {
-    height: 100%;
+.dialog-cancel,
+.dialog-install {
+    width: 25%;
+    display: flex;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--main-background-color);
+    margin: 0 20px;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
 }
 
-.pluginMainConts .set_tip {
-    height: min-content;
+.dialog-cancel {
+    z-index: 101;
+}
+
+.dialog-cancel:hover,
+.dialog-install:hover {
+    cursor: pointer;
+    background: var(--main-background-hover-color);
+}
+
+.dialog-cancel:active,
+.dialog-install:active {
+    transform: scale(0.90);
+    background: var(--main-background-active-color);
+}
+
+/* 详情对话框 */
+.details-dialog {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    animation: fade;
+    -webkit-animation: fade 0.5s;
+    -moz-animation: fade 0.5s;
+    -o-animation: fade 0.5s;
+    -ms-animation: fade 0.5s;
+}
+
+.con:has(.entry-items.active.on) .details-dialog>.dialog-content,
+.con:has(.entry-items.active.on) .order-dialog>.dialog-content>.plugin-list {
+    height: 390px;
+}
+
+.details-dialog .dialog-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 310px;
+    width: 100%;
+    margin-right: 10px;
+}
+
+#manageContent,
+.store-button,
+.store-item,
+.dialog-content,
+#storeContent {
+    animation: fade;
+    -webkit-animation: fade 0.45s;
+    -moz-animation: fade 0.45s;
+    -o-animation: fade 0.45s;
+    -ms-animation: fade 0.45s;
 }
 
 /* 插件列表 */
@@ -87,6 +219,48 @@
     cursor: pointer;
     opacity: 0;
     animation: fadeIn 0.3s ease forwards;
+}
+
+/* 插件图标 */
+.plugin-icon,
+.plugin_icon img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    margin-right: 15px;
+    object-fit: cover;
+    animation: fade;
+    -webkit-animation: fade 0.8s;
+    -moz-animation: fade 0.8s;
+    -o-animation: fade 0.8s;
+    -ms-animation: fade 0.8s;
+}
+
+/* 拖动控制控件 */
+.drag-handle {
+    margin-right: 10px;
+    cursor: move;
+    color: var(--main-text-color);
+}
+
+.drag-handle .iconfont {
+    font-size: 32px;
+}
+
+/* 插件信息 */
+.plugin-info {
+    flex: 1;
+}
+
+.plugin-info strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.plugin-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
 }
 
 /* 插件间关联 */
@@ -144,22 +318,32 @@
 }
 
 .plugin-item.plugin-relation-item.info {
-    border: 1px solid #2196F3;
+    border: 1px solid #ffffff;
 }
 
-/* 插件图标 */
-.plugin-icon,
-.plugin_icon img {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    margin-right: 15px;
-    object-fit: cover;
-    animation: fade;
-    -webkit-animation: fade 0.8s;
-    -moz-animation: fade 0.8s;
-    -o-animation: fade 0.8s;
-    -ms-animation: fade 0.8s;
+.plugin-item.plugin-relation-item[data-disabled="true"] {
+    border: 1px solid #ffffff;
+}
+
+.plugin-item.plugin-relation-item[data-disabled="true"]:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.translate-installed-hint {
+    font-size: medium;
+    color: var(--main-text-color);
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.translate-installed-text {
+    font-size: small;
+    color: #4CAF50;
+    margin-top: 5px;
+    font-weight: bold;
 }
 
 /* 详情区域 */
@@ -320,33 +504,6 @@
     border-radius: 4px;
 }
 
-/* 拖动控制 */
-.drag-handle {
-    margin-right: 10px;
-    cursor: move;
-    color: var(--main-text-color);
-}
-
-.drag-handle .iconfont {
-    font-size: 32px;
-}
-
-/* 插件信息 */
-.plugin-info {
-    flex: 1;
-}
-
-.plugin-info strong {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.plugin-info p {
-    margin: 0;
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
 /* 按钮组 */
 .store-button {
     display: flex;
@@ -385,102 +542,112 @@
     background: var(--main-button-active-color);
 }
 
-/* 详情对话框 */
-.details-dialog {
+.toggle_plugin_list,
+.toggle_translate_list,
+.toggle_store_sources {
+    background: var(--main-button-color);
+    color: var(--main-text-color);
+    border: none;
+    border-radius: 4px;
+    width: 36px;
+    height: 36px;
     display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    animation: fade;
-    -webkit-animation: fade 0.5s;
-    -moz-animation: fade 0.5s;
-    -o-animation: fade 0.5s;
-    -ms-animation: fade 0.5s;
-}
-
-.con:has(.entry-items.active.on) .details-dialog>.dialog-content,
-.con:has(.entry-items.active.on) .order-dialog>.dialog-content>.plugin-list {
-    height: 390px;
-}
-
-.details-dialog .dialog-content {
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: 310px;
-    width: 100%;
-    margin-right: 10px;
-}
-
-/* 对话框容器 */
-.dialog-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-around;
-    flex-direction: column;
-    flex-wrap: nowrap;
-}
-
-.dialog-btn {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.dialog-cancel,
-.dialog-install {
-    width: 25%;
+.toggle_plugin_list:hover,
+.toggle_translate_list:hover,
+.toggle_store_sources:hover {
+    background: var(--main-button-hover-color);
+    transform: scale(1.05);
+}
+
+.toggle_plugin_list:active,
+.toggle_translate_list:active,
+.toggle_store_sources:active {
+    transform: scale(0.95);
+}
+
+#entryPluginSettings,
+.reloadPluginSettings-btn {
     display: flex;
     height: 40px;
     border-radius: 8px;
     background: var(--main-background-color);
-    margin: 0 20px;
     justify-content: center;
     align-items: center;
     transition: 0.3s;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
 }
 
-.dialog-cancel:hover,
-.dialog-install:hover {
-    cursor: pointer;
-    background: var(--main-background-hover-color);
-}
-
-.dialog-cancel:active,
-.dialog-install:active {
+#entryPluginSettings:active,
+.reloadPluginSettings-btn:active {
     transform: scale(0.90);
     background: var(--main-background-active-color);
+    transition: 0.3s;
 }
 
-#manageContent {
-    gap: 10px
+#entryPluginSettings:hover,
+.reloadPluginSettings-btn:hover {
+    cursor: pointer;
+    background: var(--main-background-hover-color);
+    transition: 0.3s;
 }
 
+/* 拖动控制 */
+.sortable-ghost {
+    opacity: 0.5;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.sortable-chosen {
+    background-color: rgba(52, 152, 219, 0.2);
+    border: 1px dashed #3498db;
+}
+
+.sortable-drag {
+    opacity: 0.8;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.entry-pluginSettings {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* 加载状态 */
 .store-loading {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
-    backdrop-filter: var(--main-box-gauss-plus);
-    -webkit-backdrop-filter: var(--main-box-gauss-plus);
+    background: var(--main-background-color);
     border-radius: 6px;
     font-size: 0.85rem;
     color: var(--main-text-color);
     margin-bottom: 10px;
     opacity: 0;
     animation: fadeIn 0.3s ease forwards;
-    transition: opacity 0.5s ease, max-height 0.5s ease;
+    transition: opacity 0.3s ease, max-height 0.5s ease;
 }
 
 .store-loading.fade-out {
     opacity: 0;
+    transform: scale(0);
     max-height: 0;
     padding: 0;
     margin: 0;
     overflow: hidden;
-    animation: fadeOut 0.3s ease forwards;
+    transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
 }
 
 .store-loading-spinner {
@@ -495,12 +662,6 @@
 .store-loading.success .store-loading-spinner,
 .store-loading.error .store-loading-spinner {
     display: none;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 .store-loading-icon {
@@ -518,39 +679,6 @@
     animation: successFlash 0.5s ease;
 }
 
-@keyframes successFlash {
-
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.3);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0;
-    }
-}
-
-/* 插件详情页全屏loading */
 .details-loading-overlay {
     position: absolute;
     top: 0;
@@ -569,7 +697,6 @@
 }
 
 .details-loading-overlay.fade-out {
-    opacity: 1;
     animation: fadeOut 0.3s ease forwards;
 }
 
@@ -587,9 +714,21 @@
     color: var(--main-text-color);
     font-size: 0.9rem;
     opacity: 0.8;
+    text-shadow: 0 0 10px var(--body-background-color);
 }
 
 /* 插件管理 */
+.store_sources_management,
+.plugin_management {
+    border-radius: 8px;
+    background: var(--main-background-color);
+    padding: 10px;
+    --border-color: rgba(255, 255, 255, 0.1);
+    margin-right: 5px;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
+}
+
 .plugin_management_header {
     display: flex;
     justify-content: space-between;
@@ -602,35 +741,18 @@
     margin-left: 5px;
 }
 
-.toggle_plugin_list {
-    background: var(--main-button-color);
-    color: var(--main-text-color);
-    border: none;
-    border-radius: 4px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.toggle_plugin_list:hover {
-    background: var(--main-button-hover-color);
-    transform: scale(1.05);
-}
-
-.toggle_plugin_list:active {
-    transform: scale(0.95);
-}
-
 .plugin_list_table {
     width: 100%;
     max-height: 0;
     overflow-y: auto;
+    overflow-x: hidden;
     transition: max-height 0.5s cubic-bezier(0, 0.5, 0.6, 1);
     margin-top: 5px;
+}
+
+.plugin_list_table:not(.expanded) {
+    max-height: 0;
+    overflow: hidden;
 }
 
 .plugin_list_table.expanded {
@@ -728,95 +850,10 @@
 }
 
 .plugin_item.coreNpp .plugin_actions .uninstall_plugin .iconfont {
-    color: var(--border-bottom-color-hover)
+    color: var(--border-bottom-color-hover);
 }
 
-/* 页面布局 */
-#storePage {
-    width: 100%;
-    height: 100%;
-}
-
-.pluginMainConts {
-    position: relative;
-}
-
-/* 排序库样式 */
-.sortable-ghost {
-    opacity: 0.5;
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-.sortable-chosen {
-    background-color: rgba(52, 152, 219, 0.2);
-    border: 1px dashed #3498db;
-}
-
-.sortable-drag {
-    opacity: 0.8;
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.entry-pluginSettings {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px;
-    flex-direction: row;
-    align-items: center;
-}
-
-#entryPluginSettings,
-.reloadPluginSettings-btn {
-    display: flex;
-    height: 40px;
-    border-radius: 8px;
-    background: var(--main-background-color);
-    justify-content: center;
-    align-items: center;
-    transition: 0.3s;
-    box-shadow: var(--main-search-shadow);
-    -webkit-box-shadow: var(--main-search-shadow);
-}
-
-#entryPluginSettings:active,
-.reloadPluginSettings-btn:active {
-    transform: scale(0.90);
-    background: var(--main-background-active-color);
-    transition: 0.3s;
-}
-
-#entryPluginSettings:hover,
-.reloadPluginSettings-btn:hover {
-    cursor: pointer;
-    background: var(--main-background-hover-color);
-    transition: 0.3s;
-}
-
-#noPluginSetting {
-    font-size: 2vw;
-    height: 100%;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-}
-
-.store .store-item .content {
-    display: none;
-}
-
-/* 源管理样式 */
-.store_sources_management,
-.plugin_management {
-    border-radius: 8px;
-    background: var(--main-background-color);
-    padding: 10px;
-    --border-color: rgba(255, 255, 255, 0.1);
-    margin-right: 5px;
-    box-shadow: var(--main-search-shadow);
-    -webkit-box-shadow: var(--main-search-shadow);
-}
-
+/* 商店源管理 */
 .store_sources_header {
     display: flex;
     justify-content: space-between;
@@ -827,29 +864,6 @@
     color: var(--main-text-color);
     margin: 0;
     margin-left: 5px;
-}
-
-.toggle_store_sources {
-    background: var(--main-button-color);
-    color: var(--main-text-color);
-    border: none;
-    border-radius: 4px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.toggle_store_sources:hover {
-    background: var(--main-button-hover-color);
-    transform: scale(1.05);
-}
-
-.toggle_store_sources:active {
-    transform: scale(0.95);
 }
 
 .store_sources_content {

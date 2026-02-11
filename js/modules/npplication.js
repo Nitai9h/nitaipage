@@ -5,17 +5,250 @@ Github：https://github.com/Nitai9h/npplicaiton
 */
 const DB_NAME = 'nppstore';
 const NPP_STORE = 'Npp';
+const NITAI_PAGE_DB_NAME = 'nitaiPageDB';
+const NITAI_PAGE_STORE = 'nitaiPage';
+const NPP_DB_NAME = 'nppDB';
 
-/**
-* JS文件校验
-* @param {string} url
-* @returns {Promise<boolean>} 校验结果 true/false
-*/
+function openIndexedDB(dbName, version, upgradeCallback) {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, version);
+
+        if (upgradeCallback) {
+            request.onupgradeneeded = (event) => {
+                upgradeCallback(event.target.result);
+            };
+        }
+
+        request.onsuccess = (event) => {
+            resolve(event.target.result);
+        };
+
+        request.onerror = (event) => {
+            console.error(`打开数据库 ${dbName} 失败: ` + event.target.error.message);
+            reject(event.target.error);
+        };
+    });
+}
+
+function getFromIndexedDB(dbName, storeName, key, version = 1) {
+    return new Promise((resolve, reject) => {
+        openIndexedDB(dbName, version).then(db => {
+            const transaction = db.transaction(storeName, 'readonly');
+            const store = transaction.objectStore(storeName);
+            const request = store.get(key);
+
+            request.onsuccess = () => {
+                db.close();
+                resolve(request.result);
+            };
+
+            request.onerror = () => {
+                console.error(`从 ${storeName} 获取数据失败`);
+                db.close();
+                reject(request.error);
+            };
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
+function putToIndexedDB(dbName, storeName, data, version = 1) {
+    return new Promise((resolve, reject) => {
+        openIndexedDB(dbName, version).then(db => {
+            const transaction = db.transaction(storeName, 'readwrite');
+            const store = transaction.objectStore(storeName);
+            const request = store.put(data);
+
+            request.onsuccess = () => {
+                db.close();
+                resolve();
+            };
+
+            request.onerror = () => {
+                console.error(`保存数据到 ${storeName} 失败`);
+                db.close();
+                reject(request.error);
+            };
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
+function deleteFromIndexedDB(dbName, storeName, key, version = 1) {
+    return new Promise((resolve, reject) => {
+        openIndexedDB(dbName, version).then(db => {
+            const transaction = db.transaction(storeName, 'readwrite');
+            const store = transaction.objectStore(storeName);
+            const request = store.delete(key);
+
+            request.onsuccess = () => {
+                db.close();
+                resolve();
+            };
+
+            request.onerror = () => {
+                console.error(`从 ${storeName} 删除数据失败`);
+                db.close();
+                reject(request.error);
+            };
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
+function countFromIndexedDB(dbName, storeName, version = 1) {
+    return new Promise((resolve, reject) => {
+        openIndexedDB(dbName, version).then(db => {
+            const transaction = db.transaction(storeName, 'readonly');
+            const store = transaction.objectStore(storeName);
+            const request = store.count();
+
+            request.onsuccess = () => {
+                db.close();
+                resolve(request.result);
+            };
+
+            request.onerror = () => {
+                console.error(`统计 ${storeName} 数据失败`);
+                db.close();
+                reject(request.error);
+            };
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
+// 添加加载遮罩层
+function showLoadingOverlay() {
+    if (window._currentDialogContent) {
+        window._currentDialogContent.style.filter = 'blur(3px)';
+    }
+
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'details-loading-overlay';
+    loadingOverlay.innerHTML = `
+        <div class="details-loading-spinner"></div>
+        <div class="details-loading-text">加载中...</div>
+    `;
+
+    if (window._currentDialogContain) {
+        const dialog = window._currentDialogContain.querySelector('.details-dialog');
+        if (dialog) {
+            dialog.appendChild(loadingOverlay);
+        }
+    }
+    return loadingOverlay;
+}
+
+// 隐藏加载遮罩层
+function hideLoadingOverlay(loadingOverlay) {
+    if (loadingOverlay && loadingOverlay.parentNode) {
+        loadingOverlay.classList.add('fade-out');
+        setTimeout(() => {
+            if (loadingOverlay && loadingOverlay.parentNode) {
+                loadingOverlay.remove();
+            }
+        }, 300);
+    }
+    if (window._currentDialogContent) {
+        window._currentDialogContent.style.filter = '';
+    }
+}
+
+// 隐藏指定 ID 的 toast
+function hideToastById(toastId) {
+    if ($(toastId).length) {
+        iziToast.hide({}, toastId);
+    }
+}
+
+var npp = npp || {}; // 定义一个命名空间
+
+// 获取当前npp的元数据
+async function getCurrentPluginMetadata() {
+    try {
+        const scriptUrl = document.currentScript.src;
+        return await extractMetadata(scriptUrl);
+    } catch (error) {
+        console.error('获取当前插件元数据失败:', error);
+        return undefined;
+    }
+}
+
+npp.init = function (pluginId) {
+    return new Promise((resolve, reject) => {
+        openIndexedDB(NPP_DB_NAME, 1, (db) => {
+            if (!db.objectStoreNames.contains(pluginId)) {
+                db.createObjectStore(pluginId, { keyPath: 'key' });
+            }
+        }).then(db => {
+            db.close();
+            resolve();
+        }).catch(error => {
+            console.error('插件存储数据库初始化失败:', error);
+            reject(error);
+        });
+    });
+}
+
+npp.set = async function (key, value) {
+    const metadata = await getCurrentPluginMetadata();
+    if (!metadata || !metadata.id) return false;
+
+    try {
+        await npp.init(metadata.id);
+        return putToIndexedDB(NPP_DB_NAME, metadata.id, { key, value }, 1)
+            .then(() => true)
+            .catch(() => false);
+    } catch (error) {
+        console.error('设置插件存储失败:', error);
+        return false;
+    }
+}
+
+npp.get = async function (key) {
+    const metadata = await getCurrentPluginMetadata();
+    if (!metadata || !metadata.id) return undefined;
+
+    try {
+        await npp.init(metadata.id);
+        return getFromIndexedDB(NPP_DB_NAME, metadata.id, key, 1)
+            .then(result => result ? result.value : undefined)
+            .catch(() => undefined);
+    } catch (error) {
+        console.error('获取插件存储失败:', error);
+        return undefined;
+    }
+}
+
+npp.remove = async function (key) {
+    const metadata = await getCurrentPluginMetadata();
+    if (!metadata || !metadata.id) return false;
+
+    try {
+        await npp.init(metadata.id);
+        return deleteFromIndexedDB(NPP_DB_NAME, metadata.id, key, 1)
+            .then(() => true)
+            .catch(() => false);
+    } catch (error) {
+        console.error('删除插件存储失败:', error);
+        return false;
+    }
+}
+
+function cleanUrl(url) {
+    // 清理URL中的反引号和空格
+    return url.replace(/`/g, '').trim();
+}
+
 async function verifyJSUrl(url) {
     try {
         // 检查URL扩展名
         if (!url.endsWith('.js')) {
-            // 非 js 文件 --> false
             return false;
         }
 
@@ -29,7 +262,6 @@ async function verifyJSUrl(url) {
         // 提取 Content-Type (响应头)
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/javascript')) {
-            // 是 js 文件 --> true
             return true;
         }
 
@@ -41,12 +273,11 @@ async function verifyJSUrl(url) {
             cache: 'no-cache'
         });
 
+        // 检查 Content-Range
         const contentRange = rangeResponse.headers.get('content-range');
-        // 是 js 文件 --> true
         if (!!contentRange) {
             return true;
         };
-
     } catch (error) {
         console.error('Error verifying JS URL:', error);
         return false;
@@ -92,14 +323,25 @@ async function extractMetadata(url) {
         if (!metadata.name
             || !metadata.id
             || !metadata.version
-            || !metadata.time
         ) {
             console.error('缺少必要元数据字段');
             return;
         }
 
+        // 验证 translates
+        if (metadata.type === 'translate' && !metadata.translates) {
+            console.error('翻译插件缺少必要的 translates 字段');
+            return;
+        }
+
+        // 验证 time
+        if (metadata.type !== 'translate' && !metadata.time) {
+            console.error('缺少必要的 time 字段');
+            return;
+        }
+
         // 验证 id 格式
-        if (metadata.type !== 'coreNpp') {
+        if (metadata.type !== 'coreNpp' && metadata.type !== 'translate') {
             // UUID v4 格式
             const idPattern = /^([0-9]{13})_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
             const match = metadata.id.match(idPattern);
@@ -117,9 +359,14 @@ async function extractMetadata(url) {
         }
 
         // 验证 加载时机
-        if (!metadata.time || !['head', 'body'].includes(metadata.time.toLowerCase())) {
-            metadata.time = 'body'; // 默认
+        if (metadata.type !== 'translate') {
+            if (!metadata.time || !['head', 'body'].includes(metadata.time.toLowerCase())) {
+                metadata.time = 'body'; // 默认
+            }
         }
+
+        // translate: 不解析关联项和依赖项
+        const isTranslatePlugin = metadata.type === 'translate';
 
         return {
             name: metadata.name,
@@ -129,13 +376,14 @@ async function extractMetadata(url) {
             description: metadata.description || '未提供',
             author: metadata.author || '未知',
             type: metadata.type || '',
-            time: metadata.time.toLowerCase(),
+            time: isTranslatePlugin ? 'body' : metadata.time.toLowerCase(),
             icon: metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg',
             screen: metadata.screen || '',
             forceUpdate: metadata.forced || 'false',
             setting: metadata.setting || 'false',
-            dependencies: metadata.dependencies || '',
-            associations: metadata.associations || '',
+            dependencies: isTranslatePlugin ? '' : (metadata.dependencies || ''),
+            associations: isTranslatePlugin ? '' : (metadata.associations || ''),
+            translates: metadata.translates || '',
         };
     } catch (error) {
         console.error(error);
@@ -144,458 +392,258 @@ async function extractMetadata(url) {
 }
 
 /**
- * 解析依赖项字符串为对象
- * @param {string} dependenciesStr - 依赖项字符串
- * @returns {Object} 依赖项对象; 键为 URL,值为版本要求
+ * 解析关系项字符串为对象
+ * @param {string} relationStr - 关系项字符串
+ * @param {string} type - 类型: 'dependencies'/'associations'/'translates'
+ * @returns {Object} 关系项对象; 键为 URL,值为版本要求
  */
+function parseRelationItems(relationStr, type) {
+    try {
+        const cleanStr = relationStr.trim().replace(/^\[|\]$/g, '');
+        if (!cleanStr) {
+            return {};
+        }
+
+        const entries = cleanStr.split(',').map(entry => entry.trim());
+        const relations = {};
+
+        entries.forEach(entry => {
+            let match = entry.match(/`\s*([^`]+?)\s*`\s*:\s*`\s*([^`]+?)\s*`/);
+            let url = null;
+            let version = 'Latest';
+
+            if (match && match.length >= 3) {
+                url = match[1].trim().replace(/`/g, '');
+                version = match[2].trim().replace(/`/g, '');
+            } else {
+                match = entry.match(/`\s*([^`]+?)\s*`/);
+                if (match && match.length >= 2) {
+                    url = match[1].trim().replace(/`/g, '');
+                } else {
+                    const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+                    console.warn(`无法解析的${typeNames[type]}:${entry}`);
+                    return;
+                }
+            }
+
+            relations[url] = version;
+        });
+        return relations;
+    } catch (error) {
+        const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+        console.error(`${typeNames[type]}解析失败:` + error);
+        return {};
+    }
+}
+
 function parseDependencies(dependenciesStr) {
-    try {
-        // 移除前后的括号和空格
-        const cleanStr = dependenciesStr.trim().replace(/^\[|\]$/g, '');
-        if (!cleanStr) {
-            return {};
-        }
-
-        // 分割多个依赖项
-        const depEntries = cleanStr.split(',').map(entry => entry.trim());
-        const dependencies = {};
-
-        // 解析每个依赖项
-        depEntries.forEach(entry => {
-            // 标准格式 [`url`:`version`]
-            let match = entry.match(/`\s*([^`]+?)\s*`\s*:\s*`\s*([^`]+?)\s*`/);
-            let depUrl = null;
-            let version = 'Latest'; // 默认Latest
-
-            // 标准格式
-            if (match && match.length >= 3) {
-                depUrl = match[1].trim().replace(/`/g, '');
-                version = match[2].trim().replace(/`/g, '');
-            } else {
-                // [`URL`]
-                match = entry.match(/`\s*([^`]+?)\s*`/);
-                if (match && match.length >= 2) {
-                    depUrl = match[1].trim().replace(/`/g, '');
-                } else {
-                    console.warn('无法解析的依赖项:' + entry);
-                    return;
-                }
-            }
-
-            dependencies[depUrl] = version;
-        });
-        return dependencies;
-    } catch (error) {
-        console.error('依赖项解析失败:' + error);
-        return {};
-    }
+    return parseRelationItems(dependenciesStr, 'dependencies');
 }
 
-/**
- * 解析关联项字符串为对象
- * @param {string} associationsStr - 关联项字符串
- * @returns {Object} 关联项对象; 键为 URL,值为版本要求
- */
 function parseAssociations(associationsStr) {
+    return parseRelationItems(associationsStr, 'associations');
+}
+
+function parseTranslates(translatesStr) {
+    return parseRelationItems(translatesStr, 'translates');
+}
+
+// 检查关联项或依赖项是否满足要求
+async function checkRelationItems(relations, type) {
+    if (!relations || Object.keys(relations).length === 0) {
+        return type === 'dependencies' ? { status: true, details: {} } : { details: {} };
+    }
+
     try {
-        // 移除前后的括号和空格
-        const cleanStr = associationsStr.trim().replace(/^\[|\]$/g, '');
-        if (!cleanStr) {
-            return {};
+        const plugins = await getPluginsList();
+        const details = {};
+        let allSatisfied = true;
+
+        for (const [url, requiredVersion] of Object.entries(relations)) {
+            try {
+                const metadata = await extractMetadata(url);
+                if (!metadata || !metadata.id) {
+                    const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+                    console.error(`无法获取${typeNames[type]}有效元数据:` + url);
+                    details[url] = { status: 'failed', message: `获取${typeNames[type]}信息失败` };
+                    if (type === 'dependencies') allSatisfied = false;
+                    continue;
+                }
+
+                let actualRequiredVersion = requiredVersion;
+                if (requiredVersion.toLowerCase() === 'latest') {
+                    actualRequiredVersion = metadata.version;
+                }
+
+                const installedPlugin = plugins.find(p => p.id === metadata.id);
+                if (!installedPlugin) {
+                    const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+                    const messages = { dependencies: '未安装', associations: '可安装', translates: '可安装' };
+                    details[url] = {
+                        status: 'not_installed',
+                        message: messages[type],
+                        requiredVersion: requiredVersion,
+                        metadata: metadata
+                    };
+                    if (type === 'dependencies') allSatisfied = false;
+                    continue;
+                }
+
+                const versionCompare = compareVersions(installedPlugin.version, actualRequiredVersion);
+
+                if (versionCompare < 0) {
+                    const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+                    const messages = { dependencies: '需安装更新版本', associations: '有更版本可用', translates: '有新版本可用' };
+                    details[url] = {
+                        status: 'version_mismatch',
+                        message: messages[type],
+                        installedVersion: installedPlugin.version,
+                        requiredVersion: requiredVersion,
+                        metadata: metadata
+                    };
+                    if (type === 'dependencies') allSatisfied = false;
+                } else {
+                    details[url] = {
+                        status: 'satisfied',
+                        message: '已安装',
+                        installedVersion: installedPlugin.version,
+                        requiredVersion: requiredVersion,
+                        metadata: metadata
+                    };
+                }
+            } catch (error) {
+                const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+                console.error(`检查${typeNames[type]}失败:` + url, error);
+                details[url] = { status: 'failed', message: `检查${typeNames[type]}时出错` };
+                if (type === 'dependencies') allSatisfied = false;
+            }
         }
 
-        // 分割多个关联项
-        const assocEntries = cleanStr.split(',').map(entry => entry.trim());
-        const associations = {};
-
-        // 解析每个关联项
-        assocEntries.forEach(entry => {
-            // 标准格式 [`url`:`version`]
-            let match = entry.match(/`\s*([^`]+?)\s*`\s*:\s*`\s*([^`]+?)\s*`/);
-            let assocUrl = null;
-            let version = 'Latest'; // 默认Latest
-
-            // 标准格式
-            if (match && match.length >= 3) {
-                assocUrl = match[1].trim().replace(/`/g, '');
-                version = match[2].trim().replace(/`/g, '');
-            } else {
-                // [`URL`]
-                match = entry.match(/`\s*([^`]+?)\s*`/);
-                if (match && match.length >= 2) {
-                    assocUrl = match[1].trim().replace(/`/g, '');
-                } else {
-                    console.warn('无法解析的关联项:' + entry);
-                    return;
-                }
-            }
-
-            associations[assocUrl] = version;
-        });
-        return associations;
+        return type === 'dependencies' ? { status: allSatisfied, details: details } : { details: details };
     } catch (error) {
-        console.error('关联项解析失败:' + error);
-        return {};
+        const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+        console.error(`${typeNames[type]}检查过程中发生错误:`, error);
+        return type === 'dependencies' ? { status: false, details: {} } : { details: {} };
     }
 }
 
-/**
- * 检查依赖项状态
- * @param {Object} dependencies - 依赖项对象; 键为 URL,值为版本要求
- * @returns {Promise<{status: boolean, details: Object}>} - 对象; 包含整体状态和每个依赖项状态
- */
 async function checkDependencies(dependencies) {
-
-    // 无依赖项
-    if (!dependencies || Object.keys(dependencies).length === 0) {
-        return { status: true, details: {} };
-    }
-
-    try {
-        const plugins = await getPluginsList();
-
-        const details = {};
-        let allDependenciesMet = true;
-
-        // 检查每个依赖项
-        for (const [depUrl, requiredVersion] of Object.entries(dependencies)) {
-
-            try {
-                // 获取依赖项的元数据
-                const depMetadata = await extractMetadata(depUrl);
-                if (!depMetadata || !depMetadata.id) {
-                    console.error('无法获取依赖项有效元数据:' + depUrl);
-                    details[depUrl] = { status: 'failed', message: '获取依赖项信息失败' };
-                    allDependenciesMet = false;
-                    continue;
-                }
-
-                // Latest: 解析远程版本
-                let actualRequiredVersion = requiredVersion;
-                if (requiredVersion.toLowerCase() === 'latest') {
-                    actualRequiredVersion = depMetadata.version;
-                }
-
-                // 检查依赖项是否已安装
-                const installedPlugin = plugins.find(p => p.id === depMetadata.id);
-                if (!installedPlugin) {
-                    details[depUrl] = {
-                        status: 'not_installed',
-                        message: '未安装',
-                        requiredVersion: requiredVersion,
-                        metadata: depMetadata
-                    };
-                    allDependenciesMet = false;
-                    continue;
-                }
-
-                // 检查版本
-                const versionCompare = compareVersions(installedPlugin.version, actualRequiredVersion);
-
-                if (versionCompare < 0) {
-                    details[depUrl] = {
-                        status: 'version_mismatch',
-                        message: '需安装更新版本',
-                        installedVersion: installedPlugin.version,
-                        requiredVersion: requiredVersion,
-                        metadata: depMetadata
-                    };
-                    allDependenciesMet = false;
-                } else {
-                    details[depUrl] = {
-                        status: 'satisfied',
-                        message: '已安装',
-                        installedVersion: installedPlugin.version,
-                        requiredVersion: requiredVersion,
-                        metadata: depMetadata
-                    };
-                }
-            } catch (error) {
-                console.error('检查依赖项失败:' + depUrl, error);
-                details[depUrl] = { status: 'failed', message: '检查依赖项时出错' };
-                allDependenciesMet = false;
-            }
-        }
-
-        return { status: allDependenciesMet, details: details };
-    } catch (error) {
-        console.error('依赖项检查过程中发生错误:', error);
-        return { status: false, details: {} };
-    }
+    return checkRelationItems(dependencies, 'dependencies');
 }
 
-/**
- * 检查关联项状态
- * @param {Object} associations - 关联项对象; 键为 URL,值为版本要求
- * @returns {Promise<{details: Object}>} - 对象; 包含每个关联项状态
- */
 async function checkAssociations(associations) {
+    return checkRelationItems(associations, 'associations');
+}
 
-    // 无关联项
-    if (!associations || Object.keys(associations).length === 0) {
-        return { details: {} };
+async function checkTranslates(translates) {
+    return checkRelationItems(translates, 'translates');
+}
+
+// 渲染关联项
+async function renderRelationItems(container, relations, type, source = '') {
+    if (!relations || Object.keys(relations).length === 0) {
+        container.innerHTML = '';
+        return type === 'dependencies' ? { status: true, details: {}, hasContent: false } : { details: {}, hasContent: false };
     }
 
     try {
-        const plugins = await getPluginsList();
+        const checkResult = type === 'dependencies' ? await checkDependencies(relations) :
+            type === 'associations' ? await checkAssociations(relations) : await checkTranslates(relations);
+        const details = checkResult.details;
 
-        const details = {};
+        let html = '<div class="plugin-relation-list">';
+        if (Object.keys(details).length > 0) {
+            const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+            const versionLabels = { dependencies: '所需版本', associations: '推荐版本', translates: '已安装' };
 
-        // 检查每个关联项
-        for (const [assocUrl, requiredVersion] of Object.entries(associations)) {
-
-            try {
-                // 获取关联项的元数据
-                const assocMetadata = await extractMetadata(assocUrl);
-                if (!assocMetadata || !assocMetadata.id) {
-                    console.error('无法获取关联项有效元数据:' + assocUrl);
-                    details[assocUrl] = { status: 'failed', message: '获取关联项信息失败' };
-                    continue;
+            if (type === 'translates') {
+                const hasAnyInstalled = Object.values(details).some(d => d.status === 'satisfied');
+                if (hasAnyInstalled) {
+                    html += `
+                    <div class="translate-installed-hint"><i class="iconfont icon-wrong"></i>已成功安装翻译，请手动卸载后再安装其它翻译项</div>
+                    `;
                 }
+            }
 
-                // Latest: 解析远程版本
-                let actualRequiredVersion = requiredVersion;
-                if (requiredVersion.toLowerCase() === 'latest') {
-                    actualRequiredVersion = assocMetadata.version;
-                }
+            for (const [url, itemDetails] of Object.entries(details)) {
+                const metadata = itemDetails.metadata || {};
+                const isInstalled = itemDetails.status === 'satisfied';
+                const isDisabled = type === 'translates' && Object.values(details).some(d => d.status === 'satisfied') && !isInstalled;
 
-                // 检查关联项是否已安装
-                const installedPlugin = plugins.find(p => p.id === assocMetadata.id);
-                if (!installedPlugin) {
-                    details[assocUrl] = {
-                        status: 'not_installed',
-                        message: '可安装',
-                        requiredVersion: requiredVersion,
-                        metadata: assocMetadata
-                    };
-                    continue;
-                }
+                const statusClass =
+                    itemDetails.status === 'satisfied' ? 'satisfied' :
+                        itemDetails.status === 'version_mismatch' ? (type === 'dependencies' ? 'warning' : 'info') :
+                            itemDetails.status === 'not_installed' ? (type === 'dependencies' ? 'error' : 'info') : 'failed';
 
-                // 检查版本
-                const versionCompare = compareVersions(installedPlugin.version, actualRequiredVersion);
-
-                if (versionCompare < 0) {
-                    details[assocUrl] = {
-                        status: 'version_mismatch',
-                        message: '有更版本可用',
-                        installedVersion: installedPlugin.version,
-                        requiredVersion: requiredVersion,
-                        metadata: assocMetadata
-                    };
-                } else {
-                    details[assocUrl] = {
-                        status: 'satisfied',
-                        message: '已安装',
-                        installedVersion: installedPlugin.version,
-                        requiredVersion: requiredVersion,
-                        metadata: assocMetadata
-                    };
-                }
-            } catch (error) {
-                console.error('检查关联项失败:' + assocUrl, error);
-                details[assocUrl] = { status: 'failed', message: '检查关联项时出错' };
+                html += `
+                    <div class="plugin-item plugin-relation-item ${statusClass}" data-url="${url}" ${isDisabled ? 'data-disabled="true"' : ''}>
+                        <img src="${metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg'}" alt="${metadata.name || typeNames[type]}" class="plugin-icon">
+                        <div class="plugin-info">
+                            <strong translate="none">${metadata.name || url}</strong>
+                            ${type === 'translates' ? `<p translate="none">${metadata.translates}</p>` : `
+                            <div class="detail-source">
+                                <p>${versionLabels[type]}: <span translate="none">${itemDetails.requiredVersion || 'Latest'}</span>
+                                <span translate="none">${itemDetails.installedVersion ? `<p class="sourceNonCritical">|</p> <p>已安装: <span translate="none">${itemDetails.installedVersion}</span></p>` : ''}</p>
+                            </div>
+                            `}
+                            ${isInstalled && type === 'translates' ? '<div class="translate-installed-text">已安装</div>' : ''}
+                            ${type !== 'translates' ? `<p class="status">${itemDetails.message}</p>` : ''}
+                        </div>
+                    </div>
+                `;
             }
         }
+        html += '</div>';
+        container.innerHTML = html;
 
-        return { details: details };
+        const errorMessages = { dependencies: '读取依赖项时出错', associations: '读取关联项时出错', translates: '读取翻译项时出错' };
+
+        container.querySelectorAll('.plugin-relation-item').forEach(item => {
+            const isDisabled = item.dataset.disabled === 'true';
+
+            if (isDisabled) {
+                item.style.pointerEvents = 'none';
+                item.style.opacity = '0.6';
+            } else {
+                item.addEventListener('click', async () => {
+                    const itemUrl = item.dataset.url;
+                    const loadingOverlay = showLoadingOverlay();
+
+                    try {
+                        const metadata = await extractMetadata(itemUrl);
+                        if (metadata) {
+                            showPluginDetails({ url: itemUrl, ...metadata, source: source });
+                        }
+                    } catch (error) {
+                        console.error(`${errorMessages[type]}:` + error);
+                        hideLoadingOverlay(loadingOverlay);
+                        iziToast.show({
+                            timeout: 3000,
+                            message: errorMessages[type]
+                        });
+                    }
+                });
+            }
+        });
+
+        return { ...checkResult, hasContent: Object.keys(details).length > 0 };
     } catch (error) {
-        console.error('关联项检查过程中发生错误:', error);
-        return { details: {} };
+        console.error(`渲染${type === 'dependencies' ? '依赖项' : type === 'associations' ? '关联项' : '翻译项'}失败:`, error);
+        container.innerHTML = '';
+        return type === 'dependencies' ? { status: false, details: {}, hasContent: false } : { details: {}, hasContent: false };
     }
 }
 
-/**
- * 加载依赖项
- * @param {HTMLElement} container - 需要依赖项的插件容器
- * @param {Object} dependencies - 依赖项对象
- * @param {string} source - 插件来源
- */
 async function renderDependencies(container, dependencies, source = '') {
-
-    if (!dependencies || Object.keys(dependencies).length === 0) {
-        container.innerHTML = '';
-        return { status: true, details: {}, hasContent: false };
-    }
-
-    try {
-        const dependencyCheckResult = await checkDependencies(dependencies);
-        const details = dependencyCheckResult.details;
-
-        let html = '<div class="plugin-relation-list">';
-        if (Object.keys(details).length === 0) {
-            html += '';
-        } else {
-            for (const [depUrl, depDetails] of Object.entries(details)) {
-                const metadata = depDetails.metadata || {};
-                const statusClass =
-                    depDetails.status === 'satisfied' ? 'satisfied' :
-                        depDetails.status === 'version_mismatch' ? 'warning' :
-                            depDetails.status === 'not_installed' ? 'error' : 'failed';
-
-                html += `
-                    <div class="plugin-item plugin-relation-item ${statusClass}" data-url="${depUrl}">
-                        <img src="${metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg'}" alt="${metadata.name || '依赖项'}" class="plugin-icon">
-                        <div class="plugin-info">
-                            <strong translate="none">${metadata.name || depUrl}</strong>
-                            <div class="detail-source">
-                                <p>所需版本: <span translate="none">${depDetails.requiredVersion || 'Latest'}</span>
-                                <span translate="none">${depDetails.installedVersion ? `<p class="sourceNonCritical">|</p> <p>已安装: <span translate="none">${depDetails.installedVersion}</span></p>` : ''}</p>
-                            </div>
-                            <p class="status" translate="none">${depDetails.message}</p>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-        html += '</div>';
-        container.innerHTML = html;
-
-        // 依赖点击
-        container.querySelectorAll('.plugin-relation-item').forEach(item => {
-            item.addEventListener('click', async () => {
-                const depUrl = item.dataset.url;
-
-                if (window._currentDialogContent) {
-                    window._currentDialogContent.style.filter = 'blur(3px)';
-                }
-
-                const loadingOverlay = document.createElement('div');
-                loadingOverlay.className = 'details-loading-overlay';
-                loadingOverlay.innerHTML = `
-                    <div class="details-loading-spinner"></div>
-                    <div class="details-loading-text">加载中...</div>
-                `;
-                if (window._currentDialogContain) {
-                    const dialog = window._currentDialogContain.querySelector('.details-dialog');
-                    if (dialog) {
-                        dialog.appendChild(loadingOverlay);
-                    }
-                }
-
-                try {
-                    const metadata = await extractMetadata(depUrl);
-                    if (metadata) {
-                        showPluginDetails({ url: depUrl, ...metadata, source: source });
-                    }
-                } catch (error) {
-                    console.error('打开依赖项详情失败:' + error);
-                    if (loadingOverlay && loadingOverlay.parentNode) {
-                        loadingOverlay.remove();
-                    }
-                    if (window._currentDialogContent) {
-                        window._currentDialogContent.style.filter = '';
-                    }
-                    iziToast.show({
-                        timeout: 3000,
-                        message: '读取依赖项时出错'
-                    });
-                }
-            });
-        });
-
-        return { ...dependencyCheckResult, hasContent: Object.keys(details).length > 0 };
-    } catch (error) {
-        console.error('渲染依赖项失败:', error);
-        container.innerHTML = '';
-        return { status: false, details: {}, hasContent: false };
-    }
+    return renderRelationItems(container, dependencies, 'dependencies', source);
 }
 
-/**
- * 加载关联项
- * @param {HTMLElement} container - 需要关联项的插件容器
- * @param {Object} associations - 关联项对象
- * @param {string} source - 插件来源
- */
 async function renderAssociations(container, associations, source = '') {
+    return renderRelationItems(container, associations, 'associations', source);
+}
 
-    if (!associations || Object.keys(associations).length === 0) {
-        container.innerHTML = '';
-        return { details: {}, hasContent: false };
-    }
-
-    try {
-        const associationCheckResult = await checkAssociations(associations);
-        const details = associationCheckResult.details;
-
-        let html = '<div class="plugin-relation-list">';
-        if (Object.keys(details).length === 0) {
-            html += '';
-        } else {
-            for (const [assocUrl, assocDetails] of Object.entries(details)) {
-                const metadata = assocDetails.metadata || {};
-                const statusClass =
-                    assocDetails.status === 'satisfied' ? 'satisfied' :
-                        assocDetails.status === 'version_mismatch' ? 'info' :
-                            assocDetails.status === 'not_installed' ? 'info' : 'failed';
-
-                html += `
-                    <div class="plugin-item plugin-relation-item ${statusClass}" data-url="${assocUrl}">
-                        <img src="${metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg'}" alt="${metadata.name || '关联项'}" class="plugin-icon">
-                        <div class="plugin-info">
-                            <strong translate="none">${metadata.name || assocUrl}</strong>
-                            <div class="detail-source">
-                                <p>推荐版本: <span translate="none">${assocDetails.requiredVersion || 'Latest'}</span>
-                                <span translate="none">${assocDetails.installedVersion ? `<p class="sourceNonCritical">|</p> <p>已安装: <span translate="none">${assocDetails.installedVersion}</span></p>` : ''}</p>
-                            </div>
-                                <p class="status" translate="none">${assocDetails.message}</p>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-        html += '</div>';
-        container.innerHTML = html;
-
-        // 关联项点击
-        container.querySelectorAll('.plugin-relation-item').forEach(item => {
-            item.addEventListener('click', async () => {
-                const assocUrl = item.dataset.url;
-
-                if (window._currentDialogContent) {
-                    window._currentDialogContent.style.filter = 'blur(3px)';
-                }
-
-                const loadingOverlay = document.createElement('div');
-                loadingOverlay.className = 'details-loading-overlay';
-                loadingOverlay.innerHTML = `
-                    <div class="details-loading-spinner"></div>
-                    <div class="details-loading-text">加载中...</div>
-                `;
-                if (window._currentDialogContain) {
-                    const dialog = window._currentDialogContain.querySelector('.details-dialog');
-                    if (dialog) {
-                        dialog.appendChild(loadingOverlay);
-                    }
-                }
-
-                try {
-                    const metadata = await extractMetadata(assocUrl);
-                    if (metadata) {
-                        showPluginDetails({ url: assocUrl, ...metadata, source: source });
-                    }
-                } catch (error) {
-                    console.error('打开关联项详情失败:' + error);
-                    if (loadingOverlay && loadingOverlay.parentNode) {
-                        loadingOverlay.remove();
-                    }
-                    if (window._currentDialogContent) {
-                        window._currentDialogContent.style.filter = '';
-                    }
-                    iziToast.show({
-                        timeout: 3000,
-                        message: '读取关联项时出错'
-                    });
-                }
-            });
-        });
-
-        return { ...associationCheckResult, hasContent: Object.keys(details).length > 0 };
-    } catch (error) {
-        console.error('渲染关联项失败:', error);
-        container.innerHTML = '';
-        return { details: {}, hasContent: false };
-    }
+async function renderTranslates(container, translates, source = '') {
+    return renderRelationItems(container, translates, 'translates', source);
 }
 
 /**
@@ -604,47 +652,35 @@ async function renderAssociations(container, associations, source = '') {
 */
 function getPluginsList() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open('nitaiPageDB', 2);
-
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains('nitaiPage')) {
-                db.createObjectStore('nitaiPage', { keyPath: 'id' });
+        openIndexedDB(NITAI_PAGE_DB_NAME, 2, (db) => {
+            if (!db.objectStoreNames.contains(NITAI_PAGE_STORE)) {
+                db.createObjectStore(NITAI_PAGE_STORE, { keyPath: 'id' });
             }
-        };
-
-        request.onsuccess = (event) => {
-            const db = event.target.result;
-            const transaction = db.transaction('nitaiPage', 'readonly');
-            const store = transaction.objectStore('nitaiPage');
+        }).then(db => {
+            const transaction = db.transaction(NITAI_PAGE_STORE, 'readonly');
+            const store = transaction.objectStore(NITAI_PAGE_STORE);
             const getRequest = store.get('npp_plugins');
 
             getRequest.onsuccess = () => {
                 const result = getRequest.result;
                 let plugins = result ? result.data : null;
 
-                // 从 localStorage 恢复插件列表 (兼容:v2.0.4)
                 if (plugins === null) {
                     try {
                         const localStorageData = localStorage.getItem('npp_plugins');
                         if (localStorageData) {
                             plugins = JSON.parse(localStorageData);
-                            // 将数据迁移到 indexedDB
-                            const saveTransaction = db.transaction('nitaiPage', 'readwrite');
-                            const saveStore = saveTransaction.objectStore('nitaiPage');
-                            const saveRequest = saveStore.put({ id: 'npp_plugins', data: plugins });
-
-                            saveRequest.onsuccess = () => {
-                                console.log('已从 localStorage 加载并迁移插件列表');
-                                db.close();
-                                resolve(plugins);
-                            };
-
-                            saveRequest.onerror = () => {
-                                console.warn('已从 localStorage 加载插件列表,但数据迁移失败');
-                                db.close();
-                                resolve(plugins);
-                            };
+                            putToIndexedDB(NITAI_PAGE_DB_NAME, NITAI_PAGE_STORE, { id: 'npp_plugins', data: plugins }, 2)
+                                .then(() => {
+                                    console.log('已从 localStorage 加载并迁移插件列表');
+                                    db.close();
+                                    resolve(plugins);
+                                })
+                                .catch(() => {
+                                    console.warn('已从 localStorage 加载插件列表, 但数据迁移失败');
+                                    db.close();
+                                    resolve(plugins);
+                                });
                         } else {
                             plugins = [];
                             db.close();
@@ -667,11 +703,8 @@ function getPluginsList() {
                 db.close();
                 reject();
             };
-        };
-
-        request.onerror = (event) => {
-            console.error('打开数据库失败: ' + event.target.error.message);
-            // 回退到使用 localStorage 加载插件列表
+        }).catch(error => {
+            console.error('打开数据库失败: ' + error.message);
             try {
                 const localStorageData = localStorage.getItem('npp_plugins');
                 const plugins = localStorageData ? JSON.parse(localStorageData) : [];
@@ -680,49 +713,12 @@ function getPluginsList() {
                 console.error('从 localStorage 读取插件列表失败:' + error);
                 resolve([]);
             }
-        };
+        });
     });
 }
 
-/**
-* 保存插件列表到 indexedDB
-* @param {Array} plugins - 插件列表
-* @returns {Promise<void>}
-*/
 function savePluginsList(plugins) {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open('nitaiPageDB', 2);
-
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains('nitaiPage')) {
-                db.createObjectStore('nitaiPage', { keyPath: 'id' });
-            }
-        };
-
-        request.onsuccess = (event) => {
-            const db = event.target.result;
-            const transaction = db.transaction('nitaiPage', 'readwrite');
-            const store = transaction.objectStore('nitaiPage');
-            const putRequest = store.put({ id: 'npp_plugins', data: plugins });
-
-            putRequest.onsuccess = () => {
-                db.close();
-                resolve();
-            };
-
-            putRequest.onerror = () => {
-                console.error('保存插件列表失败');
-                db.close();
-                reject();
-            };
-        };
-
-        request.onerror = (event) => {
-            console.error('打开数据库失败: ' + event.target.error.message);
-            reject();
-        };
-    });
+    return putToIndexedDB(NITAI_PAGE_DB_NAME, NITAI_PAGE_STORE, { id: 'npp_plugins', data: plugins }, 2);
 }
 
 /**
@@ -734,7 +730,7 @@ function savePluginMetadata(metadata) {
         try {
             // 验证metadata有效性
             if (!metadata || typeof metadata !== 'object' || !metadata.id) {
-                console.error('无效的插件: 缺少必要的id字段');
+                console.error('无效的插件: 缺少必要的 ID 字段');
                 reject();
                 return;
             }
@@ -799,7 +795,6 @@ function savePluginMetadata(metadata) {
 */
 function saveJSFile(id, url) {
     return new Promise((resolve, reject) => {
-        // 参数验证
         if (!id || !url) {
             console.error('缺少必要参数: ' + (id ? '' : 'id ') + (url ? '' : 'url'));
             reject();
@@ -816,32 +811,15 @@ function saveJSFile(id, url) {
                 return response.text();
             })
             .then(content => {
-                // 数据库
-                const request = indexedDB.open(DB_NAME, 1);
-
-                request.onsuccess = (event) => {
-                    const db = event.target.result;
-                    const transaction = db.transaction(NPP_STORE, 'readwrite');
-                    const store = transaction.objectStore(NPP_STORE);
-
-                    // 存储文件
-                    const putRequest = store.put({ id, content });
-
-                    putRequest.onsuccess = () => {
+                putToIndexedDB(DB_NAME, NPP_STORE, { id, content })
+                    .then(() => {
                         console.log('下载成功');
                         resolve();
-                    };
-
-                    putRequest.onerror = () => {
+                    })
+                    .catch(() => {
                         console.error('下载失败');
                         reject();
-                    };
-                };
-
-                request.onerror = () => {
-                    console.error('文件读取失败失败');
-                    reject();
-                };
+                    });
             })
             .catch(error => {
                 console.error('下载失败:', error);
@@ -858,8 +836,6 @@ function saveJSFile(id, url) {
 function getNpp(option) {
     return new Promise(async (resolve, reject) => {
         if (option.id) {
-
-            // 从 indexedDB 获取元数据
             const plugins = await getPluginsList();
             const metadata = plugins.find(p => p.id === option.id);
             if (!metadata) {
@@ -867,13 +843,12 @@ function getNpp(option) {
                 reject('未找到元数据');
                 return;
             }
-            // 从 indexedDB 获取文件内容
-            const request = indexedDB.open(DB_NAME, 1);
-            request.onsuccess = (event) => {
-                const db = event.target.result;
+
+            openIndexedDB(DB_NAME, 1).then(db => {
                 const transaction = db.transaction(NPP_STORE, 'readonly');
                 const store = transaction.objectStore(NPP_STORE);
                 const getRequest = store.get(option.id);
+
                 getRequest.onsuccess = () => {
                     const fileRecord = getRequest.result;
                     if (fileRecord) {
@@ -881,17 +856,21 @@ function getNpp(option) {
                         const url = URL.createObjectURL(blob);
                         resolve({ metadata, url });
                     } else {
-                        // indexedDB 不存在则只返回 metadata
-                        // coreNpp 可忽略此提示
                         console.warn('在 indexedDB 内未找到内容' + option.id);
                         resolve({ metadata });
                     }
+                    db.close();
                 };
-            };
-            request.onerror = (event) => {
-                console.error('数据库打开失败: ' + event.target.error.message);
+
+                getRequest.onerror = () => {
+                    console.error('获取文件内容失败');
+                    db.close();
+                    reject('获取文件内容失败');
+                };
+            }).catch(error => {
+                console.error('数据库打开失败: ' + error.message);
                 reject('数据库打开失败');
-            };
+            });
         } else if (option.url) {
             try {
                 const metadata = await extractMetadata(option.url);
@@ -900,7 +879,6 @@ function getNpp(option) {
                 console.error('获取插件元数据失败:', error);
                 reject();
             }
-
         }
     });
 }
@@ -999,9 +977,7 @@ async function checkUpdates(id, info = 'show') {
                         title: '自动更新',
                         message: `${localMetadata.name} 已更新至版本 ${remoteMetadata.version}`,
                     });
-                    if ($('#checkUpdateToast').length) {
-                        if ($('#checkUpdateToast').length) { iziToast.hide({}, '#checkUpdateToast'); }
-                    }
+                    hideToastById('#checkUpdateToast');
                     showRefreshDialog();
                 } else {
                     await new Promise((resolve) => {
@@ -1047,11 +1023,10 @@ async function checkUpdates(id, info = 'show') {
                                 resolve();
                             }
                         });
-                        if ($('#checkUpdateToast').length) { iziToast.hide({}, '#checkUpdateToast'); }
+                        hideToastById('#checkUpdateToast');
                     });
                 }
             } else {
-                // 使用Promise确保逐个显示提示
                 if (info !== 'hide') {
                     await new Promise((toastResolve) => {
                         iziToast.show({
@@ -1061,7 +1036,7 @@ async function checkUpdates(id, info = 'show') {
                                 toastResolve();
                             }
                         });
-                        if ($('#checkUpdateToast').length) { iziToast.hide({}, '#checkUpdateToast'); }
+                        hideToastById('#checkUpdateToast');
                     });
                 }
             }
@@ -1071,50 +1046,40 @@ async function checkUpdates(id, info = 'show') {
                 timeout: 8000,
                 message: `检查插件 ${pluginId} 更新时发生错误`
             });
-            if ($('#checkUpdateToast').length) { iziToast.hide({}, '#checkUpdateToast'); }
+            hideToastById('#checkUpdateToast');
         }
     };
 
     if (id === 'all') {
-        // 检查所有插件，使用顺序队列确保逐个询问
         const plugins = await getPluginsList();
         for (const plugin of plugins) {
             await checkSinglePluginUpdate(plugin.id, 'hide');
         }
-        // 检查完成
         if (info === 'show') {
             iziToast.show({
                 timeout: 2000,
                 message: '所有 Npp 均已更新到最新版本或已提交更新申请'
             });
         }
-        if ($('#checkUpdateToast').length) { iziToast.hide({}, '#checkUpdateToast'); }
+        hideToastById('#checkUpdateToast');
     } else {
         // 检查单个插件
         await checkSinglePluginUpdate(id);
     }
 }
 
-// 按指定顺序加载所有插件
 async function loadNpp() {
-    // 顺序
-    const plugins = await getPluginsList();
+    const plugins = await getPluginsList(); // 获取插件列表
     plugins.forEach(plugin => {
         if (plugin.id
-            && plugin.time && plugin.type !== 'coreNpp') {
+            && plugin.time && plugin.type !== 'coreNpp') { // 排除核心插件
             loadTime(plugin.id, plugin.time);
         }
     });
 }
 
-// 初始化 coreNpp
 async function initCoreNpp() {
-    // 指定目录
     const coreNppDir = './js/coreNpp/';
-    // 指定文件(指定完请添加链接到HTML内，否则不加载)
-    // 只有在这里指定的文件才会加载元数据
-    // 否则不会出现在商店管理的列表内
-    // coreNpp 会触发 (npplication.js:490) 在 indexedDB 内未找到内容的提示，可以忽略
     const coreNppFiles = [
         'themeColor.js',
         'advancedSettings.js',
@@ -1124,30 +1089,23 @@ async function initCoreNpp() {
     for (const fileName of coreNppFiles) {
         const pluginUrl = `${coreNppDir}${fileName}`;
         try {
-            // 提取元数据 (文件)
             const metadata = await extractMetadata(pluginUrl);
-            // 跳过非 coreNpp 类型的插件
-            if (metadata.type !== 'coreNpp') {
+            if (metadata.type !== 'coreNpp') { // 跳过非核心插件
                 console.warn(`File ${fileName} is not a coreNpp plugin`);
                 continue;
             }
-            // 查找元数据 (indexedDB)
-            const storedPlugins = await getPluginsList();
+            const storedPlugins = await getPluginsList(); // 获取已存储的插件列表
             const existingPlugin = storedPlugins.find(p => p.id === metadata.id);
 
             if (existingPlugin) {
-                // localStorage 版本 > 文件版本
                 if (compareVersions(existingPlugin.version, metadata.version) > 0) {
-                    // 使用 localStorage 的版本 (更新的版本)
                     const scriptTag = document.querySelector(`script[src*="${fileName}"]`);
                     if (scriptTag) {
                         const { url } = await getNpp({ id: metadata.id });
                         scriptTag.src = url;
                     }
                 }
-                // localStorage 没有记录插件
             } else {
-                // 保存元数据 localStorage
                 await savePluginMetadata(metadata);
             }
         } catch (error) {
@@ -1156,64 +1114,30 @@ async function initCoreNpp() {
     }
 }
 
-// 获取已安装插件数量
+// 从 IndexedDB 统计插件数量
 function getNum() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME);
-        request.onsuccess = (event) => {
-            const db = event.target.result;
-            const store = db.transaction(NPP_STORE, 'readonly').objectStore(NPP_STORE);
-            const countRequest = store.count();
-
-            countRequest.onsuccess = () => {
-                resolve(countRequest.result);
-                db.close();
-            };
-            countRequest.onerror = () => {
-                console.warn('获取插件数量失败');
-                reject();
-                db.close();
-            };
-        };
-
-        request.onerror = (event) => {
-            console.error('数据库打开失败');
-            reject();
-        };
-    });
+    return countFromIndexedDB(DB_NAME, NPP_STORE, 1);
 }
 
-/**
-* 数据库初始化
-* @returns {Promise<void>}
-*/
 function initializaNppDB() {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 1);
-
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
+        openIndexedDB(DB_NAME, 1, (db) => {
             if (!db.objectStoreNames.contains(NPP_STORE)) {
                 db.createObjectStore(NPP_STORE, { keyPath: 'id' });
             }
-            /* console.log('Successful database initialization'); */
-        };
-        request.onsuccess = (event) => {
-            const db = event.target.result;
-            // 验证
+        }).then(db => {
             if (!db.objectStoreNames.contains(NPP_STORE)) {
                 console.error('缺少必要的对象存储: ' + NPP_STORE);
+                db.close();
                 reject();
                 return;
             }
             db.close();
             resolve();
-        };
-        request.onerror = (event) => {
-            console.error('数据库初始化失败: ' + event.target.error.message);
+        }).catch(error => {
+            console.error('数据库初始化失败: ' + error.message);
             reject();
-        };
-
+        });
     });
 }
 
@@ -1333,7 +1257,6 @@ async function showOrderConfigDialog() {
     });
 }
 
-// 刷新提示
 function showRefreshDialog() {
     iziToast.show({
         timeout: 4000,
@@ -1350,9 +1273,8 @@ function showRefreshDialog() {
     });
 }
 
-// 覆盖安装确认对话框
 function showUpdateDialog(metadata) {
-    if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
+    hideToastById('#installToast');
     iziToast.show({
         timeout: 8000,
         message: `确定要覆盖安装插件"${metadata.name}"?`,
@@ -1360,9 +1282,7 @@ function showUpdateDialog(metadata) {
             ['<button class="confirm-btn">覆盖</button>', async function (instance, toast) {
                 instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
                 try {
-                    // 下载并保存
                     await saveJSFile(metadata.id, metadata.updateUrl);
-                    // 更新元数据
                     await savePluginMetadata({
                         ...metadata,
                         ignoreUpdatePrompt: false
@@ -1383,34 +1303,26 @@ function showUpdateDialog(metadata) {
     });
 }
 
-/**
-* 主安装函数
-* @param {string} url - JS 文件 URL
-*/
 async function installNpplication(url) {
     try {
-        // 获取元数据
         const { metadata } = await getNpp({ url });
-        // 验证 URL
         if (!await verifyJSUrl(url)) {
             console.error('无效的JS文件URL:' + url);
             iziToast.show({
                 timeout: 2000,
                 message: '安装失败'
             });
-            if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
+            hideToastById('#installToast');
             return;
         }
 
-        // 检查依赖项
         const dependencies = parseDependencies(metadata.dependencies || '');
         const dependencyCheckResult = await checkDependencies(dependencies);
 
-        if (!dependencyCheckResult.status) {
-            if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
+        if (metadata.type !== 'translate' && !dependencyCheckResult.status) {
+            hideToastById('#installToast');
             return;
         }
-        // 来源验证
         if (metadata.type === 'coreNpp' && !url.startsWith(
             'https://nfdb.nitai.us.kg'
         )) {
@@ -1419,21 +1331,19 @@ async function installNpplication(url) {
                 timeout: 2000,
                 message: '安装失败'
             });
-            if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
+            hideToastById('#installToast');
             return;
         }
 
-        // 从 indexedDB 获取现有插件列表
         const plugins = await getPluginsList();
         const existing = plugins.find(p => p.id === metadata.id);
-        // 检查核心应用是否存在
         if (metadata.type === 'coreNpp' && !existing) {
             console.warn('核心应用禁止安装');
             iziToast.show({
                 timeout: 2000,
                 message: '安装失败'
             });
-            if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
+            hideToastById('#installToast');
             return;
         }
         // 覆盖弹窗
@@ -1449,18 +1359,14 @@ async function installNpplication(url) {
                 checkUpdates(metadata.id);
             }
         } else {
-            // 验证加载时机
             if (!['head', 'body'].includes(metadata.time)) {
                 console.error('无有效的加载时机');
                 return;
             }
-            // 保存元数据
             await savePluginMetadata(metadata);
-            // 下载并保存
             await saveJSFile(metadata.id, url);
-            // 显示刷新提示
             showRefreshDialog();
-            if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
+            hideToastById('#installToast');
         }
     } catch (error) {
         console.error(`安装失败: ${error.message}`);
@@ -1468,7 +1374,7 @@ async function installNpplication(url) {
             timeout: 2000,
             message: '安装失败'
         });
-        if ($('#installToast').length) { iziToast.hide({}, '#installToast'); }
+        hideToastById('#installToast');
     }
 }
 
@@ -1517,7 +1423,7 @@ async function loadPluginManagementPage() {
                     <div class='plugin_list_table expanded'>`;
 
         // 生成插件列表
-        for (const plugin of plugins) {
+        for (const plugin of plugins.filter(p => p.type !== 'translate')) {
             html += `<div class='plugin_item ${plugin.type === "coreNpp" ? "coreNpp" : ""}'>
                 <div class='plugin_info'>
                     <div class='plugin_icon'>
@@ -1541,6 +1447,47 @@ async function loadPluginManagementPage() {
             </div>`;
         }
 
+        html += `</div>`;
+
+        // 生成翻译项列表
+        const translatePlugins = plugins.filter(p => p.type === 'translate');
+        if (translatePlugins.length > 0) {
+            html += `
+                    <div class='plugin_management_header'>
+                        <h3>已安装的翻译项</h3>
+                        <button class='toggle_translate_list'>
+                            <i class='iconfont icon-folding'></i>
+                        </button>
+                    </div>
+                    <div class='plugin_list_table'>`;
+
+            for (const plugin of translatePlugins) {
+                html += `<div class='plugin_item translate-plugin'>
+                    <div class='plugin_info'>
+                        <div class='plugin_icon'>
+                            <img src='${plugin.icon}'>
+                        </div>
+                        <div class='plugin_text'>
+                            <div class='plugin_name' translate='none'>${plugin.name}</div>
+                            <div class='plugin_details'>
+                                <span>版本: <span translate='none'>${plugin.version}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='plugin_actions' id='${plugin.id}'>
+                        <button class='update_plugin' data-id='${plugin.id}'>
+                            <i class="iconfont icon-refresh"></i>
+                        </button>
+                        <button class='uninstall_plugin' data-id='${plugin.id}'>
+                            <i class="iconfont icon-delete"></i>
+                        </button>
+                    </div>
+                </div>`;
+            }
+
+            html += `</div>`;
+        }
+
         html += `</div></div>`;
 
         // 插入到页面
@@ -1552,11 +1499,25 @@ async function loadPluginManagementPage() {
 
                 // Npplication 列表折叠
                 const $togglePluginBtn = $('.toggle_plugin_list', manageContent);
-                const $pluginContent = $('.plugin_list_table', manageContent);
+                const $pluginContent = $('.plugin_list_table', manageContent).first();
                 if ($togglePluginBtn.length && $pluginContent.length) {
                     $togglePluginBtn.on('click', function () {
                         $pluginContent.toggleClass('expanded');
                         const isExpanded = $pluginContent.hasClass('expanded');
+                        $(this).html(isExpanded ? '<i class="iconfont icon-unfolding"></i>' : '<i class="iconfont icon-folding"></i>');
+                    });
+                }
+
+                // translates 列表折叠
+                const $toggleTranslateBtn = $('.toggle_translate_list', manageContent);
+                const $translateContent = $('.plugin_list_table', manageContent).last();
+                if ($toggleTranslateBtn.length && $translateContent.length) {
+                    // 默认不展开
+                    $translateContent.removeClass('expanded');
+                    $toggleTranslateBtn.html('<i class="iconfont icon-folding"></i>');
+                    $toggleTranslateBtn.on('click', function () {
+                        $translateContent.toggleClass('expanded');
+                        const isExpanded = $translateContent.hasClass('expanded');
                         $(this).html(isExpanded ? '<i class="iconfont icon-unfolding"></i>' : '<i class="iconfont icon-folding"></i>');
                     });
                 }
@@ -1710,37 +1671,25 @@ async function loadPluginManagementPage() {
                                         });
                                         return;
                                     } else {
-                                        // 移除indexedDB元数据
                                         let plugins = await getPluginsList();
                                         plugins = plugins.filter(p => p.id !== pluginId);
                                         await savePluginsList(plugins);
-                                        // 删除indexedDB文件
-                                        const request = indexedDB.open('nppstore');
-                                        request.onsuccess = (event) => {
-                                            const db = event.target.result;
-                                            const transaction = db.transaction('Npp', 'readwrite');
-                                            const store = transaction.objectStore('Npp');
-                                            const deleteRequest = store.delete(pluginId);
-                                            deleteRequest.onsuccess = () => {
-                                                db.close();
-                                                iziToast.show({
-                                                    timeout: 3000,
-                                                    message: '插件已卸载，刷新页面生效',
-                                                    buttons: [
-                                                        ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
-                                                            instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
-                                                            window.location.reload(true);
-                                                        }, true],
-                                                        ['<button class="later-btn">稍后</button>', function (instance, toast) {
-                                                            instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
-                                                        }]
-                                                    ]
-                                                });
-                                                loadPluginManagementPage();
-                                            };
-                                            deleteRequest.onerror = () => { db.close(); throw new Error('删除插件文件失败'); };
-                                        };
-                                        request.onerror = () => { throw new Error('打开数据库失败'); };
+                                        await deleteFromIndexedDB(DB_NAME, NPP_STORE, pluginId, 1);
+
+                                        iziToast.show({
+                                            timeout: 3000,
+                                            message: '插件已卸载，刷新页面生效',
+                                            buttons: [
+                                                ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                                                    instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
+                                                    window.location.reload(true);
+                                                }, true],
+                                                ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                                                    instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
+                                                }]
+                                            ]
+                                        });
+                                        loadPluginManagementPage();
                                     }
                                 }, true],
                                 ['<button>取消</button>', function (instance, toast) {
@@ -1923,9 +1872,10 @@ async function renderPlugins(pluginsArray) {
             const pluginWithMetadata = {
                 ...plugin,
                 ...(metadata || {}),
-                dependencies: (metadata && metadata.dependencies) || ''
+                dependencies: (metadata && metadata.dependencies) || '',
+                associations: (metadata && metadata.associations) || '',
+                translates: (metadata && metadata.translates) || ''
             };
-            const cleanUrl = (url) => url.replace(/`/g, '').trim();
 
             const pluginItem = document.createElement('div');
             pluginItem.className = 'plugin-item';
@@ -1979,10 +1929,6 @@ async function renderPlugins(pluginsArray) {
 function showPluginDetails(pluginWithMetadata) {
     showContain_plugin();
 
-    // 清理数据中的多余引号和空格
-    const cleanUrl = (url) => url.replace(/`/g, '').trim();
-
-    // 创建详情对话框
     const page = document.getElementById('storePage');
     const dialogContain = document.createElement('div');
     dialogContain.className = 'dialog-container';
@@ -2048,6 +1994,15 @@ function showPluginDetails(pluginWithMetadata) {
                     <div class="detail-section">
                         <div class="detail-header">
                             <i class="iconfont icon-folding"></i>
+                            <h3>翻译</h3>
+                        </div>
+                        <div class="detail-content">
+                            <div id="translates-container" translate="none"></div>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-header">
+                            <i class="iconfont icon-folding"></i>
                             <h3>截图</h3>
                         </div>
                         <div class="detail-content">
@@ -2088,8 +2043,18 @@ function showPluginDetails(pluginWithMetadata) {
         const associationsSection = dialog.querySelector('#associations-container').closest('.detail-section');
         const associationCheckResult = await renderAssociations(associationsContainer, associations, pluginWithMetadata.source || '');
 
+        const translates = parseTranslates(pluginWithMetadata.translates || '');
+        const translatesContainer = dialog.querySelector('#translates-container');
+        const translatesSection = dialog.querySelector('#translates-container').closest('.detail-section');
+        const translateCheckResult = await renderTranslates(translatesContainer, translates, pluginWithMetadata.source || '');
+
         if (loadingOverlay && loadingOverlay.parentNode) {
-            loadingOverlay.remove();
+            loadingOverlay.classList.add('fade-out');
+            setTimeout(() => {
+                if (loadingOverlay && loadingOverlay.parentNode) {
+                    loadingOverlay.remove();
+                }
+            }, 300);
         }
 
         dialogContent.style.filter = '';
@@ -2099,6 +2064,9 @@ function showPluginDetails(pluginWithMetadata) {
         }
         if (!associationCheckResult.hasContent && associationsSection) {
             associationsSection.style.display = 'none';
+        }
+        if (!translateCheckResult.hasContent && translatesSection) {
+            translatesSection.style.display = 'none';
         }
 
         // 截图处理
@@ -2151,7 +2119,15 @@ function showPluginDetails(pluginWithMetadata) {
 
     showDependencyDetailsDialog().catch(error => {
         if (loadingOverlay && loadingOverlay.parentNode) {
-            loadingOverlay.remove();
+            loadingOverlay.classList.add('fade-out');
+            setTimeout(() => {
+                if (loadingOverlay && loadingOverlay.parentNode) {
+                    loadingOverlay.remove();
+                }
+            }, 300);
+        }
+        if (dialogContent) {
+            dialogContent.style.filter = '';
         }
         iziToast.show({
             timeout: 3000,
@@ -2162,172 +2138,4 @@ function showPluginDetails(pluginWithMetadata) {
 
     $('#storeTabs').css('display', 'none');
     $('.store-block').css('display', 'none');
-}
-
-var npp = npp || {}; // 定义一个命名空间
-
-// 获取当前npp的元数据
-async function getCurrentPluginMetadata() {
-    try {
-        const scriptUrl = document.currentScript.src;
-        return await extractMetadata(scriptUrl);
-    } catch (error) {
-        console.error('获取当前插件元数据失败:', error);
-        return undefined;
-    }
-}
-
-// 初始化插件存储库
-npp.init = function (pluginId) {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open('nppDB', 1);
-
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains(pluginId)) {
-                db.createObjectStore(pluginId, { keyPath: 'key' });
-            }
-        };
-
-        request.onsuccess = (event) => {
-            const db = event.target.result;
-            db.close();
-            resolve();
-        };
-
-        request.onerror = (event) => {
-            console.error('插件存储数据库初始化失败:', event.target.error);
-            reject(event.target.error);
-        };
-    })
-}
-
-/**
- * 存储数据到当前插件的存储空间
- * @param {string} key - 存储键名
- * @param {any} value - 存储值
- * @returns {Promise<boolean>} - 是否存储成功
- */
-npp.set = async function (key, value) {
-    const metadata = await getCurrentPluginMetadata();
-    if (!metadata || !metadata.id) return false;
-
-    try {
-        await npp.init(metadata.id);
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open('nppDB');
-
-            request.onsuccess = (event) => {
-                const db = event.target.result;
-                const transaction = db.transaction(metadata.id, 'readwrite');
-                const store = transaction.objectStore(metadata.id);
-                const putRequest = store.put({ key, value });
-
-                putRequest.onsuccess = () => {
-                    db.close();
-                    resolve(true);
-                };
-
-                putRequest.onerror = () => {
-                    console.error('存储插件数据失败:', putRequest.error);
-                    db.close();
-                    reject(false);
-                };
-            };
-
-            request.onerror = (event) => {
-                console.error('打开插件存储数据库失败:', event.target.error);
-                reject(false);
-            };
-        });
-    } catch (error) {
-        console.error('设置插件存储失败:', error);
-        return false;
-    }
-}
-
-/**
- * 从当前插件的存储空间获取数据
- * @param {string} key - 存储键名
- * @returns {Promise<any>} - 存储的值或undefined
- */
-npp.get = async function (key) {
-    const metadata = await getCurrentPluginMetadata();
-    if (!metadata || !metadata.id) return undefined;
-
-    try {
-        await npp.init(metadata.id);
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open('nppDB');
-
-            request.onsuccess = (event) => {
-                const db = event.target.result;
-                const transaction = db.transaction(metadata.id, 'readonly');
-                const store = transaction.objectStore(metadata.id);
-                const getRequest = store.get(key);
-
-                getRequest.onsuccess = () => {
-                    db.close();
-                    resolve(getRequest.result ? getRequest.result.value : undefined);
-                };
-
-                getRequest.onerror = () => {
-                    console.error('获取插件数据失败:', getRequest.error);
-                    db.close();
-                    reject(undefined);
-                };
-            };
-
-            request.onerror = (event) => {
-                console.error('打开插件存储数据库失败:', event.target.error);
-                reject(undefined);
-            };
-        });
-    } catch (error) {
-        console.error('获取插件存储失败:', error);
-        return undefined;
-    }
-}
-
-/**
- * 从当前插件的存储空间删除数据
- * @param {string} key - 存储键名
- * @returns {Promise<boolean>} - 是否删除成功
- */
-npp.remove = async function (key) {
-    const metadata = await getCurrentPluginMetadata();
-    if (!metadata || !metadata.id) return false;
-
-    try {
-        await npp.init(metadata.id);
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open('nppDB');
-
-            request.onsuccess = (event) => {
-                const db = event.target.result;
-                const transaction = db.transaction(metadata.id, 'readwrite');
-                const store = transaction.objectStore(metadata.id);
-                const deleteRequest = store.delete(key);
-
-                deleteRequest.onsuccess = () => {
-                    db.close();
-                    resolve(true);
-                };
-
-                deleteRequest.onerror = () => {
-                    console.error('删除插件数据失败:', deleteRequest.error);
-                    db.close();
-                    reject(false);
-                };
-            };
-
-            request.onerror = (event) => {
-                console.error('打开插件存储数据库失败:', event.target.error);
-                reject(false);
-            };
-        });
-    } catch (error) {
-        console.error('删除插件存储失败:', error);
-        return false;
-    }
 }
