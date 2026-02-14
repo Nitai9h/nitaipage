@@ -39,8 +39,8 @@ function createAdvancedSettingSwitch() {
                 </style>
                 <div class="advancedSetting_switch-container">
                     <div>
-                        <span class="set_text"><big>高级设置开关&nbsp;</big><br></span>
-                        <span class="set_text" style="color: gray;"><small>启用高级功能设置</small></span>
+                        <span class="set_text"><big>@advancedSettings:setting-advanced-switch &nbsp;</big><br></span>
+                        <span class="set_text" style="color: gray;"><small>@advancedSettings:setting-advanced-switch-desc</small></span>
                     </div>
                     <div class="switch" id="toggleAdvancedSetting"></div>
                 </div>
@@ -71,13 +71,13 @@ function createAdvancedSettingSwitch() {
                 localStorage.setItem('advancedSettingEnabled', 'off');
                 iziToast.show({
                     timeout: 4000,
-                    message: '设置成功，刷新生效',
+                    message: '@advancedSettings:setting-advanced-switch-success',
                     buttons: [
-                        ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                        ['<button class="refresh-btn">@global:toast-refresh</button>', function (instance, toast) {
                             instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
                             window.location.reload(true);
                         }, true],
-                        ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                        ['<button class="later-btn">@global:toast-later</button>', function (instance, toast) {
                             instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
                         }]
                     ]
@@ -87,13 +87,13 @@ function createAdvancedSettingSwitch() {
                 localStorage.setItem('advancedSettingEnabled', 'on');
                 iziToast.show({
                     timeout: 4000,
-                    message: '设置成功，刷新生效',
+                    message: '@advancedSettings:setting-advanced-switch-success',
                     buttons: [
-                        ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                        ['<button class="refresh-btn">@global:toast-refresh</button>', function (instance, toast) {
                             instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
                             window.location.reload(true);
                         }, true],
-                        ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                        ['<button class="later-btn">@global:toast-later</button>', function (instance, toast) {
                             instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
                         }]
                     ]

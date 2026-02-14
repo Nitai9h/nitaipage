@@ -22,37 +22,37 @@ const defaultWallpaperOptions = [
     {
         label: "<i class='iconfont icon-add'></i>",
         url: '',
-        description: '添加壁纸项'
+        description: '@global:setting-set-wallpaper-add'
     },
     {
-        label: '随机壁纸',
+        label: '@global:setting-set-wallpaper-random',
         url: '',
-        description: '随机壁纸，每次刷新后更换'
+        description: '@global:setting-set-wallpaper-random-desc'
     },
     {
-        label: '纯色背景',
+        label: '@global:setting-set-wallpaper-solid-color',
         url: 'solid-color',
-        description: '纯色背景，可自定义颜色'
+        description: '@global:setting-set-wallpaper-solid-color-desc'
     },
     {
-        label: '必应 4K',
+        label: '@global:setting-set-wallpaper-bing-4k',
         url: 'https://bing.biturl.top/?resolution=UHD&format=image',
-        description: '必应每日一图 4K UHD 超高清，每天更新'
+        description: '@global:setting-set-wallpaper-bing-4k-desc'
     },
     {
-        label: '必应 1080P',
+        label: '@global:setting-set-wallpaper-bing-1080p',
         url: 'https://bing.biturl.top/?resolution=1920&format=image',
-        description: '必应每日一图 1080P FHD 全高清，每天更新'
+        description: '@global:setting-set-wallpaper-bing-1080p-desc'
     },
     {
-        label: '风景',
+        label: '@global:setting-set-wallpaper-scene',
         url: 'https://tu.ltyuanfang.cn/api/fengjing.php',
-        description: '随机风景图，每次刷新后更换'
+        description: '@global:setting-set-wallpaper-scene-desc'
     },
     {
-        label: '二次元',
+        label: '@global:setting-set-wallpaper-anime',
         url: 'https://www.loliapi.com/acg',
-        description: '随机二次元图，每次刷新后更换'
+        description: '@global:setting-set-wallpaper-anime-desc'
     }
 ];
 
@@ -249,8 +249,8 @@ function setupVideoElement(videoElement, url, bg) {
         // 检查视频元素是否仍然有效
         if (videoElement.data('video-id') === videoId) {
             iziToast.message({
-                title: '加载超时',
-                message: '已加载默认壁纸',
+                title: '@global:setting-set-wallpaper-video-load-timeout',
+                message: '@global:setting-set-wallpaper-video-load-default',
                 timeout: 2000
             });
             loadDefaultWallpaper(bg);
@@ -283,19 +283,19 @@ function setupVideoElement(videoElement, url, bg) {
         if (isEnabled && !hasSeenInitialPrompt) {
             iziToast.show({
                 timeout: 8000,
-                message: '已开启壁纸音效，是否现在打开声音?',
+                message: '@global:setting-set-wallpaper-video-sound-prompt',
                 position: 'bottomCenter',
                 transitionIn: 'bounceInUp',
                 transitionOut: 'fadeOutDown',
                 transitionInMobile: 'fadeInUp',
                 transitionOutMobile: 'fadeOutDown',
                 buttons: [
-                    ['<button>确定</button>', (instance, toast) => {
+                    ['<button>@global:toast-ok</button>', (instance, toast) => {
                         this.muted = false;
                         this.play();
                         instance.hide({ transitionOut: 'fadeOutDown' }, toast, 'button');
                     }, true],
-                    ['<button>取消</button>', (instance, toast) => {
+                    ['<button>@global:toast-cancel</button>', (instance, toast) => {
                         this.muted = true;
                         this.play();
                         instance.hide({ transitionOut: 'fadeOutDown' }, toast, 'button');
@@ -386,8 +386,8 @@ function handleIndexedDBMedia(mediaInfo, bg) {
     } else {
         console.error('未获取到壁纸文件');
         iziToast.message({
-            title: '未获取到壁纸文件',
-            message: '已加载默认壁纸',
+            title: '@global:setting-set-wallpaper-file-load-fail',
+            message: '@global:setting-set-wallpaper-video-load-default',
             timeout: 2000
         });
         // 回退为默认壁纸
@@ -491,8 +491,8 @@ function setBgImgInit() {
         }).catch(error => {
             console.error('从 indexedDB 获取文件失败:' + error);
             iziToast.message({
-                title: '获取壁纸失败',
-                message: '已加载默认壁纸',
+                title: '@global:setting-set-wallpaper-file-load-fail',
+                message: '@global:setting-set-wallpaper-video-load-default',
                 timer: 2000
             });
             // 回退为默认壁纸
@@ -560,16 +560,16 @@ async function initWallpaperSettings() {
         setBgImg(bg_img);
 
         if (index === 0) {
-            $('#wallpaper_text').html("添加壁纸项");
+            $('#wallpaper_text').html("@global:setting-set-new-wallpaper-add");
         } else if (index === 2) {
-            $('#wallpaper_text').html("纯色背景");
+            $('#wallpaper_text').html("@global:setting-set-wallpaper-solid-color");
             iziToast.show({
-                message: '切换成功',
+                message: '@global:toast-switch-success',
                 timeout: 2000
             });
         } else {
             iziToast.show({
-                message: '切换成功',
+                message: '@global:toast-switch-success',
                 timeout: 2000
             });
         }
@@ -591,7 +591,7 @@ async function initWallpaperSettings() {
             // 验证颜色格式
             if (!color || !/^#[0-9A-F]{6}$/i.test(color)) {
                 iziToast.show({
-                    message: '请输入16进制颜色',
+                    message: '@global:setting-set-wallpaper-solid-color-invalid',
                     timeout: 2000
                 });
                 return;
@@ -606,7 +606,7 @@ async function initWallpaperSettings() {
             $('#bg').css({ 'opacity': '1', 'filter': 'blur(0px)', 'transition': 'ease 0.7s' });
 
             iziToast.show({
-                message: '保存成功',
+                message: '@global:toast-save-success',
                 timeout: 2000
             });
 
@@ -621,7 +621,7 @@ async function initWallpaperSettings() {
         // 验证
         if (!name) {
             iziToast.show({
-                message: '请输入壁纸名',
+                message: '@global:setting-set-wallpaper-name-invalid',
                 timeout: 2000
             });
             return;
@@ -630,7 +630,7 @@ async function initWallpaperSettings() {
         const existingIndex = wallpaperOptions.findIndex(option => option.label === name);
         if (existingIndex !== -1) {
             iziToast.show({
-                message: '已存在相同名称的壁纸',
+                message: '@global:setting-set-wallpaper-name-exists',
                 timeout: 2000
             });
             return;
@@ -641,7 +641,7 @@ async function initWallpaperSettings() {
             // 验证文件类型
             if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
                 iziToast.show({
-                    message: '请上传正确的图片或视频',
+                    message: '@global:setting-set-wallpaper-file-invalid',
                     timeout: 2000
                 });
                 return;
@@ -649,7 +649,7 @@ async function initWallpaperSettings() {
 
             iziToast.show({
                 id: 'upload',
-                message: '正在上传',
+                message: '@global:setting-set-wallpaper-uploading',
                 timeout: 2000
             });
 
@@ -661,7 +661,7 @@ async function initWallpaperSettings() {
                 const newOption = {
                     label: name,
                     url: indexedDBUrl,
-                    description: `自定义壁纸项: ${name}`,
+                    description: `@global:setting-set-new-option-wallpaper-description ${name}`,
                     mediaId: mediaId
                 };
 
@@ -681,14 +681,14 @@ async function initWallpaperSettings() {
 
                 iziToast.show({
                     id: 'upload',
-                    message: '上传成功',
+                    message: '@global:toast-upload-success',
                     timeout: 2000
                 });
             }).catch(error => {
                 console.error('文件保存失败:' + error);
                 iziToast.show({
                     id: 'upload',
-                    message: '上传失败',
+                    message: '@global:toast-upload-fail',
                     timeout: 2000
                 });
             });
@@ -699,7 +699,7 @@ async function initWallpaperSettings() {
         // 使用 URL (未选择文件)
         if (!url) {
             iziToast.show({
-                message: '请输入壁纸 URL 或上传文件',
+                message: '@global:setting-set-wallpaper-url-fail',
                 timeout: 2000
             });
             return;
@@ -708,7 +708,7 @@ async function initWallpaperSettings() {
         // 验证格式
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
             iziToast.show({
-                message: 'URL必须以 http:// 或 https:// 开头',
+                message: '@global:setting-set-wallpaper-url-format',
                 timeout: 2000,
                 color: 'red'
             });
@@ -719,7 +719,7 @@ async function initWallpaperSettings() {
         const newOption = {
             label: name,
             url: url,
-            description: `自定义壁纸项: ${name}`
+            description: `@global:setting-set-new-option-wallpaper-description ${name}`
         };
 
         wallpaperOptions.push(newOption);
@@ -736,7 +736,7 @@ async function initWallpaperSettings() {
         refreshWallpaperOptions();
 
         iziToast.show({
-            message: '添加成功',
+            message: '@global:toast-save-success',
             timeout: 2000
         });
     });
@@ -754,7 +754,7 @@ async function initWallpaperSettings() {
             if (file) {
                 if (!file.type.startsWith('image/')) {
                     iziToast.show({
-                        message: '随机壁纸仅支持图片文件',
+                        message: '@global:setting-set-wallpaper-file-format-invalid',
                         timeout: 2000
                     });
                     document.body.removeChild(this);
@@ -765,13 +765,13 @@ async function initWallpaperSettings() {
                     await addWallpaperToList(file);
                     renderWallpaperList();
                     iziToast.show({
-                        message: '上传成功',
+                        message: '@global:toast-upload-success',
                         timeout: 2000
                     });
                 } catch (error) {
                     console.error(error);
                     iziToast.show({
-                        message: '上传失败',
+                        message: '@global:toast-upload-fail',
                         timeout: 2000
                     });
                 }
@@ -991,7 +991,7 @@ function refreshWallpaperOptions() {
 
                 if (deleteIndex === currentWallpaperType) {
                     iziToast.show({
-                        message: '无法删除正在使用的壁纸',
+                        message: '@global:toast-delete-current-wallpaper',
                         timeout: 2000
                     });
                     return;
@@ -1002,9 +1002,9 @@ function refreshWallpaperOptions() {
 
                 // 二次确认
                 iziToast.show({
-                    message: `确定删除?`,
+                    message: `@global:toast-delete-confirm`,
                     buttons: [
-                        ['<button><b>确定</b></button>', function (instance, toast) {
+                        ['<button><b>@global:toast-ok</b></button>', function (instance, toast) {
                             if (wallpaperToDelete.mediaId) {
                                 deleteMediaFileFromDB(wallpaperToDelete.mediaId)
                             }
@@ -1015,7 +1015,7 @@ function refreshWallpaperOptions() {
                             saveWallpaperOptionsToDB(wallpaperOptions)
 
                             iziToast.show({
-                                message: '删除成功',
+                                message: '@global:toast-delete-success',
                                 timeout: 2000
                             });
 
@@ -1027,7 +1027,7 @@ function refreshWallpaperOptions() {
 
                             instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
                         }, true],
-                        ['<button>取消</button>', function (instance, toast) {
+                        ['<button>@global:toast-cancel</button>', function (instance, toast) {
                             instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
                         }]
                     ]
@@ -1061,7 +1061,7 @@ function renderWallpaperList() {
         } else {
             img.src = picture;
         }
-        img.alt = `壁纸 ${index + 1}`;
+        img.alt = `@global:render-wallpaper ${index + 1}`;
 
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
@@ -1070,33 +1070,33 @@ function renderWallpaperList() {
         deleteBtn.addEventListener('click', async () => {
             if (wallpaperPictures.length <= 1) {
                 iziToast.show({
-                    message: '请至少保留一张壁纸',
+                    message: '@global:render-wallpaper-minium',
                     timeout: 2000
                 });
                 return;
             }
             // 弹出二次确认对话框
             iziToast.show({
-                message: '确定删除?',
+                message: '@global:toast-delete-confirm',
                 buttons: [
-                    ['<button>确定</button>', async (instance, toast) => {
+                    ['<button>@global:toast-ok</button>', async (instance, toast) => {
                         try {
                             await removeWallpaperFromList(index);
                             renderWallpaperList();
                             iziToast.show({
-                                message: '删除成功',
+                                message: '@global:toast-delete-success',
                                 timeout: 2000
                             });
                         } catch (error) {
                             console.error(error);
                             iziToast.show({
-                                message: '删除失败',
+                                message: '@global:toast-delete-fail',
                                 timeout: 2000
                             });
                         }
                         instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
                     }, true],
-                    ['<button>取消</button>', (instance, toast) => {
+                    ['<button>@global:toast-cancel</button>', (instance, toast) => {
                         instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
                     }]
                 ]

@@ -38,7 +38,7 @@ function time() {
     dt = new Date();
     var mm = dt.getMonth() + 1;
     var d = dt.getDate();
-    var weekday = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+    var weekday = ["@global:time-sun", "@global:time-mon", "@global:time-tue", "@global:time-wed", "@global:time-thu", "@global:time-fri", "@global:time-sat"];
     var day = dt.getDay();
     var h = dt.getHours();
     var m = dt.getMinutes();
@@ -67,8 +67,8 @@ function time() {
     $("#ampm").html(
         ampmHTML
     );
-    $("#day").html(wrapDayDigits(mm.toString(), 'month') + "&nbsp;月&nbsp;" + '<span id="point"></span>'
-        + wrapDayDigits(d.toString(), 'day') + "&nbsp;日&nbsp;" + '<span id="point"></span>'
+    $("#day").html(wrapDayDigits(mm.toString(), 'month') + "&nbsp;" + '@global:time-month' + "&nbsp;" + '<span id="point"></span>'
+        + wrapDayDigits(d.toString(), 'day') + "&nbsp;" + '@global:time-day' + "&nbsp;" + '<span id="point"></span>'
         + weekday[day]);
 
     // 清理动画

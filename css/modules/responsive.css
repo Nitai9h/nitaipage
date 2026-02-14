@@ -1,4 +1,5 @@
 @charset "utf-8";
+/* 响应式 */
 
 /*小于1200px时*/
 @media (max-width: 1200px) {
@@ -95,7 +96,6 @@
 
 /*小于512px时*/
 @media (max-width: 512px) {
-
     .screenshot-img {
         width: 100%;
     }
@@ -145,8 +145,6 @@
     }
 
     .set_tip_new {
-        margin-left: 2.5%;
-        margin-right: 2.5%;
         gap: 5px;
     }
 
@@ -255,7 +253,6 @@
 
 /*小于260px时*/
 @media (max-width: 260px) {
-
     #fold {
         display: none !important;
     }

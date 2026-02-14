@@ -97,18 +97,18 @@ function createCustomStyleSetting() {
                     <div class="set_tip">
                         <i class="iconfont icon-act" style="font-size: 32px;"></i>
                         <span class="set_text">
-                            这是一个危险的操作，请不要填入不被信任的样式，这样可能会导致隐私泄露、布局错乱等。
-                            <span class="unAdvancedSetting">如要使用，请开启高级设置。</span>
+                            @customStyle:setting-custom-style-warning1
+                            <span class="unAdvancedSetting">@customStyle:setting-custom-style-warning2</span>
                         </span>
                     </div>
                     <div class="advancedSetting">
-                        <span class="set_text"><big>自定义CSS&nbsp;</big><br></span>
-                        <span class="set_text" style="color: gray;"><small>添加自定义CSS样式</small></span>
-                        <textarea id="customCSS" class="customStyle-textarea" placeholder="在此粘贴 CSS 样式..."></textarea>
+                        <span class="set_text"><big>@customStyle:setting-custom-css-style-title &nbsp;</big><br></span>
+                        <span class="set_text" style="color: gray;"><small>@customStyle:setting-custom-css-style-desc</small></span>
+                        <textarea id="customCSS" class="customStyle-textarea" placeholder="@customStyle:setting-custom-css-style-placeholder"></textarea>
                     </div>
                     <div class="customStyle-buttons advancedSetting">
-                        <button id="resetCustomStyle" class="customStyle-button">重置</button>
-                        <button id="saveCustomStyle" class="customStyle-button">保存</button>
+                        <button id="resetCustomStyle" class="customStyle-button">@customStyle:setting-custom-css-style-reset</button>
+                        <button id="saveCustomStyle" class="customStyle-button">@customStyle:setting-custom-css-style-save</button>
                     </div>
                 </div>
             `;
@@ -148,7 +148,7 @@ function removeCustomCSS() {
             const cssText = $('#customCSS').val();
             localStorage.setItem('customCSS', cssText);
             iziToast.show({
-                message: '保存成功',
+                message: '@global:setting-save-success',
                 timeout: 2000
             });
             applyCustomCSS(cssText);
@@ -158,7 +158,7 @@ function removeCustomCSS() {
             $('#customCSS').val('');
             localStorage.removeItem('customCSS');
             iziToast.show({
-                message: '重置成功',
+                message: '@customStyle:setting-custom-css-style-reset-success',
                 timeout: 2000
             });
             removeCustomCSS();

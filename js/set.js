@@ -221,24 +221,24 @@ $(document).ready(function () {
         var name = $(this).val();
         iziToast.show({
             timeout: 8000,
-            message: '是否设置为默认搜索引擎？',
+            message: '@global:se-set-default-search-engine',
             buttons: [
-                ['<button>确认</button>', async function (instance, toast) {
+                ['<button>@global:toast-ok</button>', async function (instance, toast) {
                     localStorage.setItem('se_default', name);
                     setSeInit();
                     instance.hide({
                         transitionOut: 'fadeOutUp',
                     }, toast, 'buttonName');
                     iziToast.show({
-                        message: '设置成功,刷新后生效',
+                        message: '@global:se-set-default-search-engine-success',
                         buttons: [
-                            ['<button>确认</button>', async function (instance, toast) {
+                            ['<button>@global:toast-ok</button>', async function (instance, toast) {
                                 window.location.reload()
                                 instance.hide({
                                     transitionOut: 'fadeOutUp',
                                 }, toast, 'buttonName');
                             }, true],
-                            ['<button>稍后</button>', function (instance, toast) {
+                            ['<button>@global:toast-later</button>', function (instance, toast) {
                                 instance.hide({
                                     transitionOut: 'fadeOutUp',
                                 }, toast, 'buttonName');
@@ -246,7 +246,7 @@ $(document).ready(function () {
                         ]
                     });
                 }, true],
-                ['<button>取消</button>', function (instance, toast) {
+                ['<button>@global:toast-close</button>', function (instance, toast) {
                     instance.hide({
                         transitionOut: 'fadeOutUp',
                     }, toast, 'buttonName');
@@ -277,7 +277,7 @@ $(document).ready(function () {
         if (!num.test(key)) {
             iziToast.show({
                 timeout: 2000,
-                message: '序号 ' + key + ' 不是正整数'
+                message: '@global:se-set-the-key' + key + ' @global:se-set-not-integer'
             });
             return;
         }
@@ -287,9 +287,9 @@ $(document).ready(function () {
         if (se_list[key]) {
             iziToast.show({
                 timeout: 8000,
-                message: '搜索引擎 ' + key + ' 已有数据，是否覆盖？',
+                message: '@global:se-set-search-engine-cover' + key + ' @global:se-set-cover-has-data',
                 buttons: [
-                    ['<button>确认</button>', function (instance, toast) {
+                    ['<button>@global:toast-ok</button>', function (instance, toast) {
                         se_list[key] = {
                             title: title,
                             url: url,
@@ -305,10 +305,10 @@ $(document).ready(function () {
                             transitionOut: 'fadeOutUp',
                         }, toast, 'buttonName');
                         iziToast.show({
-                            message: '覆盖成功'
+                            message: '@global:se-set-cover-success'
                         });
                     }, true],
-                    ['<button>取消</button>', function (instance, toast) {
+                    ['<button>@global:toast-close</button>', function (instance, toast) {
                         instance.hide({
                             transitionOut: 'fadeOutUp',
                         }, toast, 'buttonName');
@@ -332,7 +332,7 @@ $(document).ready(function () {
         setSeInit();
         iziToast.show({
             timeout: 2000,
-            message: '添加成功'
+            message: '@global:add-success'
         });
         $(".se_add_content").hide();
         showSe();
@@ -370,14 +370,14 @@ $(document).ready(function () {
         var key = $(this).val();
         if (key == se_default) {
             iziToast.show({
-                message: '默认搜索引擎不可删除'
+                message: '@global:se-set-search-engine-delete-default'
             });
         } else {
             iziToast.show({
                 timeout: 8000,
-                message: '搜索引擎 ' + key + ' 是否删除？',
+                message: '@global:se-set-search-engine-delete' + key + ' @global:delete-confirm',
                 buttons: [
-                    ['<button>确认</button>', async function (instance, toast) {
+                    ['<button>@global:toast-ok</button>', async function (instance, toast) {
                         var se_list = await getSeList();
                         delete se_list[key];
                         setSeList(se_list);
@@ -386,10 +386,10 @@ $(document).ready(function () {
                             transitionOut: 'fadeOutUp',
                         }, toast, 'buttonName');
                         iziToast.show({
-                            message: '删除成功'
+                            message: '@global:delete-success'
                         });
                     }, true],
-                    ['<button>取消</button>', function (instance, toast) {
+                    ['<button>@global:toast-close</button>', function (instance, toast) {
                         instance.hide({
                             transitionOut: 'fadeOutUp',
                         }, toast, 'buttonName');
@@ -403,9 +403,9 @@ $(document).ready(function () {
     $(".set_se_list_preinstall").click(function () {
         iziToast.show({
             timeout: 8000,
-            message: '现有搜索引擎数据将被清空',
+            message: '@global:se-set-search-engine-preinstall-confirm',
             buttons: [
-                ['<button>确认</button>', function (instance, toast) {
+                ['<button>@global:toast-ok</button>', function (instance, toast) {
                     setSeList(se_list_preinstall);
                     localStorage.setItem('se_default', 1);
                     setSeInit();
@@ -414,13 +414,13 @@ $(document).ready(function () {
                     }, toast, 'buttonName');
                     iziToast.show({
                         timeout: 2000,
-                        message: '重置成功'
+                        message: '@global:preinstall-success'
                     });
                     // setTimeout(function () {
                     //     window.location.reload()
                     // }, 1000);
                 }, true],
-                ['<button>取消</button>', function (instance, toast) {
+                ['<button>@global:toast-close</button>', function (instance, toast) {
                     instance.hide({
                         transitionOut: 'fadeOutUp',
                     }, toast, 'buttonName');
@@ -450,7 +450,7 @@ $(document).ready(function () {
         if (!num.test(key)) {
             iziToast.show({
                 timeout: 2000,
-                message: '快捷方式 ' + key + ' 不是正整数'
+                message: '@global:quick-set-shortcut' + key + ' @global:se-set-not-integer'
             });
             return;
         }
@@ -460,9 +460,9 @@ $(document).ready(function () {
         if (quick_list[key]) {
             iziToast.show({
                 timeout: 8000,
-                message: '快捷方式 ' + key + ' 已有数据，是否覆盖？',
+                message: '@global:quick-set-shortcut' + key + ' @global:se-set-cover-has-data',
                 buttons: [
-                    ['<button>确认</button>', function (instance, toast) {
+                    ['<button>@global:toast-ok</button>', function (instance, toast) {
                         quick_list[key] = {
                             title: title,
                             url: url,
@@ -478,10 +478,10 @@ $(document).ready(function () {
                             transitionOut: 'fadeOutUp',
                         }, toast, 'buttonName');
                         iziToast.show({
-                            message: '覆盖成功'
+                            message: '@global:se-set-cover-success'
                         });
                     }, true],
-                    ['<button>取消</button>', function (instance, toast) {
+                    ['<button>@global:toast-close</button>', function (instance, toast) {
                         instance.hide({
                             transitionOut: 'fadeOutUp',
                         }, toast, 'buttonName');
@@ -505,7 +505,7 @@ $(document).ready(function () {
         $(".quick_add_content").hide();
         iziToast.show({
             timeout: 2000,
-            message: '添加成功'
+            message: '@global:add-success'
         });
 
         //显示列表
@@ -524,9 +524,9 @@ $(document).ready(function () {
     $(".set_quick_list_preinstall").click(function () {
         iziToast.show({
             timeout: 8000,
-            message: '快捷方式数据将被清空',
+            message: '@global:quick-set-preinstall-data',
             buttons: [
-                ['<button>确认</button>', function (instance, toast) {
+                ['<button>@global:toast-ok</button>', function (instance, toast) {
                     setQuickList(quick_list_preinstall);
                     setQuickInit();
                     instance.hide({
@@ -534,13 +534,13 @@ $(document).ready(function () {
                     }, toast, 'buttonName');
                     iziToast.show({
                         timeout: 2000,
-                        message: '重置成功'
+                        message: '@global:preinstall-success'
                     });
                     // setTimeout(function () {
                     //     window.location.reload()
                     // }, 1000);
                 }, true],
-                ['<button>取消</button>', function (instance, toast) {
+                ['<button>@global:toast-close</button>', function (instance, toast) {
                     instance.hide({
                         transitionOut: 'fadeOutUp',
                     }, toast, 'buttonName');
@@ -574,9 +574,9 @@ $(document).ready(function () {
 
         iziToast.show({
             timeout: 8000,
-            message: '快捷方式 ' + key + ' 是否删除？',
+            message: '@global:quick-set-shortcut' + key + ' @global:delete-confirm',
             buttons: [
-                ['<button>确认</button>', async function (instance, toast) {
+                ['<button>@global:toast-ok</button>', async function (instance, toast) {
                     var quick_list = await getQuickList();
                     delete quick_list[key];
                     await setQuickList(quick_list);
@@ -586,10 +586,10 @@ $(document).ready(function () {
                     }, toast, 'buttonName');
                     iziToast.show({
                         timeout: 2000,
-                        message: '删除成功'
+                        message: '@global:delete-success'
                     });
                 }, true],
-                ['<button>取消</button>', function (instance, toast) {
+                ['<button>@global:toast-close</button>', function (instance, toast) {
                     instance.hide({
                         transitionOut: 'fadeOutUp',
                     }, toast, 'buttonName');
@@ -630,7 +630,7 @@ $(document).ready(function () {
         download("NitaiPage-back-up-" + $.now() + ".json", json);
         iziToast.show({
             timeout: 2000,
-            message: '已导出备份文件至下载目录'
+            message: '@global:backup-export-success'
         });
     });
 
@@ -659,23 +659,23 @@ $(document).ready(function () {
             } catch (e) {
                 iziToast.show({
                     timeout: 2000,
-                    message: '数据解析异常'
+                    message: '@global:data-parse-error'
                 });
                 return;
             }
             if (typeof mydata != 'object') {
                 iziToast.show({
                     timeout: 2000,
-                    message: '数据格式错误'
+                    message: '@global:data-format-error'
                 });
                 return;
             }
 
             iziToast.show({
                 timeout: 8000,
-                message: '当前数据将会被' + '"' + name + '"' + '覆盖！是否继续导入？',
+                message: '@global:my-data-import-confirm' + '"' + name + '"' + '@global:my-data-import-confirm-2',
                 buttons: [
-                    ['<button>确认</button>', async function (instance, toast) {
+                    ['<button>@global:toast-ok</button>', async function (instance, toast) {
                         // 导入cookie数据
                         if (mydata.cookies) {
                             for (var key in mydata.cookies) {
@@ -706,13 +706,13 @@ $(document).ready(function () {
                         }, toast, 'buttonName');
                         iziToast.show({
                             timeout: 2000,
-                            message: size + ' KB 数据被导入'
+                            message: '@global:my-data-import-success' + size + ' KB'
                         });
                         setTimeout(function () {
                             window.location.reload()
                         }, 1000);
                     }, true],
-                    ['<button>取消</button>', function (instance, toast) {
+                    ['<button>@global:toast-cancel</button>', function (instance, toast) {
                         instance.hide({
                             transitionOut: 'fadeOutUp',
                         }, toast, 'buttonName');
@@ -729,9 +729,9 @@ $(document).ready(function () {
     $("#my_data_reset").click(async function () {
         iziToast.show({
             timeout: 8000,
-            message: '当前数据将全部清除！是否继续重置？',
+            message: '@global:my-data-preinstall-confirm',
             buttons: [
-                ['<button>确认</button>', async function () {
+                ['<button>@global:toast-ok</button>', async function () {
                     // cookie
                     const cookies = document.cookie.split("; ");
                     for (let cookie of cookies) {
@@ -751,12 +751,12 @@ $(document).ready(function () {
 
                     iziToast.show({
                         timeout: 1500,
-                        message: '重置完成'
+                        message: '@global:preinstall-success'
                     });
                     location.reload();
 
                 }, true],
-                ['<button>取消</button>', function (instance, toast) {
+                ['<button>@global:toast-cancel</button>', function (instance, toast) {
                     instance.hide({
                         transitionOut: 'fadeOutUp',
                     }, toast, 'buttonName');
@@ -769,7 +769,7 @@ $(document).ready(function () {
     $(".store_check_update").click(function () {
         iziToast.show({
             id: 'checkUpdateToast',
-            message: '正在检查更新...'
+            message: '@global:check-update-message'
         });
         checkUpdates('all');
     });

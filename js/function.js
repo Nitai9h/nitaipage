@@ -720,9 +720,9 @@ async function init() {
     // 快捷方式数据加载
     quickData();
 
-    // Npp插件加载
+    // Npp 插件加载
     initCoreNpp();
-    loadNpp();
+    await loadNpp();
 
     // 生成设置
     await generatePluginSettings();
@@ -1032,7 +1032,7 @@ function showWelcomeMessage() {
     setTimeout(function () {
         iziToast.show({
             title: hello,
-            message: '欢迎使用 拟态起始页'
+            message: '@global:welcome-message'
         });
     }, 800);
 }
@@ -1374,13 +1374,13 @@ function updateMainStyle(blur, weight) {
  * @param {string} content - 通知内容
  * @param {string} buttonText - 关闭按钮文本
  */
-function showAnnouncement(title, content, buttonText = '关闭') {
+function showAnnouncement(title, content, buttonText = '@global:toast-close') {
     // \n 换行
-    const formattedContent = content ? content.replace(/\n/g, '<br>') : '暂无内容';
+    const formattedContent = content ? content.replace(/\n/g, '<br>') : '@global:toast-no-content';
 
     // 使用iziToast显示通知
     iziToast.show({
-        title: title || '通知',
+        title: title || '@global:toast-no-title',
         message: formattedContent,
         position: 'center',
         timeout: false,

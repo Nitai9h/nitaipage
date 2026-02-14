@@ -16,7 +16,7 @@ async function generatePluginSettings() {
   // 模板页面
   const tabs = [
     {
-      name: '返回',
+      name: `@global:plugin_settings-return`,
       id: 'close-pluginSettings',
       active: false,
       value: 'returnToSettings'
@@ -41,13 +41,15 @@ async function generatePluginSettings() {
   // 生成标签页
   const tabsContainer = document.createElement('div');
   tabsContainer.className = 'tabs';
-  tabs.forEach(tab => {
+  tabs.forEach((tab, index) => {
     const tabElement = document.createElement('div');
     tabElement.className = `tab-items ${tab.active ? 'actives' : ''}`;
     tabElement.id = tab.id;
     tabElement.dataset.value = tab.value; // 设置 value (NID)
     tabElement.innerHTML = `<span class="tab_text">${tab.name}</span>`;
-    tabElement.setAttribute('translate', 'none');
+    if (index !== 0) {
+      tabElement.setAttribute('translate', 'none');
+    }
     tabsContainer.appendChild(tabElement);
   });
   container.appendChild(tabsContainer);
@@ -61,7 +63,7 @@ async function generatePluginSettings() {
   const returnContent = document.createElement('div');
   returnContent.className = settingPlugins.length === 0 ? 'mainConts selected' : 'mainConts';
   returnContent.dataset.value = 'returnToSettings';
-  returnContent.textContent = '还没有插件添加设置项或插件设置项未加载...请尝试刷新页面重载';
+  returnContent.textContent = '@global:plugin_settings-no-plugin';
   returnContent.id = 'noPluginSetting';
   contents.appendChild(returnContent);
 

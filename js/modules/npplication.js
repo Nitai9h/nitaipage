@@ -132,7 +132,7 @@ function showLoadingOverlay() {
     loadingOverlay.className = 'details-loading-overlay';
     loadingOverlay.innerHTML = `
         <div class="details-loading-spinner"></div>
-        <div class="details-loading-text">加载中...</div>
+        <div class="details-loading-text">@npplication:loading-text</div>
     `;
 
     if (window._currentDialogContain) {
@@ -373,8 +373,8 @@ async function extractMetadata(url) {
             id: metadata.id,
             version: metadata.version,
             updateUrl: metadata.updateUrl || url,
-            description: metadata.description || '未提供',
-            author: metadata.author || '未知',
+            description: metadata.description || '@npplication:no-description',
+            author: metadata.author || '@npplication:no-author',
             type: metadata.type || '',
             time: isTranslatePlugin ? 'body' : metadata.time.toLowerCase(),
             icon: metadata.icon || 'https://nitai-images.pages.dev/nitaiPage/defeatNpp.svg',
@@ -420,7 +420,11 @@ function parseRelationItems(relationStr, type) {
                 if (match && match.length >= 2) {
                     url = match[1].trim().replace(/`/g, '');
                 } else {
-                    const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+                    const typeNames = {
+                        dependencies: '@npplication:dependencies',
+                        associations: '@npplication:associations',
+                        translates: '@npplication:translates'
+                    };
                     console.warn(`无法解析的${typeNames[type]}:${entry}`);
                     return;
                 }
@@ -430,7 +434,11 @@ function parseRelationItems(relationStr, type) {
         });
         return relations;
     } catch (error) {
-        const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+        const typeNames = {
+            dependencies: '@npplication:dependencies',
+            associations: '@npplication:associations',
+            translates: '@npplication:translates'
+        };
         console.error(`${typeNames[type]}解析失败:` + error);
         return {};
     }
@@ -463,9 +471,13 @@ async function checkRelationItems(relations, type) {
             try {
                 const metadata = await extractMetadata(url);
                 if (!metadata || !metadata.id) {
-                    const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+                    const typeNames = {
+                        dependencies: '@npplication:dependencies',
+                        associations: '@npplication:associations',
+                        translates: '@npplication:translates'
+                    };
                     console.error(`无法获取${typeNames[type]}有效元数据:` + url);
-                    details[url] = { status: 'failed', message: `获取${typeNames[type]}信息失败` };
+                    details[url] = { status: 'failed', message: `@npplication:get-details-failed ${typeNames[type]}` };
                     if (type === 'dependencies') allSatisfied = false;
                     continue;
                 }
@@ -477,8 +489,16 @@ async function checkRelationItems(relations, type) {
 
                 const installedPlugin = plugins.find(p => p.id === metadata.id);
                 if (!installedPlugin) {
-                    const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
-                    const messages = { dependencies: '未安装', associations: '可安装', translates: '可安装' };
+                    const typeNames = {
+                        dependencies: '@npplication:dependencies',
+                        associations: '@npplication:associations',
+                        translates: '@npplication:translates'
+                    };
+                    const messages = {
+                        dependencies: '@npplication:not-installed',
+                        associations: '@npplication:can-install',
+                        translates: '@npplication:can-install'
+                    };
                     details[url] = {
                         status: 'not_installed',
                         message: messages[type],
@@ -492,8 +512,16 @@ async function checkRelationItems(relations, type) {
                 const versionCompare = compareVersions(installedPlugin.version, actualRequiredVersion);
 
                 if (versionCompare < 0) {
-                    const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
-                    const messages = { dependencies: '需安装更新版本', associations: '有更版本可用', translates: '有新版本可用' };
+                    const typeNames = {
+                        dependencies: '@npplication:dependencies',
+                        associations: '@npplication:associations',
+                        translates: '@npplication:translates'
+                    };
+                    const messages = {
+                        dependencies: '@npplication:need-update',
+                        associations: '@npplication:has-newer',
+                        translates: '@npplication:has-newer'
+                    };
                     details[url] = {
                         status: 'version_mismatch',
                         message: messages[type],
@@ -505,23 +533,31 @@ async function checkRelationItems(relations, type) {
                 } else {
                     details[url] = {
                         status: 'satisfied',
-                        message: '已安装',
+                        message: '@npplication:installed',
                         installedVersion: installedPlugin.version,
                         requiredVersion: requiredVersion,
                         metadata: metadata
                     };
                 }
             } catch (error) {
-                const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+                const typeNames = {
+                    dependencies: '@npplication:dependencies',
+                    associations: '@npplication:associations',
+                    translates: '@npplication:translates'
+                };
                 console.error(`检查${typeNames[type]}失败:` + url, error);
-                details[url] = { status: 'failed', message: `检查${typeNames[type]}时出错` };
+                details[url] = { status: 'failed', message: `@npplication:check-failed ${typeNames[type]}` };
                 if (type === 'dependencies') allSatisfied = false;
             }
         }
 
         return type === 'dependencies' ? { status: allSatisfied, details: details } : { details: details };
     } catch (error) {
-        const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
+        const typeNames = {
+            dependencies: '@npplication:dependencies',
+            associations: '@npplication:associations',
+            translates: '@npplication:translates'
+        };
         console.error(`${typeNames[type]}检查过程中发生错误:`, error);
         return type === 'dependencies' ? { status: false, details: {} } : { details: {} };
     }
@@ -553,14 +589,22 @@ async function renderRelationItems(container, relations, type, source = '') {
 
         let html = '<div class="plugin-relation-list">';
         if (Object.keys(details).length > 0) {
-            const typeNames = { dependencies: '依赖项', associations: '关联项', translates: '翻译项' };
-            const versionLabels = { dependencies: '所需版本', associations: '推荐版本', translates: '已安装' };
+            const typeNames = {
+                dependencies: '@npplication:dependencies',
+                associations: '@npplication:associations',
+                translates: '@npplication:translates'
+            };
+            const versionLabels = {
+                dependencies: '@npplication:required-version',
+                associations: '@npplication:recommended-version',
+                translates: '@npplication:installed-version'
+            };
 
             if (type === 'translates') {
                 const hasAnyInstalled = Object.values(details).some(d => d.status === 'satisfied');
                 if (hasAnyInstalled) {
                     html += `
-                    <div class="translate-installed-hint"><i class="iconfont icon-wrong"></i>已成功安装翻译，请手动卸载后再安装其它翻译项</div>
+                    <div class="translate-installed-hint"><i class="iconfont icon-wrong"></i>@npplication:installed-translate-desc</div>
                     `;
                 }
             }
@@ -583,10 +627,10 @@ async function renderRelationItems(container, relations, type, source = '') {
                             ${type === 'translates' ? `<p translate="none">${metadata.translates}</p>` : `
                             <div class="detail-source">
                                 <p>${versionLabels[type]}: <span translate="none">${itemDetails.requiredVersion || 'Latest'}</span>
-                                <span translate="none">${itemDetails.installedVersion ? `<p class="sourceNonCritical">|</p> <p>已安装: <span translate="none">${itemDetails.installedVersion}</span></p>` : ''}</p>
+                                <span translate="none">${itemDetails.installedVersion ? `<p class="sourceNonCritical">|</p> <p>@npplication:installed: <span translate="none">${itemDetails.installedVersion}</span></p>` : ''}</p>
                             </div>
                             `}
-                            ${isInstalled && type === 'translates' ? '<div class="translate-installed-text">已安装</div>' : ''}
+                            ${isInstalled && type === 'translates' ? '<div class="translate-installed-text">@npplication:installed</div>' : ''}
                             ${type !== 'translates' ? `<p class="status">${itemDetails.message}</p>` : ''}
                         </div>
                     </div>
@@ -596,7 +640,11 @@ async function renderRelationItems(container, relations, type, source = '') {
         html += '</div>';
         container.innerHTML = html;
 
-        const errorMessages = { dependencies: '读取依赖项时出错', associations: '读取关联项时出错', translates: '读取翻译项时出错' };
+        const errorMessages = {
+            dependencies: '@npplication:check-failed-dependencies',
+            associations: '@npplication:check-failed-associations',
+            translates: '@npplication:check-failed-translates'
+        };
 
         container.querySelectorAll('.plugin-relation-item').forEach(item => {
             const isDisabled = item.dataset.disabled === 'true';
@@ -887,38 +935,42 @@ function getNpp(option) {
 * 注入 NPP
 * @param {string} id
 * @param {string} time - 加载时机 (head/body)
+* @returns {Promise}
 */
-function loadTime(id, time) {
-    getNpp({ id })
-        .then(({ url }) => {
-            // 查找现有的 script
-            const existingScript = document.querySelector(`script[data-npp-id="${id}"]`);
-            if (existingScript) {
-                // 更新 src
-                existingScript.src = url;
-            } else {
-                // 创建新的 script
-                const script = document.createElement('script');
-                script.src = url;
-                script.type = 'text/javascript';
-                script.dataset.nppId = id;
-                // 根据 @time 注入
-                if (time === 'head') {
-                    document.head.appendChild(script);
-                } else if (time === 'body') {
-                    document.body.appendChild(script);
-                } else {
-                    console.error('加载时机无效');
-                    return;
-                }
-            }
-        })
-        .catch(error => {
-            console.error('获取插件失败:', error);
-            return;
-        });
-}
+async function loadTime(id, time) {
+    function addScript(url, resolve, reject) {
+        const existingScript = document.querySelector(`script[data-npp-id="${id}"]`);
+        if (existingScript) {
+            existingScript.src = url;
+            resolve();
+        } else {
+            const script = document.createElement('script');
+            script.src = url;
+            script.type = 'text/javascript';
+            script.dataset.nppId = id;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error(`加载插件 ${id} 失败`));
 
+            if (time === 'head') {
+                document.head.appendChild(script);
+            } else if (time === 'body') {
+                document.body.appendChild(script);
+            } else {
+                reject(new Error('加载时机无效'));
+            }
+        }
+    }
+    return new Promise((resolve, reject) => {
+        getNpp({ id })
+            .then(({ url }) => {
+                addScript(url, resolve, reject);
+            })
+            .catch(error => {
+                console.error('获取插件失败:', error);
+                reject(error);
+            });
+    });
+}
 
 /**
 * 版本比较
@@ -974,8 +1026,8 @@ async function checkUpdates(id, info = 'show') {
 
                     iziToast.show({
                         timeout: 2000,
-                        title: '自动更新',
-                        message: `${localMetadata.name} 已更新至版本 ${remoteMetadata.version}`,
+                        title: '@npplication:auto-update',
+                        message: `${localMetadata.name} @npplication:installed-latest-version-desc ${remoteMetadata.version}`,
                     });
                     hideToastById('#checkUpdateToast');
                     showRefreshDialog();
@@ -983,10 +1035,10 @@ async function checkUpdates(id, info = 'show') {
                     await new Promise((resolve) => {
                         iziToast.show({
                             timeout: 8000,
-                            title: '更新',
-                            message: `${localMetadata.name} 有新版本 ${remoteMetadata.version} 可用，是否更新？`,
+                            title: '@npplication:update',
+                            message: `${localMetadata.name} @npplication:has-new-version-desc ${remoteMetadata.version}`,
                             buttons: [
-                                ['<button>更新</button>', async function (instance, toast) {
+                                ['<button>@npplication:update</button>', async function (instance, toast) {
                                     instance.hide({ transitionOut: 'flipOutX' }, toast, 'update');
 
                                     // 下载并保存
@@ -999,13 +1051,13 @@ async function checkUpdates(id, info = 'show') {
 
                                     iziToast.show({
                                         timeout: 2000,
-                                        title: '更新',
-                                        message: `${localMetadata.name} 已更新至版本 ${remoteMetadata.version}`
+                                        title: '@npplication:update',
+                                        message: `${localMetadata.name} @npplication:installed-version-desc ${remoteMetadata.version}`
                                     });
                                     resolve();
                                     showRefreshDialog();
                                 }, true],
-                                ['<button>不再提示</button>', function (instance, toast) {
+                                ['<button>@npplication:dont-ask-to-update</button>', function (instance, toast) {
                                     instance.hide({ transitionOut: 'flipOutX' }, toast, 'noUpdate');
                                     // 保存用户选择：不再提示更新
                                     savePluginMetadata({
@@ -1014,7 +1066,7 @@ async function checkUpdates(id, info = 'show') {
                                     });
                                     resolve();
                                 }],
-                                ['<button>稍后</button>', function (instance, toast) {
+                                ['<button>@global:toast-later</button>', function (instance, toast) {
                                     instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
                                     resolve();
                                 }]
@@ -1031,7 +1083,7 @@ async function checkUpdates(id, info = 'show') {
                     await new Promise((toastResolve) => {
                         iziToast.show({
                             timeout: 2000,
-                            message: `${localMetadata.name} 已是最新版本 ${localMetadata.version}`,
+                            message: `${localMetadata.name} @npplication:installed-latest-version-desc ${localMetadata.version}`,
                             onClosed: function () {
                                 toastResolve();
                             }
@@ -1044,7 +1096,7 @@ async function checkUpdates(id, info = 'show') {
             console.error(`检查插件 ${pluginId} 更新失败:`, error);
             iziToast.show({
                 timeout: 8000,
-                message: `检查插件 ${pluginId} 更新时发生错误`
+                message: `${localMetadata.name} @npplication:check-update-error-desc`
             });
             hideToastById('#checkUpdateToast');
         }
@@ -1058,7 +1110,7 @@ async function checkUpdates(id, info = 'show') {
         if (info === 'show') {
             iziToast.show({
                 timeout: 2000,
-                message: '所有 Npp 均已更新到最新版本或已提交更新申请'
+                message: `@npplication:all-updated-desc`
             });
         }
         hideToastById('#checkUpdateToast');
@@ -1070,20 +1122,23 @@ async function checkUpdates(id, info = 'show') {
 
 async function loadNpp() {
     const plugins = await getPluginsList(); // 获取插件列表
-    plugins.forEach(plugin => {
-        if (plugin.id
-            && plugin.time && plugin.type !== 'coreNpp') { // 排除核心插件
-            loadTime(plugin.id, plugin.time);
-        }
-    });
+    const loadPromises = plugins
+        .filter(plugin =>
+            plugin.id
+            && plugin.time
+            && plugin.type !== 'coreNpp') // 排除核心插件
+        .map(plugin => loadTime(plugin.id, plugin.time));
+
+    await Promise.all(loadPromises);
 }
 
 async function initCoreNpp() {
     const coreNppDir = './js/coreNpp/';
-    const coreNppFiles = [
+    var coreNppFiles = [
         'themeColor.js',
         'advancedSettings.js',
-        'customStyle.js'
+        'customStyle.js',
+        'i18n.js'
     ];
 
     for (const fileName of coreNppFiles) {
@@ -1145,11 +1200,11 @@ function initializaNppDB() {
 async function showOrderConfigDialog() {
     const storePage = document.getElementById('storePage');
     const plugins = await getPluginsList();
-    if (plugins.length === 0) {
+    if (plugins.filter(plugin => plugin.id !== 'i18n').length === 0) {
         console.error('没有可配置的插件');
         iziToast.show({
             timeout: 2000,
-            message: '没有可配置的插件'
+            message: '@npplication:no-configurable-plugins-desc'
         });
         return;
     }
@@ -1162,7 +1217,7 @@ async function showOrderConfigDialog() {
     list.className = 'plugin-list';
 
     // 创建列表项
-    const items = plugins.map(plugin => {
+    const items = plugins.filter(plugin => plugin.id !== 'i18n').map(plugin => {
         const item = document.createElement('div');
         item.className = 'plugin-item';
         item.dataset.id = plugin.id;
@@ -1171,7 +1226,7 @@ async function showOrderConfigDialog() {
                 <div class="plugin-info">
                     <strong translate="none">${plugin.name}</strong>
                     <p>NID: <span translate="none">${plugin.id}</span></p>
-                    <p>版本: <span translate="none">${plugin.version}</span></p>
+                    <p>@npplication:version: <span translate="none">${plugin.version}</span></p>
                 </div>
                 `;
         return item;
@@ -1204,10 +1259,10 @@ async function showOrderConfigDialog() {
     buttons.className = 'store-button';
     const saveBtn = document.createElement('button');
     saveBtn.className = 'store-order-save';
-    saveBtn.textContent = '保存';
+    saveBtn.textContent = '@npplication:save';
     const cancelBtn = document.createElement('button');
     cancelBtn.className = 'store-order-cancel';
-    cancelBtn.textContent = '取消';
+    cancelBtn.textContent = '@npplication:cancel';
 
     buttons.appendChild(saveBtn);
     buttons.appendChild(cancelBtn);
@@ -1241,10 +1296,14 @@ async function showOrderConfigDialog() {
             .filter(plugin => plugin);
         // 保留未选中的插件
         const remainingPlugins = updatedPlugins.filter(
-            plugin => !newOrder.includes(plugin.id)
+            plugin => !newOrder.includes(plugin.id) && plugin.id !== 'i18n'
         );
-        // 合并所有插件
+        // 将 i18n 放在最后
+        const i18nPlugin = updatedPlugins.find(plugin => plugin.id === 'i18n');
         const finalPlugins = [...orderedPlugins, ...remainingPlugins];
+        if (i18nPlugin) {
+            finalPlugins.push(i18nPlugin);
+        }
         // 保存至indexedDB
         await savePluginsList(finalPlugins);
         // 关闭对话框
@@ -1260,13 +1319,13 @@ async function showOrderConfigDialog() {
 function showRefreshDialog() {
     iziToast.show({
         timeout: 4000,
-        message: '安装成功，刷新生效',
+        message: '@npplication:install-success-desc',
         buttons: [
-            ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+            ['<button class="refresh-btn">@global:toast-refresh</button>', function (instance, toast) {
                 instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
                 window.location.reload(true);
             }, true],
-            ['<button class="later-btn">稍后</button>', function (instance, toast) {
+            ['<button class="later-btn">@global:toast-later</button>', function (instance, toast) {
                 instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
             }]
         ]
@@ -1277,9 +1336,9 @@ function showUpdateDialog(metadata) {
     hideToastById('#installToast');
     iziToast.show({
         timeout: 8000,
-        message: `确定要覆盖安装插件"${metadata.name}"?`,
+        message: `@npplication:are-you-sure-to-cover-version"${metadata.name}"?`,
         buttons: [
-            ['<button class="confirm-btn">覆盖</button>', async function (instance, toast) {
+            ['<button class="confirm-btn">@global:toast-ok</button>', async function (instance, toast) {
                 instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
                 try {
                     await saveJSFile(metadata.id, metadata.updateUrl);
@@ -1292,11 +1351,11 @@ function showUpdateDialog(metadata) {
                     console.error('覆盖失败:' + error.message);
                     iziToast.show({
                         timeout: 3000,
-                        message: '覆盖失败'
+                        message: '@npplication:cover-fail'
                     });
                 }
             }, true],
-            ['<button class="cancel-btn">取消</button>', function (instance, toast) {
+            ['<button class="cancel-btn">@global:toast-cancel</button>', function (instance, toast) {
                 instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
             }]
         ]
@@ -1310,7 +1369,7 @@ async function installNpplication(url) {
             console.error('无效的JS文件URL:' + url);
             iziToast.show({
                 timeout: 2000,
-                message: '安装失败'
+                message: '@npplication:install-fail'
             });
             hideToastById('#installToast');
             return;
@@ -1329,7 +1388,7 @@ async function installNpplication(url) {
             console.warn('核心应用只能从指定源安装');
             iziToast.show({
                 timeout: 2000,
-                message: '安装失败'
+                message: '@npplication:install-fail'
             });
             hideToastById('#installToast');
             return;
@@ -1341,7 +1400,7 @@ async function installNpplication(url) {
             console.warn('核心应用禁止安装');
             iziToast.show({
                 timeout: 2000,
-                message: '安装失败'
+                message: '@npplication:install-fail'
             });
             hideToastById('#installToast');
             return;
@@ -1354,7 +1413,7 @@ async function installNpplication(url) {
             } else if (versionComparison < 0) {
                 iziToast.show({
                     id: 'checkUpdateToast',
-                    message: '正在安装'
+                    message: '@npplication:installing'
                 });
                 checkUpdates(metadata.id);
             }
@@ -1372,7 +1431,7 @@ async function installNpplication(url) {
         console.error(`安装失败: ${error.message}`);
         iziToast.show({
             timeout: 2000,
-            message: '安装失败'
+            message: '@npplication:install-fail'
         });
         hideToastById('#installToast');
     }
@@ -1387,7 +1446,7 @@ async function loadPluginManagementPage() {
 
         let html = `<div class='store_sources_management'>
                     <div class='store_sources_header'>
-                        <h3>商店源管理</h3>
+                        <h3>@npplication:store-sources-management</h3>
                         <button class='toggle_store_sources'>
                             <i class='iconfont icon-folding'></i>
                         </button>
@@ -1405,7 +1464,7 @@ async function loadPluginManagementPage() {
                                 </div>`).join('')}
                         </div>
                         <div class='add_store_source'>
-                            <input type='text' id='new_store_source' placeholder='输入商店源...'>
+                            <input type='text' id='new_store_source' placeholder='@npplication:store-sources-management-placeholder'>
                             <button id='add_store_source_btn'>
                                 <i class='iconfont icon-add'></i>
                             </button>
@@ -1432,7 +1491,7 @@ async function loadPluginManagementPage() {
                     <div class='plugin_text'>
                         <div class='plugin_name' translate='none'>${plugin.name}</div>
                         <div class='plugin_details'>
-                            <span>版本: <span translate='none'>${plugin.version}</span></span>
+                            <span>@npplication:version: <span translate='none'>${plugin.version}</span></span>
                         </div>
                     </div>
                 </div>
@@ -1454,7 +1513,7 @@ async function loadPluginManagementPage() {
         if (translatePlugins.length > 0) {
             html += `
                     <div class='plugin_management_header'>
-                        <h3>已安装的翻译项</h3>
+                        <h3>@npplication:installed-translate-plugins</h3>
                         <button class='toggle_translate_list'>
                             <i class='iconfont icon-folding'></i>
                         </button>
@@ -1470,7 +1529,7 @@ async function loadPluginManagementPage() {
                         <div class='plugin_text'>
                             <div class='plugin_name' translate='none'>${plugin.name}</div>
                             <div class='plugin_details'>
-                                <span>版本: <span translate='none'>${plugin.version}</span></span>
+                                <span>@npplication:version: <span translate='none'>${plugin.version}</span></span>
                             </div>
                         </div>
                     </div>
@@ -1554,7 +1613,7 @@ async function loadPluginManagementPage() {
                     if (!urlRegex.test(newSource)) {
                         iziToast.show({
                             timeout: 2000,
-                            message: 'URL 无效'
+                            message: '@npplication:invalid-url'
                         });
                         return;
                     }
@@ -1569,12 +1628,12 @@ async function loadPluginManagementPage() {
                         loadPluginManagementPage();
                         iziToast.show({
                             timeout: 2000,
-                            message: '添加成功'
+                            message: '@npplication:add-success'
                         });
                     } else {
                         iziToast.show({
                             timeout: 2000,
-                            message: '源已存在'
+                            message: '@npplication:source-exists'
                         });
                     }
                     // 清空输入框
@@ -1582,7 +1641,7 @@ async function loadPluginManagementPage() {
                 } else {
                     iziToast.show({
                         timeout: 2000,
-                        message: 'URL 无效'
+                        message: '@npplication:invalid-url'
                     });
                 }
             });
@@ -1598,7 +1657,7 @@ async function loadPluginManagementPage() {
                 if (newStoreSources.length === 0) {
                     iziToast.show({
                         timeout: 2000,
-                        message: '至少保留一个商店源'
+                        message: '@npplication:at-least-one-source'
                     });
                     return;
                 }
@@ -1608,7 +1667,7 @@ async function loadPluginManagementPage() {
                 loadPluginManagementPage();
                 iziToast.show({
                     timeout: 2000,
-                    message: '删除成功'
+                    message: '@npplication:delete-success'
                 });
             });
         });
@@ -1620,7 +1679,7 @@ async function loadPluginManagementPage() {
                 if (!pluginId) {
                     iziToast.show({
                         timeout: 3000,
-                        message: '未找到插件' + pluginId
+                        message: '@npplication:plugin-not-found' + pluginId
                     });
                     return;
                 }
@@ -1628,14 +1687,14 @@ async function loadPluginManagementPage() {
                 try {
                     iziToast.show({
                         id: 'checkUpdateToast',
-                        message: '正在检查更新...'
+                        message: '@npplication:checking-update'
                     });
                     // 调用更新检查函数
                     await checkUpdates(pluginId);
                 } catch (error) {
                     iziToast.show({
                         timeout: 3000,
-                        message: '检查更新时发生错误'
+                        message: '@npplication:checking-update-error'
                     });
                     console.error('更新按钮点击事件错误:', error);
                 }
@@ -1657,9 +1716,9 @@ async function loadPluginManagementPage() {
                     if (localMetadata.type !== 'coreNpp') {
                         iziToast.show({
                             timeout: 8000,
-                            message: '是否要卸载此插件吗?',
+                            message: '@npplication:confirm-uninstall',
                             buttons: [
-                                ['<button>确认</button>', async function (instance, toast) {
+                                ['<button>@global:toast-ok</button>', async function (instance, toast) {
                                     instance.hide({
                                         transitionOut: 'fadeOutUp',
                                     }, toast, 'buttonName');
@@ -1667,7 +1726,7 @@ async function loadPluginManagementPage() {
                                     if (localMetadata.type === 'coreNpp') {
                                         iziToast.show({
                                             timeout: 2000,
-                                            message: `${localMetadata.name}不支持卸载`,
+                                            message: `@npplication:core-npp-uninstall-confirm`,
                                         });
                                         return;
                                     } else {
@@ -1678,13 +1737,13 @@ async function loadPluginManagementPage() {
 
                                         iziToast.show({
                                             timeout: 3000,
-                                            message: '插件已卸载，刷新页面生效',
+                                            message: '@npplication:uninstall-success',
                                             buttons: [
-                                                ['<button class="refresh-btn">刷新</button>', function (instance, toast) {
+                                                ['<button class="refresh-btn">@global:toast-refresh</button>', function (instance, toast) {
                                                     instance.hide({ transitionOut: 'flipOutX' }, toast, 'confirm');
                                                     window.location.reload(true);
                                                 }, true],
-                                                ['<button class="later-btn">稍后</button>', function (instance, toast) {
+                                                ['<button class="later-btn">@global:toast-later</button>', function (instance, toast) {
                                                     instance.hide({ transitionOut: 'flipOutX' }, toast, 'cancel');
                                                 }]
                                             ]
@@ -1692,7 +1751,7 @@ async function loadPluginManagementPage() {
                                         loadPluginManagementPage();
                                     }
                                 }, true],
-                                ['<button>取消</button>', function (instance, toast) {
+                                ['<button>@global:toast-cancel</button>', function (instance, toast) {
                                     instance.hide({
                                         transitionOut: 'fadeOutUp',
                                     }, toast, 'buttonName');
@@ -1701,13 +1760,13 @@ async function loadPluginManagementPage() {
                         });
                     }
                 } catch (error) {
-                    iziToast.show({ timeout: 8000, message: '卸载失败:' + error.message });
+                    iziToast.show({ timeout: 8000, message: '@npplication:uninstall-fail:' + error.message });
                 }
             });
         });
     } catch (error) {
         console.error('加载插件管理页面失败:' + error);
-        iziToast.show({ timeout: 8000, message: '加载插件管理页面失败' });
+        iziToast.show({ timeout: 8000, message: '@npplication:load-plugin-management-fail' });
     }
 }
 
@@ -1728,7 +1787,7 @@ function checkStoreContent(containerId = 'storeContent', isEmpty = false) {
         tabElement.className = 'tab-items storeContentEmpty';
         tabElement.innerHTML = `
             <div>
-                <p>还未安装插件</p>
+                <p>@npplication:store-empty</p>
             </div>
         `;
         div.appendChild(tabElement);
@@ -1847,7 +1906,7 @@ async function renderPlugins(pluginsArray) {
         <div class="store-loading-spinner"></div>
         <i class="store-loading-icon iconfont icon-right1"></i>
         <i class="store-loading-icon iconfont icon-wrong"></i>
-        <span class="store-loading-text">正在加载...</span>
+        <span class="store-loading-text">@npplication:loading-text</span>
     `;
     contentContainer.appendChild(loadingElement);
 
@@ -1883,8 +1942,8 @@ async function renderPlugins(pluginsArray) {
             pluginItem.innerHTML = `
                     <img src="${cleanUrl(pluginWithMetadata.icon || '')}" alt="${pluginWithMetadata.name || '插件'}" class="plugin-icon">
                     <div class="plugin-info">
-                        <strong translate="none">${pluginWithMetadata.name || 'Unknown'}</strong>
-                        <p translate="none">${pluginWithMetadata.description || 'Unknown'}</p>
+                        <strong translate="none">${pluginWithMetadata.name || '@npplication:no-name'}</strong>
+                        <p translate="none">${pluginWithMetadata.description || '@npplication:no-description'}</p>
                     </div>
                 `;
 
@@ -1908,10 +1967,10 @@ async function renderPlugins(pluginsArray) {
     const loadingText = loadingElement.querySelector('.store-loading-text');
     if (hasError) {
         loadingElement.classList.add('error');
-        loadingText.textContent = '加载失败！';
+        loadingText.textContent = '@npplication:loading-fail';
     } else {
         loadingElement.classList.add('success');
-        loadingText.textContent = '已加载完成！';
+        loadingText.textContent = '@npplication:loading-success';
     }
 
     if (!hasError) {
@@ -1940,7 +1999,7 @@ function showPluginDetails(pluginWithMetadata) {
     loadingOverlay.className = 'details-loading-overlay';
     loadingOverlay.innerHTML = `
         <div class="details-loading-spinner"></div>
-        <div class="details-loading-text">加载中...</div>
+        <div class="details-loading-text">@npplication:loading-text</div>
     `;
 
     dialog.innerHTML = `
@@ -1948,17 +2007,17 @@ function showPluginDetails(pluginWithMetadata) {
                 <div class="plugin-detail-header">
                     <img src="${cleanUrl(pluginWithMetadata.icon)}" alt="${pluginWithMetadata.name}" class="detail-icon">
                         <div class="detail-title">
-                            <h2 translate="none">${pluginWithMetadata.name || 'Unknown'}</h2>
+                            <h2 translate="none">${pluginWithMetadata.name || '@npplication:no-name'}</h2>
                             <div class="detail-source">
-                                <p translate="none">版本: ${pluginWithMetadata.version || 'Unknown'}</p>
+                                <p>@npplication:version:</p> <p translate="none">${pluginWithMetadata.version || '</p><p>@npplication:no-version'}</p>
                                 <p class="sourceNonCritical">|</p>
-                                <p translate="none">作者: ${pluginWithMetadata.author || 'Unknown'}</p>
+                                <p>@npplication:author:</p> <p translate="none">${pluginWithMetadata.author || '</p><p>@npplication:no-author'}</p>
                             </div>
-                            <p translate="none">NID: ${pluginWithMetadata.id || 'Unknown'}</p>
+                            <p translate="none">NID: ${pluginWithMetadata.id || '</p><p>@npplication:no-nid'}</p>
                             <div class="detail-source">
-                                <p>来源:
-                                    ${pluginWithMetadata.source === 'https://nfdb.nitai.us.kg/nitaiPage/store' ? '<p class="sourceSign">官方源</p>' : ''}
-                                    ${pluginWithMetadata.source === 'https://nfdb.nitai.us.kg/nitaiPage/store' ? '<p class="sourceNonCritical">[' + pluginWithMetadata.source + ']</p>' : pluginWithMetadata.source}
+                                <p>@npplication:source:
+                                    ${pluginWithMetadata.source === 'https://nfdb.nitai.us.kg/nitaiPage/store' ? '<p class="sourceSign">@npplication:official-source</p>' : ''}
+                                    ${pluginWithMetadata.source === 'https://nfdb.nitai.us.kg/nitaiPage/store' ? '<p class="sourceNonCritical" translate="none">[' + pluginWithMetadata.source + ']</p>' : pluginWithMetadata.source}
                                 </p>
                             </div>
                     </div>
@@ -1967,7 +2026,7 @@ function showPluginDetails(pluginWithMetadata) {
                     <div class="detail-section">
                         <div class="detail-header">
                             <i class="iconfont icon-folding on"></i>
-                            <h3>描述</h3>
+                            <h3>@npplication:description</h3>
                         </div>
                         <div class="detail-content expanded">
                             <p translate="none">${pluginWithMetadata.description}</p>
@@ -1976,7 +2035,7 @@ function showPluginDetails(pluginWithMetadata) {
                     <div class="detail-section">
                         <div class="detail-header">
                             <i class="iconfont icon-folding on"></i>
-                            <h3>依赖</h3>
+                            <h3>@npplication:dependencies</h3>
                         </div>
                         <div class="detail-content expanded">
                             <div id="dependencies-container" translate="none"></div>
@@ -1985,7 +2044,7 @@ function showPluginDetails(pluginWithMetadata) {
                     <div class="detail-section">
                         <div class="detail-header">
                             <i class="iconfont icon-folding on"></i>
-                            <h3>关联</h3>
+                            <h3>@npplication:associations</h3>
                         </div>
                         <div class="detail-content expanded">
                             <div id="associations-container" translate="none"></div>
@@ -1994,7 +2053,7 @@ function showPluginDetails(pluginWithMetadata) {
                     <div class="detail-section">
                         <div class="detail-header">
                             <i class="iconfont icon-folding"></i>
-                            <h3>翻译</h3>
+                            <h3>@npplication:translates</h3>
                         </div>
                         <div class="detail-content">
                             <div id="translates-container" translate="none"></div>
@@ -2003,7 +2062,7 @@ function showPluginDetails(pluginWithMetadata) {
                     <div class="detail-section">
                         <div class="detail-header">
                             <i class="iconfont icon-folding"></i>
-                            <h3>截图</h3>
+                            <h3>@npplication:screenshots</h3>
                         </div>
                         <div class="detail-content">
                             <div class="screenshots" translate="none">
@@ -2084,19 +2143,40 @@ function showPluginDetails(pluginWithMetadata) {
         const canInstall = dependencyCheckResult.status;
 
         btn.innerHTML = `
-                <div class="dialog-cancel">返回</div>
-                ${canInstall ? `<div class="dialog-install" data-plugin-url="${cleanUrl(pluginWithMetadata.url)}">安装</div>` : ''}
+                <div class="dialog-cancel">@npplication:return</div>
+                ${canInstall ? `<div class="dialog-install" data-plugin-url="${cleanUrl(pluginWithMetadata.url)}">@npplication:install</div>` : ''}
             `;
 
         btn.querySelector('.dialog-cancel').addEventListener('click', showContain_plugin);
 
         if (canInstall) {
-            btn.querySelector('.dialog-install').addEventListener('click', function () {
+            btn.querySelector('.dialog-install').addEventListener('click', async function () {
                 iziToast.show({
                     id: 'installToast',
-                    message: '开始安装...'
+                    message: '@npplication:installing'
                 });
-                installNpplication(this.dataset.pluginUrl);
+
+                await installNpplication(this.dataset.pluginUrl);
+
+                if (localStorage.getItem('autoInstallTranslation') === 'on') {
+                    const targetLang = localStorage.getItem('autoInstallTranslationGlobal') || 'zh-CN';
+
+                    if (translateCheckResult && translateCheckResult.details) {
+                        for (const [url, details] of Object.entries(translateCheckResult.details)) {
+                            if (details.metadata && details.metadata.translates) {
+                                const translateLang = details.metadata.translates;
+                                if (translateLang === targetLang && details.status !== 'satisfied') {
+                                    await installNpplication(url);
+                                    iziToast.show({
+                                        message: '@npplication:translate-install-success-desc',
+                                        timeout: 3000
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             });
         }
 
@@ -2131,7 +2211,7 @@ function showPluginDetails(pluginWithMetadata) {
         }
         iziToast.show({
             timeout: 3000,
-            message: '加载插件时出错'
+            message: '@npplication:load-plugin-error'
         });
         showContain_plugin();
     });

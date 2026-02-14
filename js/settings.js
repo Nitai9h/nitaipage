@@ -1,11 +1,11 @@
 // 模板页面
 const tabs = [
-  { name: '面板', id: 'set-panel-menu', active: true },
-  { name: '搜取', id: '', active: false },
-  { name: '捷径', id: 'set-quick-menu', active: false },
-  { name: '壁纸', id: '', active: false },
-  { name: '更多', id: '', active: false },
-  { name: '关于', id: 'set-about-menu', active: false }
+  { name: '@global:setting-panel', id: 'set-panel-menu', active: true },
+  { name: '@global:setting-search', id: '', active: false },
+  { name: '@global:setting-quick', id: 'set-quick-menu', active: false },
+  { name: '@global:setting-wallpaper', id: '', active: false },
+  { name: '@global:setting-more', id: '', active: false },
+  { name: '@global:setting-about', id: 'set-about-menu', active: false }
 ];
 
 const searchEngines = [
@@ -32,22 +32,22 @@ const shortcuts = [
 
 const backupOptions = [
   {
-    title: '导入',
-    description: '点击选择配置文件进行恢复',
+    title: '@global:setting-import',
+    description: '@global:setting-import-description',
     buttonId: 'my_data_in',
-    buttonText: '导入'
+    buttonText: '@global:setting-import'
   },
   {
-    title: '导出',
-    description: '点击下载本站点的配置文件',
+    title: '@global:setting-export',
+    description: '@global:setting-export-description',
     buttonId: 'my_data_out',
-    buttonText: '导出'
+    buttonText: '@global:setting-export'
   },
   {
-    title: '重置',
-    description: '遇到问题可在此处进行重置',
+    title: '@global:setting-reset',
+    description: '@global:setting-reset-description',
     buttonId: 'my_data_reset',
-    buttonText: '重置'
+    buttonText: '@global:setting-reset'
   }
 ];
 
@@ -108,7 +108,7 @@ function createPanelContent() {
             <div>
               <span class="set_text">
                 <i class="iconfont icon-folding mobile"></i>
-                <big>时间与日期&nbsp;</big>
+                <big>@global:setting-time-date &nbsp;</big>
               </span>
             </div>
           </div>
@@ -116,8 +116,8 @@ function createPanelContent() {
             <div id="toggle_time" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
               <div class="tip_new_both advancedSetting tip_new_slider">
                 <div>
-                  <span class="set_text"><big>时间大小&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                  <span class="set_text"><big>@global:setting-font-size &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-font-size-description</small></span>
                 </div>
                 <div class="slider-container">
                   <input type="range" class="slider" min="0" max="100" value="0" id="font-size-slider">
@@ -126,8 +126,8 @@ function createPanelContent() {
               </div>
               <div class="tip_new_both advancedSetting tip_new_slider">
                 <div>
-                  <span class="set_text"><big>时间宽度&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                  <span class="set_text"><big>@global:setting-font-width &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-font-width-description</small></span>
                 </div>
                 <div class="slider-container">
                   <input type="range" class="slider" min="0" max="100" value="0" id="font-width-time">
@@ -136,8 +136,8 @@ function createPanelContent() {
               </div>
               <div class="tip_new_both tip_new_slider">
                 <div>
-                  <span class="set_text"><big>时间粗细&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                  <span class="set_text"><big>@global:setting-font-thickness &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-font-thickness-description</small></span>
                 </div>
                 <div class="slider-container">
                   <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-slider">
@@ -146,8 +146,8 @@ function createPanelContent() {
               </div>
               <div class="tip_new_both tip_new_slider">
                 <div>
-                  <span class="set_text"><big>时间透明度&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
+                  <span class="set_text"><big>@global:setting-font-opacity &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-font-opacity-description</small></span>
                 </div>
                 <div class="slider-container">
                   <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-slider">
@@ -158,8 +158,8 @@ function createPanelContent() {
             <div id="toggle_date" class="set_tip set_tip_new text_right" style="display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center;"> 
               <div class="tip_new_both advancedSetting tip_new_slider">
                 <div>
-                  <span class="set_text"><big>日期大小&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                  <span class="set_text"><big>@global:setting-font-size-date &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-font-size-date-description</small></span>
                 </div>
                 <div class="slider-container">
                   <input type="range" class="slider" min="0" max="100" value="0" id="font-size-date">
@@ -168,8 +168,8 @@ function createPanelContent() {
               </div>
               <div class="tip_new_both advancedSetting tip_new_slider">
                 <div>
-                  <span class="set_text"><big>日期宽度&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>最左侧为默认大小</small></span>
+                  <span class="set_text"><big>@global:setting-font-width-date &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-font-width-date-description</small></span>
                 </div>
                 <div class="slider-container">
                   <input type="range" class="slider" min="0" max="100" value="0" id="font-width-date">
@@ -178,8 +178,8 @@ function createPanelContent() {
               </div>
               <div class="tip_new_both tip_new_slider">
                 <div>
-                  <span class="set_text"><big>日期粗细&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                  <span class="set_text"><big>@global:setting-font-thickness-date &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-font-thickness-date-description</small></span>
                 </div>
                 <div class="slider-container">
                   <input type="range" class="slider" min="0" max="100" value="50" id="font-thick-date">
@@ -188,8 +188,8 @@ function createPanelContent() {
               </div>
               <div class="tip_new_both tip_new_slider">
                 <div>
-                  <span class="set_text"><big>日期透明度&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>最右侧为默认大小</small></span>
+                  <span class="set_text"><big>@global:setting-font-opacity-date &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-font-opacity-date-description</small></span>
                 </div>
                 <div class="slider-container">
                   <input type="range" class="slider" min="0" max="100" value="0" id="font-opacity-date">
@@ -200,22 +200,22 @@ function createPanelContent() {
             <div class="set_tip set_tip_new">
               <div class="switch-item tip_new_both" style="align-items: center;">
                 <div>
-                  <span class="set_text"><big>日期显示&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否显示日期</small></span>
+                  <span class="set_text"><big>@global:setting-date-display &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-date-display-description</small></span>
                 </div>
                 <div id="toggle-date-display" class="switch"></div>
               </div>
               <div class="switch-item tip_new_both">
                 <div>
-                  <span class="set_text"><big>缺位补零&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否在时间和日期中补零</small></span>
+                  <span class="set_text"><big>@global:setting-zero-padding &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-zero-padding-description</small></span>
                 </div>
                 <div id="toggle-zero-padding" class="switch"></div>
               </div>
               <div class="switch-item tip_new_both" style="align-items: center;">
                 <div>
-                  <span class="set_text"><big>时钟制式&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否使用 12 小时制</small></span>
+                  <span class="set_text"><big>@global:setting-time-format &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-time-format-description</small></span>
                 </div>
                 <div id="toggle-time-format" class="switch"></div>
               </div>
@@ -223,15 +223,15 @@ function createPanelContent() {
             <div class="set_tip set_tip_new">
               <div class="switch-item tip_new_both">
                 <div>
-                  <span class="set_text"><big>时钟闪烁&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否闪烁时钟指示器</small></span>
+                  <span class="set_text"><big>@global:setting-clock-blink &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-clock-blink-description</small></span>
                 </div>
                 <div id="toggle-clock-blink" class="switch"></div>
               </div>
               <div class="switch-item tip_new_both">
                 <div>
-                  <span class="set_text"><big>时钟动效&nbsp;</big><br></span>
-                  <span class="set_text" style="color: gray;"><small>是否启用时钟数字切换动效</small></span>
+                  <span class="set_text"><big>@global:setting-clock-num &nbsp;</big><br></span>
+                  <span class="set_text" style="color: gray;"><small>@global:setting-clock-num-description</small></span>
                 </div>
                 <div id="toggle-clock-num" class="switch"></div>
               </div>
@@ -243,7 +243,7 @@ function createPanelContent() {
             <div>
               <span class="set_text">
                 <i class="iconfont icon-folding mobile"></i>
-                <big>页面设置&nbsp;</big>
+                <big>@global:setting-page &nbsp;</big>
               </span>
             </div>
           </div>
@@ -252,22 +252,22 @@ function createPanelContent() {
               <div class="set_tip set_tip_new">
                 <div class="switch-item tip_new_both">
                   <div>
-                    <span class="set_text"><big>模糊增强&nbsp;</big><br></span>
-                    <span class="set_text" style="color: gray;"><small>是否启用模糊增强</small></span>
+                    <span class="set_text"><big>@global:setting-blur-plus &nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>@global:setting-blur-plus-description</small></span>
                   </div>
                   <div id="toggle-blur-plus" class="switch"></div>
                 </div>
                 <div class="switch-item tip_new_both">
                   <div>
-                    <span class="set_text"><big>搜索模糊&nbsp;</big><br></span>
-                    <span class="set_text" style="color: gray;"><small>是否启用搜索框模糊效果</small></span>
+                    <span class="set_text"><big>@global:setting-search-blur &nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>@global:setting-search-blur-description</small></span>
                   </div>
                   <div id="toggle-search-blur" class="switch"></div>
                 </div>
                 <div class="tip_new_both tip_new_slider">
                   <div>
-                    <span class="set_text"><big>全局模糊度&nbsp;</big><br></span>
-                    <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                    <span class="set_text"><big>@global:setting-blur-plus-gauss &nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>@global:setting-blur-plus-gauss-description</small></span>
                   </div>
                   <div class="slider-container">
                     <input type="range" class="slider" min="0" max="100" value="50" id="main-box-gauss">
@@ -278,8 +278,8 @@ function createPanelContent() {
               <div class="set_tip set_tip_new">
                 <div class="tip_new_both tip_new_slider">
                   <div>
-                    <span class="set_text"><big>全局字重&nbsp;</big><br></span>
-                    <span class="set_text" style="color: gray;"><small>正中间为默认大小</small></span>
+                    <span class="set_text"><big>@global:setting-font-weight &nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>@global:setting-font-weight-description</small></span>
                   </div>
                   <div class="slider-container">
                     <input type="range" class="slider" min="0" max="100" value="50" id="main-font-weight">
@@ -290,8 +290,8 @@ function createPanelContent() {
               <div class="set_tip set_tip_new">
                 <div class="switch-item tip_new_both">
                   <div>
-                    <span class="set_text"><big>显示页脚&nbsp;</big><br></span>
-                    <span class="set_text" style="color: gray;"><small>是否显示页脚</small></span>
+                    <span class="set_text"><big>@global:setting-footer-display &nbsp;</big><br></span>
+                    <span class="set_text" style="color: gray;"><small>@global:setting-footer-display-description</small></span>
                   </div>
                   <div id="toggle-footer-display" class="switch"></div>
                 </div>
@@ -337,38 +337,38 @@ function createSearchEngineContent() {
         </div>
         <div class="se_add_preinstall">
           <div class="set_se_list_add">
-            <span class="set_quick_text">新增</span>
+            <span class="set_quick_text">@global:setting-set-se-list-add</span>
           </div>
           <div class="set_se_list_preinstall">
-            <span class="set_quick_text">重置</span>
+            <span class="set_quick_text">@global:setting-set-se-list-preinstall</span>
           </div>
         </div>
         <div class="add_content se_add_content" style="display:none;">
           <div class="froms">
             <div class="from_items">
-              <div class="from_text">顺序</div>
+              <div class="from_text">@global:setting-set-se-list-order</div>
               <input type="hidden" name="key_inhere">
-              <input type="number" name="key" placeholder="请填入小于 100 的正整数" autocomplete="off" oninput="if(value>100)value=100;if(value<0)value=0">
+              <input type="number" name="key" placeholder="@global:setting-set-se-list-order-placeholder" autocomplete="off" oninput="if(value>100)value=100;if(value<0)value=0">
             </div>
             <div class="from_items">
-              <div class="from_text">名称</div>
-              <input type="text" name="title" placeholder="搜索引擎名称" autocomplete="off">
+              <div class="from_text">@global:setting-set-se-list-name</div>
+              <input type="text" name="title" placeholder="@global:setting-set-se-list-name-placeholder" autocomplete="off">
             </div>
             <div class="from_items">
-              <div class="from_text">网址</div>
-              <input type="url" name="url" placeholder="以 https 或 http 开头的 URL" autocomplete="off">
+              <div class="from_text">@global:setting-set-se-list-url</div>
+              <input type="url" name="url" placeholder="@global:setting-set-se-list-url-placeholder" autocomplete="off">
             </div>
             <div class="from_items">
-              <div class="from_text">字段名</div>
-              <input type="text" name="name" placeholder="URL 中 问号 后面的字段" autocomplete="off">
+              <div class="from_text">@global:setting-set-se-list-field</div>
+              <input type="text" name="name" placeholder="@global:setting-set-se-list-field-placeholder" autocomplete="off">
             </div>
             <div class="from_items" style="display: none;">
               <input type="text" name="icon" placeholder="iconfont icon-internet" value="iconfont icon-internet" disabled="disabled">
             </div>
           </div>
           <div class="from_items button">
-            <div class="se_add_save">保存</div>
-            <div class="se_add_cancel">取消</div>
+            <div class="se_add_save">@global:setting-set-se-list-save</div>
+            <div class="se_add_cancel">@global:setting-set-se-list-cancel</div>
           </div>
         </div>
       </div>
@@ -462,7 +462,7 @@ function loadUpdateLog() {
     console.error('Failed to load update log:', error);
     const updateLogElement = document.getElementById('updateLog');
     if (updateLogElement) {
-      updateLogElement.innerHTML = '<p class="update-log-error">未获取到此版本的更新日志</p>';
+      updateLogElement.innerHTML = `<p class="update-log-error">@global:setting-set-se-list-update-log-error</p>`;
     }
   });
 }
@@ -494,31 +494,31 @@ function createShortcutContent() {
         </div>
         <div class="se_add_preinstalls">
           <div class="set_quick_list_add">
-            <span class="set_quick_text">新增</span>
+            <span class="set_quick_text">@global:setting-set-quick-list-add</span>
           </div>
           <div class="set_quick_list_preinstall">
-            <span class="set_quick_text">重置</span>
+            <span class="set_quick_text">@global:setting-set-quick-list-reset</span>
           </div>
         </div>
         <div class="add_content quick_add_content" style="display:none;">
           <div class="froms">
             <div class="from_items">
-              <div class="from_text">顺序</div>
+              <div class="from_text">@global:setting-set-quick-list-order</div>
               <input type="hidden" name="key_inhere">
-              <input type="number" name="key" placeholder="请填入小于 1000 的正整数" autocomplete="off" oninput="if(value>999)value=999;if(value<0)value=0">
+              <input type="number" name="key" placeholder="@global:setting-set-quick-list-order-placeholder" autocomplete="off" oninput="if(value>999)value=999;if(value<0)value=0">
             </div>
             <div class="from_items">
-              <div class="from_text">名称</div>
-              <input type="text" name="title" placeholder="网站名称" autocomplete="off">
+              <div class="from_text">@global:setting-set-quick-list-name</div>
+              <input type="text" name="title" placeholder="@global:setting-set-quick-list-name-placeholder" autocomplete="off">
             </div>
             <div class="from_items">
-              <div class="from_text">网址</div>
-              <input type="url" name="url" placeholder="以 https 或 http 开头的 URL" autocomplete="off">
+              <div class="from_text">@global:setting-set-quick-list-url</div>
+              <input type="url" name="url" placeholder="@global:setting-set-quick-list-url-placeholder" autocomplete="off">
             </div>
           </div>
           <div class="from_items button">
-            <div class="quick_add_save">保存</div>
-            <div class="quick_add_cancel">取消</div>
+            <div class="quick_add_save">@global:setting-set-quick-list-add</div>
+            <div class="quick_add_cancel">@global:setting-set-quick-list-cancel</div>
           </div>
         </div>
       </div>
@@ -536,22 +536,22 @@ function createWallpaperContent() {
       <div class="set_tip set_tip_new">
         <div class="switch-item tip_new_both">
           <div>
-            <span class="set_text"><big>壁纸遮罩&nbsp;</big><br></span>
-            <span class="set_text" style="color: gray;"><small>是否启用壁纸遮罩</small></span>
+            <span class="set_text"><big>@global:setting-set-wallpaper-cover &nbsp;</big><br></span>
+            <span class="set_text" style="color: gray;"><small>@global:setting-set-wallpaper-cover-desc</small></span>
           </div>
           <div id="toggle-bg-cover" class="switch on"></div>
         </div>
         <div class="switch-item tip_new_both" id="wallpaper-sound-option">
           <div>
-            <span class="set_text"><big>壁纸音效通知&nbsp;</big><br></span>
-            <span class="set_text" style="color: gray;"><small>关闭后不会收到壁纸音效通知且关闭壁纸音效</small></span>
+            <span class="set_text"><big>@global:setting-set-wallpaper-sound-notify &nbsp;</big><br></span>
+            <span class="set_text" style="color: gray;"><small>@global:setting-set-wallpaper-sound-notify-desc</small></span>
           </div>
           <div id="toggle-bg-video-sound" class="switch on"></div>
         </div>
       </div>
       <div class="set_tip set_tip_new">
-        <span class="set_text_wallpaper">点击下方选项以切换壁纸，使用除默认壁纸以外的选项可能会导致页面载入缓慢</span>
-        <span class="set_text_wallpaper" id="wallpaper_text">点击选项切换壁纸，部分壁纸源不支持动态颜色</span>
+        <span class="set_text_wallpaper" translate="none">@global:setting-set-wallpaper-switch-desc</span>
+        <span class="set_text_wallpaper" id="wallpaper_text" translate="none">@global:setting-set-wallpaper-switch-desc2</span>
       </div>
       <div class="set_blocks_content">
         <div class="from_container">
@@ -573,7 +573,7 @@ function createWallpaperContent() {
                         <div class="wallpaper-list" id="wallpaper-list"></div>
                       </div>
                       <div class="wallpaper-list-add">
-                        <button type="button" id="add-wallpaper-btn">上传</button>
+                        <button type="button" id="add-wallpaper-btn">@global:setting-set-wallpaper-add</button>
                         <input type="file" id="wallpaper-file-input" accept="image/*,video/*" style="display: none;">
                       </div>
                     </div>
@@ -585,7 +585,7 @@ function createWallpaperContent() {
               <div id="wallpaper_name">
                 <div class="from_row">
                   <div class="from_items">
-                    <input type="text" name="wallpaper-name" id="wallpaper-name" class="form-input" placeholder="请输入壁纸名称" autocomplete="off">
+                    <input type="text" name="wallpaper-name" id="wallpaper-name" class="form-input" placeholder="@global:setting-set-wallpaper-name-placeholder" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -593,7 +593,7 @@ function createWallpaperContent() {
                 <div id="wallpaper_url">
                   <div class="from_row">
                     <div class="from_items">
-                      <input type="text" name="wallpaper-url" id="wallpaper-url" class="form-input" placeholder="以 https 或 http 开头的 URL" autocomplete="off">
+                      <input type="text" name="wallpaper-url" id="wallpaper-url" class="form-input" placeholder="@global:setting-set-wallpaper-url-placeholder" autocomplete="off">
                     </div>
                   </div>
                 </div>
@@ -601,7 +601,7 @@ function createWallpaperContent() {
                   <div class="from_row">
                     <div class="from_items">
                       <input type="file" id="wallpaper-file" accept="image/*,video/*" style="display: none;">
-                      <div class="wallpaper-upload-btn" id="wallpaper-upload-btn">上传</div>
+                      <div class="wallpaper-upload-btn" id="wallpaper-upload-btn">@global:setting-set-wallpaper-add</div>
                     </div>
                   </div>
                 </div>
@@ -611,9 +611,9 @@ function createWallpaperContent() {
               <div class="from_row">
                 <div class="from_items">
                   <div class="color-input-container">
-                    <input type="text" name="wallpaper-color" id="wallpaper-color-input" class="form-input" placeholder="请输入16进制颜色值，如#ffffff" autocomplete="off" maxlength="7">
+                    <input type="text" name="wallpaper-color" id="wallpaper-color-input" class="form-input" placeholder="@global:setting-set-wallpaper-color-placeholder" autocomplete="off" maxlength="7">
                     <input type="color" id="wallpaper-color-picker" class="color-picker" value="#ffffff">
-                    <div class="color-picker-btn" id="color-picker-btn">调色</div>
+                    <div class="color-picker-btn" id="color-picker-btn">@global:setting-set-wallpaper-color-picker</div>
                   </div>
                 </div>
               </div>
@@ -621,7 +621,7 @@ function createWallpaperContent() {
           </div>
         </div>
         <div class="from_items button" id="wallpaper-button">
-          <div class="wallpaper_save">保存</div>
+          <div class="wallpaper_save">@global:setting-set-wallpaper-save</div>
         </div>
       </div>
     </div>
@@ -637,13 +637,13 @@ function createMoreContent() {
     <div class="set_blocks set_blocks_content set_blocks_more">
       <div class="entry-pluginSettings set_tip">
         <span class="set_text">Npplication</span>
-        <div id="entryPluginSettings">设置</div>
+        <div id="entryPluginSettings">@global:setting-set-more</div>
       </div>
       <div class="tip_new_ac">
         <div>
           <span class="set_text">
             <i class="iconfont icon-folding mobile"></i>
-            <big>数据设置&nbsp;</big>
+            <big>@global:setting-set-more-data-backup&nbsp;</big>
           </span>
         </div>
       </div>
@@ -676,11 +676,11 @@ function createAboutContent() {
       <div class="set_tip_about">
         <span class="set_text" style="text-align: center;"><img id="favo-icon" src="./favicon.ico" style="width: 32px; height: 32px;"><br>
           <span id="version-number">${VersionInfo.VERSION}</span>
-          <br><big>NitaiPage</big></span>
+          <br><big>@global:nitaipage</big></span>
       </div>
       <div class="set_tip_about">
         <div class="set_tip_updateLog">
-          <span class="set_text"><big>更新日志</big></span>
+          <span class="set_text"><big>@global:setting-set-more-update-log</big></span>
           <div class="dropdown" id="versionDropdown">
             <span id="selectedVersion">${VersionInfo.VERSION}</span>
             <span class="iconfont icon-unfolding"></span>
@@ -693,7 +693,7 @@ function createAboutContent() {
       </div>
       <div class="set_tip_about">
         <div class="set_version">
-          <span class="set_text"><big>版权信息</big></span>
+          <span class="set_text"><big>@global:setting-set-more-copyright-info</big></span>
           <span class="set_version-text set_version-text-mobile">Copyright&nbsp;©
             <script type="text/javascript" src="./js/year.js"></script>2025&nbsp;<a class="text_hover" href="https://nitai.us.kg/">Nitai</a>
           </span>
