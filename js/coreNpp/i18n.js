@@ -338,33 +338,62 @@
     };
 
     const Plugin = {
-        async install(langCode) {
-            const pluginUrl = `https://nfdb.nitai.us.kg/translateGlobal-${langCode}.js`;
 
+        async installGlobalTranslateNpplication(url) {
             try {
-                const response = await fetch(pluginUrl);
-                if (!response.ok) {
-                    console.warn('未获取到全局翻译插件');
+                const { metadata } = await getNpp({ url });
+                if (!await verifyJSUrl(url)) {
+                    console.error('无效的JS文件URL:' + url);
                     return false;
                 }
 
-                const scriptContent = await response.text();
-
-                try {
-                    const translations = JSON.parse(scriptContent);
-                    const success = await Dict.add(translations);
-                    if (success) {
-                        localStorage.setItem('installedTranslationLang', langCode);
-                        return true;
-                    }
-                } catch (error) {
-                    console.error('解析翻译内容失败:', error);
+                if (metadata.type !== 'translate') {
+                    return false;
                 }
 
-                return false;
+                if (!['head', 'body'].includes(metadata.time)) {
+                    console.error('无有效的加载时机');
+                    return false;
+                }
+
+                const plugins = await getPluginsList();
+                const existing = plugins.find(p => p.id === metadata.id);
+
+                if (existing) {
+                    const versionComparison = compareVersions(existing.version, metadata.version);
+                    if (versionComparison >= 0) {
+                        return true;
+                    }
+                }
+
+                // 保存插件元数据和JS文件
+                await savePluginMetadata(metadata);
+                await saveJSFile(metadata.id, url);
+
+                // 自动刷新页面
+                window.location.reload();
+                return true;
             } catch (error) {
-                console.error('安装翻译插件失败:', error);
+                console.error(`安装失败: ${error.message}`);
                 return false;
+            }
+        },
+
+        async install(langCode) {
+            try {
+                await installGlobalTranslateNpplication(`https://nfdb.nitai.us.kg/translateGlobal-${langCode}.js`);
+                localStorage.setItem('installedTranslationLang', langCode);
+                return true;
+            } catch (error) {
+                try {
+                    console.warn(`安装${langCode}失败, 尝试安装zh-CN`, error);
+                    await installGlobalTranslateNpplication(`https://nfdb.nitai.us.kg/translateGlobal-zh-CN.js`);
+                    localStorage.setItem('installedTranslationLang', `zh-CN`);
+                    return true;
+                } catch (error) {
+                    console.warn('全局插件获取失败:', error);
+                    return false;
+                }
             }
         },
 
