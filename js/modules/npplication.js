@@ -1417,9 +1417,16 @@ async function installNpplication(url) {
             hideToastById('#installToast');
             return;
         }
-        if (metadata.type === 'coreNpp' && !url.startsWith(
-            'https://nfdb.nitai.us.kg'
-        )) {
+        let isAllowedCoreSource = false;
+        try {
+            const parsedUrl = new URL(url);
+            isAllowedCoreSource =
+                parsedUrl.protocol === 'https:' &&
+                parsedUrl.hostname === 'nfdb.nitai.us.kg';
+        } catch (e) {
+            isAllowedCoreSource = false;
+        }
+        if (metadata.type === 'coreNpp' && !isAllowedCoreSource) {
             console.warn('核心应用只能从指定源安装');
             iziToast.show({
                 timeout: 2000,
