@@ -1,0 +1,72 @@
+@charset "utf-8";
+/* 用户通知 */
+
+.iziToast {
+    backdrop-filter: var(--main-box-gauss-plus) !important;
+    -webkit-backdrop-filter: var(--main-box-gauss-plus) !important;
+    background-color: var(--main-background-color) !important;
+    box-shadow: var(--main-search-hover-shadow) !important;
+}
+
+.iziToast-title,
+.iziToast-message {
+    color: var(--main-text-color) !important;
+}
+
+.iziToast:after {
+    box-shadow: none !important;
+}
+
+.iziToast>.iziToast-body {
+    display: flex;
+    align-items: center;
+}
+
+.iziToast>.iziToast-body .iziToast-message {
+    margin: 0 !important;
+}
+
+.iziToast>.iziToast-body .iziToast-texts {
+    margin: 0 !important;
+}
+
+.iziToast>.iziToast-body .iziToast-buttons>a,
+.iziToast>.iziToast-body .iziToast-buttons>button,
+.iziToast>.iziToast-body .iziToast-buttons>input:not([type=checkbox]):not([type=radio]) {
+    margin: 2px 6px !important;
+    color: var(--main-text-color) !important;
+}
+
+.iziToast>.iziToast-body .iziToast-buttons>a:focus,
+.iziToast>.iziToast-body .iziToast-buttons>button:focus,
+.iziToast>.iziToast-body .iziToast-buttons>input:not([type=checkbox]):not([type=radio]):focus {
+    box-shadow: none !important;
+}
+
+.iziToast-wrapper.iziToast-wrapper-center .iziToast-capsule {
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 60%;
+    max-width: 60%;
+    min-height: 60%;
+    max-height: 60%;
+    border-radius: 8px !important;
+    position: fixed;
+    justify-content: center;
+    flex-flow: column;
+    align-items: center;
+    display: flex;
+}
+
+.iziToast-wrapper.iziToast-wrapper-center .iziToast-body {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.iziToast-wrapper.iziToast-wrapper-center .iziToast-body .iziToast-texts {
+    display: flex !important;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+}

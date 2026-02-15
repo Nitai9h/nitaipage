@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    主题色
 // @id    themeColor
-// @version    0.4.1
+// @version    0.4.2
 // @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
@@ -66,15 +66,15 @@ function createThemeSetting() {
                 </style>
                 <div class="themeColor_switch-container">
                     <div>
-                        <span class="set_text"><big>白色主题&nbsp;</big><br></span>
-                        <span class="set_text" style="color: gray;"><small>是否切换为白色主题</small></span>
+                        <span class="set_text"><big>@themeColor:setting-white-theme &nbsp;</big><br></span>
+                        <span class="set_text" style="color: gray;"><small>@themeColor:setting-white-theme-desc</small></span>
                     </div>
                     <div class="switch" id="togglewhitetheme"></div>
                 </div>
                 <div class="themeColor_switch-container">
                     <div>
-                        <span class="set_text"><big>动态主题(Beta)&nbsp;</big><br></span>
-                        <span class="set_text" style="color: gray;"><small>根据壁纸切换主题</small></span>
+                        <span class="set_text"><big>@themeColor:setting-dynamic-theme &nbsp;</big><br></span>
+                        <span class="set_text" style="color: gray;"><small>@themeColor:setting-dynamic-theme-desc</small></span>
                     </div>
                     <div class="switch" id="toggledytheme"></div>
                 </div>

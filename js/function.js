@@ -507,45 +507,21 @@ function hideTime() {
         "opacity": "0",
         "pointer-events": "none"
     });
-    $(".set").css({
+    $(".set, .mark, .store, .plugin_set").css({
         "margin-top": "0px",
         "max-height": "480px",
-        "height": "480px",
-    });
-    $(".mark").css({
-        "margin-top": "0px",
-        "max-height": "480px",
-        "height": "480px",
-    });
-    $(".store").css({
-        "margin-top": "0px",
-        "max-height": "480px",
-        "height": "480px",
-    });
-    $(".plugin_set").css({
-        "margin-top": "0px",
-        "max-height": "480px",
-        "height": "480px",
+        "height": "480px"
     });
     $(".order-dialog .dialog-content").css({
         "height": "490px !important"
     });
-    $(".dialog-content").css({
-        "height": "390px"
-    })
-    $(".storeContent").css({
+    $(".dialog-content, .storeContent").css({
         "height": "390px"
     });
-    $(".se_list").css({
+    $(".se_list, .quick_list").css({
         "height": "340px"
     });
-    $(".quick_list").css({
-        "height": "340px"
-    });
-    $(".set_blocks").css({
-        "height": "420px"
-    });
-    $(".plugin_set .contents").css({
+    $(".set_blocks, .panelContent, .plugin_set .contents").css({
         "height": "420px"
     });
 }
@@ -556,45 +532,21 @@ function showTime() {
         "opacity": "1",
         "pointer-events": "unset"
     });
-    $(".set").css({
+    $(".set, .mark, .store, .plugin_set").css({
         "margin-top": "180px",
         "max-height": "400px",
-        "height": "400px",
-    });
-    $(".mark").css({
-        "margin-top": "180px",
-        "max-height": "400px",
-        "height": "400px",
-    });
-    $(".store").css({
-        "margin-top": "180px",
-        "max-height": "400px",
-        "height": "400px",
-    });
-    $(".plugin_set").css({
-        "margin-top": "180px",
-        "max-height": "400px",
-        "height": "400px",
+        "height": "400px"
     });
     $(".order-dialog .dialog-content").css({
         "height": "390px !important"
     });
-    $(".dialog-content").css({
+    $(".dialog-content, .storeContent").css({
         "height": "310px"
     });
-    $(".storeContent").css({
-        "height": "310px"
-    });
-    $(".se_list").css({
+    $(".se_list, .quick_list").css({
         "height": "260px"
     });
-    $(".quick_list").css({
-        "height": "260px"
-    });
-    $(".set_blocks").css({
-        "height": "340px"
-    });
-    $(".plugin_set .contents").css({
+    $(".set_blocks, .panelContent, .plugin_set .contents").css({
         "height": "340px"
     });
 }
@@ -768,9 +720,9 @@ async function init() {
     // 快捷方式数据加载
     quickData();
 
-    // Npp插件加载
+    // Npp 插件加载
     initCoreNpp();
-    loadNpp();
+    await loadNpp();
 
     // 生成设置
     await generatePluginSettings();
@@ -798,12 +750,14 @@ async function init() {
     checkUpdates('all', 'hide');
 
     // 初始控制台展示
-    VersionInfo.displayVersionInfo();
+    await VersionInfo.displayVersionInfo();
     await searchData();
 
     // 版本信息
     if (typeof VersionInfo !== 'undefined' && VersionInfo.VERSION) {
-        $(".power").append(`${VersionInfo.VERSION}`);
+        $(".power").append(`
+            ${VersionInfo.VERSION} <div class="commit">(${VersionInfo.COMMIT})</div>
+        `);
     }
 }
 
@@ -1074,13 +1028,26 @@ function setupTabsScrolling(selector) {
 }
 
 function showWelcomeMessage() {
-    //用户欢迎
-    setTimeout(function () {
+    const nitaiPageInited = localStorage.getItem('nitaiPageVisited');
+    if (nitaiPageInited === '1') {
         iziToast.show({
-            title: hello,
-            message: '欢迎使用 拟态起始页'
+            message: '@global:init-message'
         });
-    }, 800);
+        setTimeout(function () {
+            localStorage.setItem('nitaiPageVisited', 'true');
+            location.reload();
+        }, 3000);
+    } else {
+        //用户欢迎
+        setTimeout(function () {
+            iziToast.show({
+                title: hello,
+                message: '@global:welcome-message'
+            });
+            blurWd();
+            closeBox();
+        }, 800);
+    }
 }
 
 function showContain_plugin() {
@@ -1420,13 +1387,13 @@ function updateMainStyle(blur, weight) {
  * @param {string} content - 通知内容
  * @param {string} buttonText - 关闭按钮文本
  */
-function showAnnouncement(title, content, buttonText = '关闭') {
+function showAnnouncement(title, content, buttonText = '@global:toast-close') {
     // \n 换行
-    const formattedContent = content ? content.replace(/\n/g, '<br>') : '暂无内容';
+    const formattedContent = content ? content.replace(/\n/g, '<br>') : '@global:toast-no-content';
 
     // 使用iziToast显示通知
     iziToast.show({
-        title: title || '通知',
+        title: title || '@global:toast-no-title',
         message: formattedContent,
         position: 'center',
         timeout: false,

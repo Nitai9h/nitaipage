@@ -44,13 +44,12 @@ function createSearchForm() {
   // 创建搜索引擎切换按钮
   const $seDiv = $('<div>')
     .addClass('se')
-    .attr('title', '点击切换搜索引擎')
     .append($('<i>').attr({ id: 'icon-se', class: 'iconfont icon-baidu' }));
 
   // 创建搜索输入框
   const $inputWd = $('<input>')
     .addClass('wd')
-    .attr({ type: 'text', name: 'wd', placeholder: '搜你所想', autocomplete: 'off' });
+    .attr({ type: 'text', name: 'wd', placeholder: '@global:search-placeholder', autocomplete: 'off' });
 
   // 创建搜索按钮
   const $souButtonDiv = $('<div>').addClass('sou-button');
@@ -110,7 +109,7 @@ function createStore() {
     <div id="storePage">
       <div class="tabs" id="storeTabs">
         <div class="tab-items active" id="storeManage">
-          <span class="tab_text">管理</span>
+          <span class="tab_text">@global:store-manage</span>
         </div>
       </div>
       <div class="store-block">
@@ -120,10 +119,10 @@ function createStore() {
         </div>
         <div class="store-button">
           <div class="store_check_update">
-            <span class="set_quick_text">更新</span>
+            <span class="set_quick_text">@global:store-check-update</span>
           </div>
           <div class="store_order_set">
-            <span class="set_quick_text">调序</span>
+            <span class="set_quick_text">@global:store-order-set</span>
           </div>
         </div>
       </div>

@@ -1,0 +1,57 @@
+@charset "utf-8";
+/* 组件 */
+
+input {
+    font-size: 1.05rem;
+    outline: none;
+    height: 40px;
+    width: 100%;
+    border-radius: 8px;
+    padding: 0px 10px;
+    border: none;
+    background: var(--main-input-color);
+}
+
+textarea {
+    font-size: 0.95rem;
+    outline: none;
+    border-radius: 8px;
+    padding: 10px;
+    border: none;
+    background: var(--main-input-color);
+    resize: vertical;
+    min-height: 100px;
+    font-family: var(--font-family), sans-serif;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+textarea::-webkit-resizer {
+    background: var(--border-bottom-color-hover);
+    border-radius: 8px 0px 10px 0px;
+    width: 10px;
+    height: 10px;
+}
+
+input:hover,
+input:active,
+textarea:hover,
+textarea:active {
+    box-shadow: var(--main-search-hover-shadow);
+}
+
+input::-webkit-input-placeholder,
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: var(--main-input-text-placeholder-color);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: var(--main-text-color);
+}

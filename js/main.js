@@ -49,7 +49,8 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.2(2)',
+    VERSION: 'v2.3(8)',
+    COMMIT: '',
 
     // 格式化 版本 信息
     formatUpdates(updates) {
@@ -70,6 +71,7 @@ const VersionInfo = {
             const currentVersionInfo = this.findVersionInfo(data.versions);
 
             if (currentVersionInfo) {
+                this.COMMIT = currentVersionInfo.commit;
                 this.logVersionInfo(currentVersionInfo, data.link);
                 return currentVersionInfo;
             } else {
@@ -90,6 +92,7 @@ const VersionInfo = {
         const linkContent = this.formatLinks(links);
         const content = `
     更新日期：${versionInfo.date}
+    本次提交：${this.COMMIT}
     更新内容：
     ${this.formatUpdates(versionInfo.updates)}
 
@@ -116,14 +119,14 @@ window.addEventListener('load', async function () {
 // 进入问候
 const hour = new Date().getHours();
 const greetings = [
-    { limit: 6, text: "凌晨啦" },
-    { limit: 8, text: "早上好" },
-    { limit: 12, text: "上午好" },
-    { limit: 14, text: "中午好" },
-    { limit: 17, text: "下午好" },
-    { limit: 19, text: "傍晚啦" },
-    { limit: 21, text: "晚上好" },
-    { limit: Infinity, text: "夜深了" }
+    { limit: 6, text: "@global:greeting-early-morning" },
+    { limit: 8, text: "@global:greeting-it's-morning" },
+    { limit: 12, text: "@global:greeting-good-morning" },
+    { limit: 14, text: "@global:greeting-good-noon" },
+    { limit: 17, text: "@global:greeting-good-afternoon" },
+    { limit: 19, text: "@global:greeting-it's-evening" },
+    { limit: 21, text: "@global:greeting-good-evening" },
+    { limit: Infinity, text: "@global:greeting-it's-late-night" }
 ];
 const hello = greetings.find(item => hour < item.limit).text;
 

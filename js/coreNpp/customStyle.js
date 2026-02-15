@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    自定义样式
 // @id    customStyle
-// @version    1.1.0
+// @version    1.1.3
 // @updateUrl    https://nfdb.nitai.us.kg/customStyle.js
 // @description    用户可以自定义CSS
 // @author    Nitai
@@ -97,18 +97,18 @@ function createCustomStyleSetting() {
                     <div class="set_tip">
                         <i class="iconfont icon-act" style="font-size: 32px;"></i>
                         <span class="set_text">
-                            这是一个危险的操作，请不要填入不被信任的样式，这样可能会导致隐私泄露、布局错乱等。
-                            <span class="unAdvancedSetting">如要使用，请开启高级设置。</span>
+                            @customStyle:setting-custom-style-warning1
+                            <span class="unAdvancedSetting">@customStyle:setting-custom-style-warning2</span>
                         </span>
                     </div>
                     <div class="advancedSetting">
-                        <span class="set_text"><big>自定义CSS&nbsp;</big><br></span>
-                        <span class="set_text" style="color: gray;"><small>添加自定义CSS样式</small></span>
-                        <textarea id="customCSS" class="customStyle-textarea" placeholder="在此粘贴 CSS 样式..."></textarea>
+                        <span class="set_text"><big>@customStyle:setting-custom-css-style-title &nbsp;</big><br></span>
+                        <span class="set_text" style="color: gray;"><small>@customStyle:setting-custom-css-style-desc</small></span>
+                        <textarea id="customCSS" class="customStyle-textarea" placeholder="@customStyle:setting-custom-css-style-placeholder"></textarea>
                     </div>
                     <div class="customStyle-buttons advancedSetting">
-                        <button id="resetCustomStyle" class="customStyle-button">重置</button>
-                        <button id="saveCustomStyle" class="customStyle-button">保存</button>
+                        <button id="resetCustomStyle" class="customStyle-button">@customStyle:setting-custom-css-style-reset</button>
+                        <button id="saveCustomStyle" class="customStyle-button">@customStyle:setting-custom-css-style-save</button>
                     </div>
                 </div>
             `;
@@ -116,12 +116,92 @@ function createCustomStyleSetting() {
     }
 }
 
+function sanitizeCSS(cssText) {
+    if (!cssText || typeof cssText !== 'string') return '';
+
+    const MAX_CSS_LENGTH = 100000;
+    if (cssText.length > MAX_CSS_LENGTH) return '';
+
+    let sanitized = cssText;
+
+    const dangerousPatterns = [
+        /\bexpression\s*\(/gi,
+        /javascript:/gi,
+        /vbscript:/gi,
+        /data:\s*text\/html/gi,
+        /data:\s*text\/javascript/gi,
+        /data:\s*application\/javascript/gi,
+        /data:\s*image\/svg\+xml/gi,
+        /@import\s+/gi,
+        /behavior:\s*url\(/gi,
+        /-moz-binding\s*:/gi,
+        /-webkit-binding\s*:/gi,
+        /@-webkit-keyframes/gi,
+        /@-moz-keyframes/gi,
+        /@keyframes\s*\{[^}]*\}/gi,
+        /@-webkit-keyframes\s*\{[^}]*\}/gi,
+        /@-moz-keyframes\s*\{[^}]*\}/gi,
+        /@font-face\s*\{[^}]*\}/gi,
+        /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi,
+        /<iframe[^>]*>.*?<\/iframe>/gis,
+        /<object[^>]*>.*?<\/object>/gis,
+        /<embed[^>]*>.*?<\/embed>/gis,
+        /on\w+\s*=/gi,
+        /eval\s*\(/gi,
+        /setTimeout\s*\(/gi,
+        /setInterval\s*\(/gi,
+        /Function\s*\(/gi,
+        /document\.(write|writeln)/gi,
+        /window\.location/gi,
+        /\.innerHTML\s*=/gi,
+        /\.outerHTML\s*=/gi,
+        /document\.cookie/gi,
+        /localStorage\.getItem/gi,
+        /sessionStorage\.getItem/gi
+    ];
+
+    dangerousPatterns.forEach(pattern => {
+        sanitized = sanitized.replace(pattern, '');
+    });
+
+    const urlPattern = /url\s*\(\s*['"]?([^'")\s]+)['"]?\s*\)/gi;
+    sanitized = sanitized.replace(urlPattern, function (match, url) {
+        if (/^(https?:|\/)/i.test(url)) {
+            return match;
+        }
+        return '';
+    });
+
+    const contentPattern = /content\s*:\s*['"]([^'"]*)['"]/gi;
+    sanitized = sanitized.replace(contentPattern, function (match, content) {
+        const safeContent = content.replace(/[<>&'"]/g, function (c) {
+            const entities = {
+                '<': '&lt;',
+                '>': '&gt;',
+                '&': '&amp;',
+                "'": '&#39;',
+                '"': '&quot;'
+            };
+            return entities[c];
+        });
+        return match.replace(content, safeContent);
+    });
+
+    return sanitized;
+}
+
 function applyCustomCSS(cssText) {
     removeCustomCSS();
 
+    if (!cssText || typeof cssText !== 'string') return;
+
+    const sanitizedCSS = sanitizeCSS(cssText);
+
+    if (!sanitizedCSS || sanitizedCSS.trim() === '') return;
+
     const styleElement = document.createElement('style');
     styleElement.id = 'customUserStyle';
-    styleElement.innerHTML = cssText;
+    styleElement.textContent = sanitizedCSS;
 
     document.body.appendChild(styleElement);
 }
@@ -135,12 +215,21 @@ function removeCustomCSS() {
 }
 
 (function () {
-    // 等待插件设置创建完成
+    const validateLocalStorageCSS = function (css) {
+        if (!css || typeof css !== 'string') return null;
+
+        const sanitized = sanitizeCSS(css);
+        if (!sanitized || sanitized.trim() === '') return null;
+
+        return sanitized;
+    };
+
     document.addEventListener('pluginSettingsTemplateReady', function () {
         createCustomStyleSetting();
 
         const savedCSSForInput = localStorage.getItem('customCSS');
-        if (savedCSSForInput) {
+        const validatedCSSForInput = validateLocalStorageCSS(savedCSSForInput);
+        if (validatedCSSForInput) {
             $('#customCSS').val(savedCSSForInput);
         }
 
@@ -148,7 +237,7 @@ function removeCustomCSS() {
             const cssText = $('#customCSS').val();
             localStorage.setItem('customCSS', cssText);
             iziToast.show({
-                message: '保存成功',
+                message: '@global:setting-save-success',
                 timeout: 2000
             });
             applyCustomCSS(cssText);
@@ -158,7 +247,7 @@ function removeCustomCSS() {
             $('#customCSS').val('');
             localStorage.removeItem('customCSS');
             iziToast.show({
-                message: '重置成功',
+                message: '@customStyle:setting-custom-css-style-reset-success',
                 timeout: 2000
             });
             removeCustomCSS();
@@ -167,8 +256,9 @@ function removeCustomCSS() {
 
     $(document).ready(function () {
         const savedCSS = localStorage.getItem('customCSS');
-        if (savedCSS) {
-            applyCustomCSS(savedCSS);
+        const validatedCSS = validateLocalStorageCSS(savedCSS);
+        if (validatedCSS) {
+            applyCustomCSS(validatedCSS);
         }
     });
 })();

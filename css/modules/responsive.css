@@ -1,4 +1,5 @@
 @charset "utf-8";
+/* 响应式 */
 
 /*小于1200px时*/
 @media (max-width: 1200px) {
@@ -59,6 +60,10 @@
         position: static !important;
     }
 
+    .plugin_management_header h3,
+    .store_sources_header h3 {
+        margin-left: 0px !important;
+    }
 }
 
 /* 大于720px时*/
@@ -69,6 +74,14 @@
 
     .mobile {
         display: inline-flex !important;
+    }
+
+    .tip_new_ac .set_text::after {
+        display: none;
+    }
+
+    .tip_new_ac .set_text {
+        position: unset;
     }
 }
 
@@ -83,7 +96,6 @@
 
 /*小于512px时*/
 @media (max-width: 512px) {
-
     .screenshot-img {
         width: 100%;
     }
@@ -133,8 +145,6 @@
     }
 
     .set_tip_new {
-        margin-left: 2.5%;
-        margin-right: 2.5%;
         gap: 5px;
     }
 
@@ -243,7 +253,6 @@
 
 /*小于260px时*/
 @media (max-width: 260px) {
-
     #fold {
         display: none !important;
     }
@@ -259,7 +268,8 @@
         bottom: 40px !important;
     }
 
-    .set_blocks {
+    .set_blocks,
+    .panelContent {
         height: 390px !important;
     }
 
