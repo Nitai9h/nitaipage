@@ -550,8 +550,8 @@ function createWallpaperContent() {
         </div>
       </div>
       <div class="set_tip set_tip_new">
-        <span class="set_text_wallpaper" translate="none">@global:setting-set-wallpaper-switch-desc</span>
-        <span class="set_text_wallpaper" id="wallpaper_text" translate="none">@global:setting-set-wallpaper-switch-desc2</span>
+        <span class="set_text_wallpaper">@global:setting-set-wallpaper-switch-desc</span>
+        <span class="set_text_wallpaper" id="wallpaper_text">@global:setting-set-wallpaper-switch-desc2</span>
       </div>
       <div class="set_blocks_content">
         <div class="from_container">
