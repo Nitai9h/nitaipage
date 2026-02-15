@@ -9,6 +9,17 @@ const NITAI_PAGE_DB_NAME = 'nitaiPageDB';
 const NITAI_PAGE_STORE = 'nitaiPage';
 const NPP_DB_NAME = 'nppDB';
 
+// HTML 转义
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') return unsafe;
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 function openIndexedDB(dbName, version, upgradeCallback) {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(dbName, version);
@@ -1221,14 +1232,38 @@ async function showOrderConfigDialog() {
         const item = document.createElement('div');
         item.className = 'plugin-item';
         item.dataset.id = plugin.id;
-        item.innerHTML = `
-                <div class="drag-handle"></div>
-                <div class="plugin-info">
-                    <strong translate="none">${plugin.name}</strong>
-                    <p>NID: <span translate="none">${plugin.id}</span></p>
-                    <p>@npplication:version: <span translate="none">${plugin.version}</span></p>
-                </div>
-                `;
+
+        const dragHandle = document.createElement('div');
+        dragHandle.className = 'drag-handle';
+
+        const pluginInfo = document.createElement('div');
+        pluginInfo.className = 'plugin-info';
+
+        const nameStrong = document.createElement('strong');
+        nameStrong.setAttribute('translate', 'none');
+        $(nameStrong).text(plugin.name);
+
+        const nidParagraph = document.createElement('p');
+        nidParagraph.innerHTML = 'NID: ';
+        const nidSpan = document.createElement('span');
+        nidSpan.setAttribute('translate', 'none');
+        $(nidSpan).text(plugin.id);
+        nidParagraph.appendChild(nidSpan);
+
+        const versionParagraph = document.createElement('p');
+        versionParagraph.innerHTML = '@npplication:version: ';
+        const versionSpan = document.createElement('span');
+        versionSpan.setAttribute('translate', 'none');
+        $(versionSpan).text(plugin.version);
+        versionParagraph.appendChild(versionSpan);
+
+        pluginInfo.appendChild(nameStrong);
+        pluginInfo.appendChild(nidParagraph);
+        pluginInfo.appendChild(versionParagraph);
+
+        item.appendChild(dragHandle);
+        item.appendChild(pluginInfo);
+
         return item;
     });
 
@@ -1454,10 +1489,10 @@ async function loadPluginManagementPage() {
                     <div class='store_sources_content'>
                         <div class='store_sources_list'>
                             ${storeSources.map(source => `
-                                <div class='store_source_item' data-url='${source}'>
-                                    <div class='store_source_url' translate='none'>${source}</div>
+                                <div class='store_source_item' data-url='${escapeHtml(source)}'>
+                                    <div class='store_source_url' translate='none'>${escapeHtml(source)}</div>
                                     <div class='store_source_buttons'>
-                                        <button class='delete_store_source' data-url='${source}'>
+                                        <button class='delete_store_source' data-url='${escapeHtml(source)}'>
                                             <i class='iconfont icon-delete'></i>
                                         </button>
                                     </div>
@@ -1486,20 +1521,20 @@ async function loadPluginManagementPage() {
             html += `<div class='plugin_item ${plugin.type === "coreNpp" ? "coreNpp" : ""}'>
                 <div class='plugin_info'>
                     <div class='plugin_icon'>
-                        <img src='${plugin.icon}'>
+                        <img src='${escapeHtml(plugin.icon)}'>
                     </div>
                     <div class='plugin_text'>
-                        <div class='plugin_name' translate='none'>${plugin.name}</div>
+                        <div class='plugin_name' translate='none'>${escapeHtml(plugin.name)}</div>
                         <div class='plugin_details'>
-                            <span>@npplication:version: <span translate='none'>${plugin.version}</span></span>
+                            <span>@npplication:version: <span translate='none'>${escapeHtml(plugin.version)}</span></span>
                         </div>
                     </div>
                 </div>
-                <div class='plugin_actions' id='${plugin.id}'>
-                    <button class='update_plugin' data-id='${plugin.id}'>
+                <div class='plugin_actions' id='${escapeHtml(plugin.id)}'>
+                    <button class='update_plugin' data-id='${escapeHtml(plugin.id)}'>
                     <i class="iconfont icon-refresh"></i>
                     </button>
-                    <button class='uninstall_plugin' data-id='${plugin.id}'>
+                    <button class='uninstall_plugin' data-id='${escapeHtml(plugin.id)}'>
                     <i class="iconfont icon-delete"></i>
                     </button>
                 </div>
@@ -1524,20 +1559,20 @@ async function loadPluginManagementPage() {
                 html += `<div class='plugin_item translate-plugin'>
                     <div class='plugin_info'>
                         <div class='plugin_icon'>
-                            <img src='${plugin.icon}'>
+                            <img src='${escapeHtml(plugin.icon)}'>
                         </div>
                         <div class='plugin_text'>
-                            <div class='plugin_name' translate='none'>${plugin.name}</div>
+                            <div class='plugin_name' translate='none'>${escapeHtml(plugin.name)}</div>
                             <div class='plugin_details'>
-                                <span>@npplication:version: <span translate='none'>${plugin.version}</span></span>
+                                <span>@npplication:version: <span translate='none'>${escapeHtml(plugin.version)}</span></span>
                             </div>
                         </div>
                     </div>
-                    <div class='plugin_actions' id='${plugin.id}'>
-                        <button class='update_plugin' data-id='${plugin.id}'>
+                    <div class='plugin_actions' id='${escapeHtml(plugin.id)}'>
+                        <button class='update_plugin' data-id='${escapeHtml(plugin.id)}'>
                             <i class="iconfont icon-refresh"></i>
                         </button>
-                        <button class='uninstall_plugin' data-id='${plugin.id}'>
+                        <button class='uninstall_plugin' data-id='${escapeHtml(plugin.id)}'>
                             <i class="iconfont icon-delete"></i>
                         </button>
                     </div>

@@ -1044,6 +1044,8 @@ function showWelcomeMessage() {
                 title: hello,
                 message: '@global:welcome-message'
             });
+            blurWd();
+            closeBox();
         }, 800);
     }
 }

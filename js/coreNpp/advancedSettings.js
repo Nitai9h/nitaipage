@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    高级设置
 // @id    advancedSettings
-// @version    1.0.5
+// @version    1.0.6
 // @updateUrl    https://nfdb.nitai.us.kg/advancedSettings.js
 // @description    用于开关高级设置
 // @author    Nitai
