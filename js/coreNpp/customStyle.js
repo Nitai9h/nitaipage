@@ -142,7 +142,7 @@ function sanitizeCSS(cssText) {
         /@-webkit-keyframes\s*\{[^}]*\}/gi,
         /@-moz-keyframes\s*\{[^}]*\}/gi,
         /@font-face\s*\{[^}]*\}/gi,
-        /<script[^>]*>.*?<\/script>/gis,
+        /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi,
         /<iframe[^>]*>.*?<\/iframe>/gis,
         /<object[^>]*>.*?<\/object>/gis,
         /<embed[^>]*>.*?<\/embed>/gis,
