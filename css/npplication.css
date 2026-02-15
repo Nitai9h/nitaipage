@@ -723,7 +723,8 @@
 
 /* 插件管理 */
 .store_sources_management,
-.plugin_management {
+.plugin_management,
+.storeContentEmpty {
     border-radius: 8px;
     background: var(--main-background-color);
     padding: 10px;

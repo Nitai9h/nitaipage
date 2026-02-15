@@ -49,7 +49,7 @@ const VersionInfo = {
         content: 'color: rgb(30,152,255);'
     },
     TITLE: 'NitaiPage',
-    VERSION: 'v2.3.6',
+    VERSION: 'v2.3.7',
     COMMIT: '',
 
     // 格式化 版本 信息

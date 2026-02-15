@@ -44,7 +44,7 @@ async function resetAndContinue() {
         indexedDB.deleteDatabase(db.name);
     }
 
-    localStorage.setItem('nitaiPageVisited', 'true');
+    localStorage.setItem('nitaiPageVisited', '1');
 
     setTimeout(() => {
         window.location.href = './';

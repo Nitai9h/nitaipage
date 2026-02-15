@@ -1,4 +1,5 @@
 {
+    "@global:init-message": "3 秒将自动刷新页面完成初始化",
     "@global:bg-video": "您的浏览器不支持视频播放",
     "@global:shortcut": "捷径",
     "@global:nitaipage": "拟态起始页",
@@ -192,6 +193,7 @@
     "@customStyle:setting-custom-css-style-save": "保存",
     "@customStyle:setting-custom-css-style-reset-success": "重置成功",
     "@i18n:setting-auto-install-translation-plugin": "自动安装翻译插件",
+    "@i18n:global-tanslate-install-success": "全局翻译安装成功",
     "@i18n:setting-auto-install-translation-plugin-desc": "在安装新的插件时，自动安装对应的翻译",
     "@i18n:setting-auto-install-translation-plugin-lang": "语言默认为安装的全局翻译插件所使用的语言",
     "@i18n:setting-auto-install-translation-plugin-need-uninstall": "注意：需要更换语言时需手动卸载",

@@ -338,57 +338,98 @@
     };
 
     const Plugin = {
-
         async installGlobalTranslateNpplication(url) {
             try {
                 const { metadata } = await getNpp({ url });
                 if (!await verifyJSUrl(url)) {
                     console.error('无效的JS文件URL:' + url);
-                    return false;
+                    iziToast.show({
+                        timeout: 2000,
+                        message: '@npplication:install-fail'
+                    });
+                    hideToastById('#installToast');
+                    return;
                 }
 
-                if (metadata.type !== 'translate') {
-                    return false;
-                }
+                const dependencies = parseDependencies(metadata.dependencies || '');
+                const dependencyCheckResult = await checkDependencies(dependencies);
 
-                if (!['head', 'body'].includes(metadata.time)) {
-                    console.error('无有效的加载时机');
-                    return false;
+                if (metadata.type !== 'translate' && !dependencyCheckResult.status) {
+                    hideToastById('#installToast');
+                    return;
+                }
+                if (metadata.type === 'coreNpp' && !url.startsWith(
+                    'https://nfdb.nitai.us.kg'
+                )) {
+                    console.warn('核心应用只能从指定源安装');
+                    iziToast.show({
+                        timeout: 2000,
+                        message: '@npplication:install-fail'
+                    });
+                    hideToastById('#installToast');
+                    return;
                 }
 
                 const plugins = await getPluginsList();
                 const existing = plugins.find(p => p.id === metadata.id);
-
+                if (metadata.type === 'coreNpp' && !existing) {
+                    console.warn('核心应用禁止安装');
+                    iziToast.show({
+                        timeout: 2000,
+                        message: '@npplication:install-fail'
+                    });
+                    hideToastById('#installToast');
+                    return;
+                }
+                // 覆盖弹窗
                 if (existing) {
                     const versionComparison = compareVersions(existing.version, metadata.version);
-                    if (versionComparison >= 0) {
-                        return true;
+                    if (versionComparison === 0) {
+                        showUpdateDialog(metadata);
+                    } else if (versionComparison < 0) {
+                        iziToast.show({
+                            id: 'checkUpdateToast',
+                            message: '@npplication:installing'
+                        });
+                        checkUpdates(metadata.id);
                     }
+                } else {
+                    if (!['head', 'body'].includes(metadata.time)) {
+                        console.error('无有效的加载时机');
+                        return;
+                    }
+                    await savePluginMetadata(metadata);
+                    await saveJSFile(metadata.id, url);
+                    hideToastById('#installToast');
                 }
-
-                // 保存插件元数据和JS文件
-                await savePluginMetadata(metadata);
-                await saveJSFile(metadata.id, url);
-
-                // 自动刷新页面
-                window.location.reload();
-                return true;
             } catch (error) {
                 console.error(`安装失败: ${error.message}`);
-                return false;
+                iziToast.show({
+                    timeout: 2000,
+                    message: '@npplication:install-fail'
+                });
+                hideToastById('#installToast');
             }
         },
 
         async install(langCode) {
             try {
-                await installGlobalTranslateNpplication(`https://nfdb.nitai.us.kg/translateGlobal-${langCode}.js`);
+                await Plugin.installGlobalTranslateNpplication(`https://nfdb.nitai.us.kg/translateGlobal-${langCode}.js`);
                 localStorage.setItem('installedTranslationLang', langCode);
+                iziToast.show({
+                    timeout: 3000,
+                    message: '@i18n:global-tanslate-install-success'
+                });
                 return true;
             } catch (error) {
                 try {
                     console.warn(`安装${langCode}失败, 尝试安装zh-CN`, error);
-                    await installGlobalTranslateNpplication(`https://nfdb.nitai.us.kg/translateGlobal-zh-CN.js`);
+                    await Plugin.installGlobalTranslateNpplication(`https://nfdb.nitai.us.kg/translateGlobal-zh-CN.js`);
                     localStorage.setItem('installedTranslationLang', `zh-CN`);
+                    iziToast.show({
+                        timeout: 3000,
+                        message: '@i18n:global-tanslate-install-success'
+                    });
                     return true;
                 } catch (error) {
                     console.warn('全局插件获取失败:', error);
@@ -416,14 +457,22 @@
         let shouldInstall = false;
 
         if (!installedLang) {
-            shouldInstall = true;
+            const basicSetting = await Plugin.loadBasic();
+            if (Object.keys(basicSetting).length > 0) {
+                const success = await Dict.add(basicSetting);
+                if (success) {
+                    shouldInstall = true;
+                }
+            }
+
         } else if (installedLang === 'basic') {
             shouldInstall = true;
         }
 
-        if (shouldInstall) {
-            const installed = await Plugin.install(preferredLang);
+        const nitaiPageInited = localStorage.getItem('nitaiPageVisited');
+        if (nitaiPageInited !== '1' && shouldInstall) {
 
+            const installed = await Plugin.install(preferredLang);
             if (!installed) {
                 const basicSetting = await Plugin.loadBasic();
                 if (Object.keys(basicSetting).length > 0) {

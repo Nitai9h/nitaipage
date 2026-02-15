@@ -1028,13 +1028,24 @@ function setupTabsScrolling(selector) {
 }
 
 function showWelcomeMessage() {
-    //用户欢迎
-    setTimeout(function () {
+    const nitaiPageInited = localStorage.getItem('nitaiPageVisited');
+    if (nitaiPageInited === '1') {
         iziToast.show({
-            title: hello,
-            message: '@global:welcome-message'
+            message: '@global:init-message'
         });
-    }, 800);
+        setTimeout(function () {
+            localStorage.setItem('nitaiPageVisited', 'true');
+            location.reload();
+        }, 3000);
+    } else {
+        //用户欢迎
+        setTimeout(function () {
+            iziToast.show({
+                title: hello,
+                message: '@global:welcome-message'
+            });
+        }, 800);
+    }
 }
 
 function showContain_plugin() {
