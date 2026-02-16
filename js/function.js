@@ -797,6 +797,13 @@ function getAllIndexedDBData() {
                 const dbName = dbInfo.name;
                 if (!dbName) { completed++; return; }
 
+                // 跳过 translate 数据库
+                if (dbName === 'translate') {
+                    completed++;
+                    if (completed === dbList.length) resolve({ databases: databases });
+                    return;
+                }
+
                 const request = indexedDB.open(dbName);
                 request.onsuccess = function (event) {
                     const db = event.target.result;
@@ -868,6 +875,13 @@ function importIndexedDBData(indexedDBData) {
         indexedDBData.databases.forEach(dbInfo => {
             const dbName = dbInfo.name;
             const dbData = dbInfo.data;
+
+            // 跳过 translate 数据库
+            if (dbName === 'translate') {
+                completed++;
+                if (completed === totalDatabases) resolve();
+                return;
+            }
 
             // 删除现有数据库
             const deleteRequest = indexedDB.deleteDatabase(dbName);

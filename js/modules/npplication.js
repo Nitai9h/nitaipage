@@ -2098,7 +2098,7 @@ function showPluginDetails(pluginWithMetadata) {
                             <h3>@npplication:translates</h3>
                         </div>
                         <div class="detail-content">
-                            <div id="translates-container" translate="none"></div>
+                            <div id="translates-container"></div>
                         </div>
                     </div>
                     <div class="detail-section">
