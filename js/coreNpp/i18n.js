@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    国际化基础插件
 // @id    i18n
-// @version    1.0.0
+// @version    1.0.1
 // @updateUrl    https://nfdb.nitai.us.kg/i18n.js
 // @description    提供页面翻译功能
 // @author    Nitai
@@ -273,7 +273,7 @@
             for (const lang of languages) {
                 if (lang && lang.length >= 2) return lang;
             }
-            return 'zh-CN';
+            return 'en-US';
         }
     };
 
@@ -430,9 +430,9 @@
                 return true;
             } catch (error) {
                 try {
-                    console.warn(`安装${langCode}失败, 尝试安装zh-CN`, error);
-                    await Plugin.installGlobalTranslateNpplication(`https://nfdb.nitai.us.kg/translateGlobal-zh-CN.js`);
-                    localStorage.setItem('installedTranslationLang', `zh-CN`);
+                    console.warn(`安装${langCode}失败, 尝试安装en-US`, error);
+                    await Plugin.installGlobalTranslateNpplication(`https://nfdb.nitai.us.kg/translateGlobal-en-US.js`);
+                    localStorage.setItem('installedTranslationLang', `en-US`);
                     iziToast.show({
                         timeout: 3000,
                         message: '@i18n:global-tanslate-install-success'
