@@ -79,6 +79,17 @@
     align-items: center;
 }
 
+.npp_tip_new {
+    border-radius: 8px;
+    background: var(--main-background-color);
+    padding: 10px;
+    --border-color: rgba(255, 255, 255, 0.1);
+    margin-right: 5px;
+    box-shadow: var(--main-search-shadow);
+    -webkit-box-shadow: var(--main-search-shadow);
+    width: unset;
+}
+
 /* 对话框基础样式 */
 .order-config-dialog,
 .install-dialog {

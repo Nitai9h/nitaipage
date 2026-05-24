@@ -793,6 +793,7 @@ $(document).ready(function () {
     localStorage.getItem('clockNumAnimation') === null && localStorage.setItem('clockNumAnimation', 'true');
     localStorage.getItem('bgVideoSound') === null && localStorage.setItem('bgVideoSound', 'true');
     localStorage.getItem('footerDisplay') === null && localStorage.setItem('footerDisplay', 'true');
+    localStorage.getItem('autoUpdatePlugins') === null && localStorage.setItem('autoUpdatePlugins', 'on');
 
     // 初始化开关状态
     $(document).ready(function () {

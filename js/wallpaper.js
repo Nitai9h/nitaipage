@@ -103,6 +103,9 @@ async function initWallpaerLoader() {
     // 从 indexedDB 获取随机图片列表
     await loadWallpaperPictures();
 
+    // 从 indexedDB 加载壁纸选项
+    await loadWallpaperOptions();
+
     // 渲染壁纸列表
     await renderWallpaperList();
 
@@ -1002,7 +1005,7 @@ function refreshWallpaperOptions() {
 
                 // 二次确认
                 iziToast.show({
-                    message: `@global:toast-delete-confirm`,
+                    message: `@global:delete-confirm`,
                     buttons: [
                         ['<button><b>@global:toast-ok</b></button>', function (instance, toast) {
                             if (wallpaperToDelete.mediaId) {
@@ -1077,20 +1080,20 @@ function renderWallpaperList() {
             }
             // 弹出二次确认对话框
             iziToast.show({
-                message: '@global:toast-delete-confirm',
+                message: '@global:delete-confirm',
                 buttons: [
                     ['<button>@global:toast-ok</button>', async (instance, toast) => {
                         try {
                             await removeWallpaperFromList(index);
                             renderWallpaperList();
                             iziToast.show({
-                                message: '@global:toast-delete-success',
+                                message: '@global:delete-success',
                                 timeout: 2000
                             });
                         } catch (error) {
                             console.error(error);
                             iziToast.show({
-                                message: '@global:toast-delete-fail',
+                                message: '@global:delete-fail',
                                 timeout: 2000
                             });
                         }

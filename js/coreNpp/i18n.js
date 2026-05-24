@@ -1,7 +1,7 @@
 // ==Npplication==
 // @name    国际化基础插件
 // @id    i18n
-// @version    1.0.1
+// @version    1.0.2
 // @updateUrl    https://nfdb.nitai.us.kg/i18n.js
 // @description    提供页面翻译功能
 // @author    Nitai
@@ -540,7 +540,7 @@
         createSettings();
 
         const toggleSwitch = $('#toggleAutoInstallTranslation');
-        const savedState = localStorage.getItem('autoInstallTranslation') || 'off';
+        const savedState = localStorage.getItem('autoInstallTranslation') || 'on';
 
         if (savedState === 'on') {
             toggleSwitch.addClass('on');

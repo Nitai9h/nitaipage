@@ -1005,7 +1005,7 @@ function compareVersions(version1, version2) {
 * @param {string} id - 传入单个插件 id / 'all'
 */
 async function checkUpdates(id, info = 'show') {
-    const checkSinglePluginUpdate = async (pluginId, info) => {
+    const checkSinglePluginUpdate = async (pluginId, info, silent = false) => {
         try {
             // 获取本地插件信息
             const localData = await getNpp({ "id": pluginId });
@@ -1026,7 +1026,7 @@ async function checkUpdates(id, info = 'show') {
             const versionComparison = compareVersions(localMetadata.version, remoteMetadata.version);
             if (versionComparison < 0) {
                 // 发现新版本
-                if (localMetadata.forceUpdate == 'true') {
+                if (localMetadata.forceUpdate == 'true' || silent) {
                     // 更新 JS 文件
                     await saveJSFile(remoteMetadata.id, remoteMetadata.updateUrl);
                     // 更新元数据
@@ -1040,7 +1040,9 @@ async function checkUpdates(id, info = 'show') {
                         title: '@npplication:auto-update',
                         message: `${localMetadata.name} @npplication:installed-latest-version-desc ${remoteMetadata.version}`,
                     });
-                    hideToastById('#checkUpdateToast');
+                    if (info !== 'hide') {
+                        hideToastById('#checkUpdateToast');
+                    }
                     showRefreshDialog();
                 } else {
                     await new Promise((resolve) => {
@@ -1114,9 +1116,10 @@ async function checkUpdates(id, info = 'show') {
     };
 
     if (id === 'all') {
+        const autoUpdateEnabled = localStorage.getItem('autoUpdatePlugins') !== 'off';
         const plugins = await getPluginsList();
         for (const plugin of plugins) {
-            await checkSinglePluginUpdate(plugin.id, 'hide');
+            await checkSinglePluginUpdate(plugin.id, 'hide', autoUpdateEnabled);
         }
         if (info === 'show') {
             iziToast.show({
@@ -1486,7 +1489,16 @@ async function loadPluginManagementPage() {
         // 获取商店源
         let storeSources = JSON.parse(localStorage.getItem('storeSources')) || storeSourcesDefault;
 
-        let html = `<div class='store_sources_management'>
+        let html = `<div class="plugin_auto_update_setting">
+                    <div class="npp_tip_new switch-item tip_new_both">
+                        <div>
+                            <span class="set_text"><big>@npplication:setting-auto-update-plugins &nbsp;</big><br></span>
+                            <span class="set_text" style="color: gray;"><small>@npplication:setting-auto-update-plugins-desc</small></span>
+                        </div>
+                        <div id="toggleAutoUpdatePlugins" class="switch"></div>
+                    </div>
+                </div>
+                <div class='store_sources_management'>
                     <div class='store_sources_header'>
                         <h3>@npplication:store-sources-management</h3>
                         <button class='toggle_store_sources'>
@@ -1597,6 +1609,22 @@ async function loadPluginManagementPage() {
             manageContent.innerHTML = html;
             requestAnimationFrame(() => {
                 checkStoreContent('manageContent', plugins.length === 0);
+
+                // 自动更新开关初始化和事件
+                const $toggleAutoUpdate = $('#toggleAutoUpdatePlugins');
+                if (localStorage.getItem('autoUpdatePlugins') === 'on') {
+                    $toggleAutoUpdate.addClass('on');
+                }
+                $toggleAutoUpdate.on('click', function () {
+                    const isOn = $(this).hasClass('on');
+                    if (isOn) {
+                        $(this).removeClass('on');
+                        localStorage.setItem('autoUpdatePlugins', 'off');
+                    } else {
+                        $(this).addClass('on');
+                        localStorage.setItem('autoUpdatePlugins', 'on');
+                    }
+                });
 
                 // Npplication 列表折叠
                 const $togglePluginBtn = $('.toggle_plugin_list', manageContent);

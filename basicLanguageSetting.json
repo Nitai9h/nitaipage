@@ -268,5 +268,7 @@
     "@npplication:load-plugin-management-fail": "加载插件管理页面失败",
     "@npplication:store-empty": "还未安装插件",
     "@npplication:official-source": "官方源",
-    "@npplication:load-plugin-error": "加载插件时出错"
+    "@npplication:load-plugin-error": "加载插件时出错",
+    "@npplication:setting-auto-update-plugins": "自动更新插件",
+    "@npplication:setting-auto-update-plugins-desc": "开启后，有新版本时自动更新插件，无需手动确认"
 }
