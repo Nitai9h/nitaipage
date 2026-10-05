@@ -12,7 +12,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "chroma-js": "^2.4.2",
-        "colorthief": "^2.6.0",
+        "colorthief": "^3.5.0",
         "fflate": "^0.8.3",
         "izitoast": "^1.4.0",
         "js-cookie": "^3.0.5",
