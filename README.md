@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./favicon.ico" width="150" height="150" />
+<img src="./public/favicon.ico" width="150" height="150" />
 
 # NitaiPage
 
@@ -8,47 +8,53 @@
 
 ![license](https://img.shields.io/github/license/nitai9h/nitaipage?color=FF5531)
 
-📢 [发行版](https://www.nitai.us.kg/) / [开发版](https://dev-www.nitai.us.kg/)
+📢 [发行版](https://tab.nitai.cc/) / [开发版](https://tab-dev.nitai.cc/)
 
-📖 [文档](https://nitaipage.nitai.us.kg/)
+📖 [文档](https://nitaipage.nitai.cc/)
 
 ⚒️ [插件问题反馈](https://github.com/Nitai9h/nitaiPage-Store)
 
 </div>
 
-![Nitaipage宣传图](https://nitai-images.pages.dev/nitaiPage/poseter_NitaiPage.webp)
+![Nitaipage post](https://nitai-images.pages.dev/nitaiPage/v3.0.0-post.webp)
 
 *Powered Snavigation V1.1 ( Open Source by imsyy )*
 
 ---
 
-## 注意事项
+## 本地开发
 
-在线版可能因浏览器缓存原因，无法及时预览最新效果
-
-可通过清除浏览器缓存与 `Ctrl + F5` 来刷新页面
-
-## 本地部署
+> 项目自 v3.0.0 迁移至 Vue 3，不再需要 http-server
 
 ```shell
 # 安装 node（这里不再过多赘述）
 
 node -v
 
-# 安装 http-server
-
-npm install http-server -g
-
-http-server -v
-
 # 进入文件夹（更换 /nitaipage 为你自己的路径）
 
 cd /nitaipage
 
-# 启动服务
+# 安装依赖
 
-# -p 指定端口 -o 立即打开浏览器
-http-server -p 11123 -o
+npm install
+
+# 启动开发服务器（默认 http://localhost:11123，默认已开启局域网访问）
+
+npm run dev
+
+```
+
+## 构建与预览
+
+```shell
+# 构建产物
+
+npm run build
+
+# 本地预览
+
+npm run preview
 ```
 
 ## 一键部署到 Netlify
@@ -59,20 +65,18 @@ http-server -p 11123 -o
 
 [![Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Nitai9h/nitaipage)
 
-## 开发版 (Dev) 说明
-
-每一阶段开发完成后与 main 分支同步，更新将会比较频繁
-
-可通过[地址](https://dev-www.nitai.us.kg)访问最新提交的更改
-
 # 技术栈
 
+* [Vue 3](https://cn.vuejs.org/)
+* [Vite](https://cn.vitejs.dev/)
+* [Pinia](https://pinia.vuejs.org/)
+* [vue-i18n](https://vue-i18n.intlify.dev/)
 * [iziToast](https://izitoast.marcelodolza.com/)
 * [Iconfont](https://www.iconfont.cn/)
-* [jQuery](https://jquery.com/)
 * [sortable](https://github.com/SortableJS/Sortable)
 * [js-cookies](https://github.com/js-cookie/js-cookie)
 * [chroma](https://github.com/gka/chroma.js)
+* [color-thief](https://github.com/lokesh/color-thief)
 
 # API
 

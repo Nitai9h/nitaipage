@@ -1,0 +1,290 @@
+@charset "utf-8";
+/* 响应式 */
+
+/*小于1200px时*/
+@media (max-width: 1200px) {
+
+    /*书签及设置高度*/
+    .mark,
+    .set,
+    .store,
+    .plugin_set {
+        margin-top: 180px;
+    }
+}
+
+/*小于720px时*/
+@media (max-width: 720px) {
+
+    .entry-left,
+    .entry-right {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    .set .panel-body:not(.menu-collapsed) .tabs-container,
+    .store .panel-body:not(.menu-collapsed) .tabs-container,
+    .plugin_set .panel-body:not(.menu-collapsed) .tabs-container {
+        width: 100%;
+    }
+
+    .set .panel-body:not(.menu-collapsed)>.contents,
+    .store .panel-body:not(.menu-collapsed)>.contents,
+    .plugin_set .panel-body:not(.menu-collapsed)>.contents {
+        min-width: 0;
+        overflow: hidden;
+        padding-left: 0;
+        padding-right: 0;
+        margin-right: 0;
+    }
+
+    /*书签*/
+    .quick {
+        width: 23%;
+        min-width: 23%;
+        max-width: 23%;
+    }
+
+    .plugin-detail-header {
+        flex-direction: column;
+    }
+
+    .screenshots a {
+        width: 100% !important;
+    }
+
+    .drag-handle .iconfont {
+        display: none;
+    }
+
+    .desktop {
+        display: block !important;
+    }
+
+    .mobile {
+        display: none !important;
+    }
+
+    .tip_new_ac {
+        flex-direction: column !important;
+    }
+
+    .tip_new_ac .set_text big {
+        position: static !important;
+    }
+}
+
+/* 大于720px时*/
+@media (min-width: 720px) {
+    .desktop {
+        display: none !important;
+    }
+
+    .mobile {
+        display: inline-flex !important;
+    }
+}
+
+/* 大于512px时*/
+@media (min-width: 512px) {
+
+    #entryPluginSettings {
+        width: 14vw;
+    }
+}
+
+/*小于512px时*/
+@media (max-width: 512px) {
+    .screenshot-img {
+        width: 100%;
+    }
+
+    .timeNum {
+        min-width: 27.5px;
+        max-width: 27.5px;
+    }
+
+    .dayNum {
+        min-width: 11.5px;
+        max-width: 11.5px;
+    }
+
+    /*搜索引擎*/
+    .se-li {
+        width: 31.33%;
+        min-width: 31.33%;
+        max-width: 31.33%;
+    }
+
+    /*设置按钮*/
+    .entry-items i {
+        font-size: 1.65rem;
+    }
+
+    /*书签*/
+    .quick {
+        width: 31.33%;
+        min-width: 31.33%;
+        max-width: 31.33%;
+    }
+
+    /*壁纸设置*/
+    #wallpaper {
+        flex-wrap: wrap;
+    }
+
+    #wallpaper_text {
+        margin-top: 0px;
+    }
+
+    .set_tip_new {
+        gap: 5px;
+    }
+
+    .set_text_wallpaper {
+        font-size: x-small;
+    }
+
+    .aboutContainer,
+    .quick-all {
+        margin: 5px 5px 0px 5px !important;
+    }
+
+    .set_blocks_content {
+        margin: 5px 5px 5px 5px !important;
+    }
+
+    .wallpapers_content {
+        margin: 0px 5px 0px 5px !important;
+    }
+
+    .drag-handle {
+        margin-bottom: 10px;
+    }
+
+    .data_backup_tip {
+        width: 100%;
+    }
+
+    .entry-pluginSettings {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: center !important;
+    }
+
+    #entryPluginSettings {
+        margin: 10px 20px 0px 20px;
+    }
+
+    .iziToast-wrapper.iziToast-wrapper-center .iziToast-capsule {
+        min-width: 80%;
+        max-width: 80%;
+        min-height: 80%;
+        max-height: 80%;
+    }
+
+    .tab_text {
+        padding: 0px 10px;
+    }
+
+    .wallpaper_container {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0px !important;
+    }
+
+    .wallpaper_container.show {
+        height: 100px !important;
+    }
+
+    #wallpaper_name {
+        width: 100%;
+    }
+
+    .wallpaper-custom-container {
+        width: 100%;
+    }
+}
+
+/*小于450px时*/
+@media (max-width: 450px) {
+    .slider {
+        width: 80px !important;
+    }
+
+    .slider-value {
+        transform: translateX(-120px);
+    }
+}
+
+/*小于370px时*/
+@media (max-width: 370px) {
+    .tip_new_slider {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .slider {
+        width: calc(100% - 25px) !important;
+    }
+
+    .slider-value {
+        opacity: 1;
+        transform: translateX(3px);
+    }
+}
+
+/*小于260px时*/
+@media (max-width: 260px) {
+    #fold {
+        display: none !important;
+    }
+
+    .set,
+    .mark,
+    .store,
+    .plugin_set {
+        margin-top: 0px !important;
+        max-height: 500px !important;
+        height: 500px !important;
+        width: 100% !important;
+        bottom: 40px !important;
+    }
+
+    .set_blocks,
+    .panelContent {
+        height: 390px !important;
+    }
+
+    .quick-all {
+        height: 380px !important;
+    }
+
+    .panel_list {
+        height: 335px !important;
+    }
+
+    .plugin-list {
+        height: 100% !important;
+    }
+
+    .plugin-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tab_text {
+        padding: 0px 5px;
+    }
+}
+
+/* 大于568px时 */
+@media (min-width: 568px) {
+    .iziToast {
+        border-radius: 30px !important;
+    }
+
+    .iziToast-wrapper {
+        padding: 10px 0px !important;
+    }
+}

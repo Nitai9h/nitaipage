@@ -1,0 +1,28 @@
+{
+    "name": "nitaipage",
+    "version": "3.0.0",
+    "private": true,
+    "description": "拟态起始页 —— 一个优雅的浏览器起始页",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --host",
+        "build": "vite build",
+        "preview": "vite preview --host"
+    },
+    "license": "Apache-2.0",
+    "dependencies": {
+        "chroma-js": "^2.4.2",
+        "colorthief": "^2.6.0",
+        "fflate": "^0.8.3",
+        "izitoast": "^1.4.0",
+        "js-cookie": "^3.0.5",
+        "pinia": "^2.2.6",
+        "sortablejs": "^1.15.6",
+        "vue": "^3.5.13",
+        "vue-i18n": "^11.4.12"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.2.1",
+        "vite": "^5.4.11"
+    }
+}
