@@ -4,7 +4,22 @@ import iziToast from 'izitoast';
 import Cookies from 'js-cookie';
 import Sortable from 'sortablejs';
 import chroma from 'chroma-js';
-import ColorThief from 'colorthief';
+import { getColorSync, getPaletteSync } from 'colorthief';
+
+// colorthief 3.x 改为命名导出，new ColorThief() + getColor/getPalette 同步返回 [r,g,b]
+class ColorThief {
+    getColor(source, quality = 10) {
+        const options = quality && typeof quality === 'object' ? { ...quality } : { quality };
+        const color = getColorSync(source, options);
+        return color ? [...color.srgb] : null;
+    }
+
+    getPalette(source, colorCount = 10, quality = 10) {
+        const options = colorCount && typeof colorCount === 'object' ? { ...colorCount } : { colorCount, quality };
+        const palette = getPaletteSync(source, options);
+        return palette ? palette.map((color) => [...color.srgb]) : null;
+    }
+}
 
 // 时钟数位
 // 返回 HTML 串，供插件拼进 innerHTML
