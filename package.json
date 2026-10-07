@@ -1,6 +1,6 @@
 {
     "name": "nitaipage",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "private": true,
     "description": "拟态起始页 —— 一个优雅的浏览器起始页",
     "type": "module",
