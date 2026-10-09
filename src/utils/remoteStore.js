@@ -61,7 +61,8 @@ export function remoteBase() {
 const seg = (value) => encodeURIComponent(String(value))
 
 async function request(path, options = {}) {
-    const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) }
+    const headers = { ...(options.headers || {}) }
+    if (options.body !== undefined && options.body !== null) headers['Content-Type'] = 'application/json'
     if (token) headers.Authorization = `Bearer ${token}`
 
     const response = await fetch(baseUrl + path, {

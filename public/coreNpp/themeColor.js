@@ -2,7 +2,7 @@
 // @name    主题色
 // @id    themeColor
 // @version    0.4.3
-// @updateUrl    https://nfdb.nitai.us.kg/themeColor.js
+// @updateUrl    https://nppdb.nitai.cc/themeColor.js
 // @description    主题扩展插件
 // @author    Nitai
 // @type    coreNpp

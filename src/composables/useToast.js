@@ -54,6 +54,7 @@ export function hideToastById(selector) {
         }
         // 先触发淡出动画，再移除 DOM
         container.classList.add('fadeOutUp')
+        container.classList.add('iziToast-closing')
         setTimeout(() => {
             if (container.parentNode) container.parentNode.removeChild(container)
         }, 300)

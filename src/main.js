@@ -14,7 +14,6 @@ import { runMigrationReceiver } from '@/migrate/receiver'
 
 function showDataServerError(remote) {
     const url = remote?.url || ''
-    const crossOrigin = !!remote?.crossOrigin
     const mount = document.getElementById('app')
     if (!mount) return
 
@@ -22,7 +21,7 @@ function showDataServerError(remote) {
     document.body.style.cssText = 'margin:0;background:#333333;overflow:hidden;height:100%'
 
     const hint = lockedByBuild
-        ? '当前绑定的服务器开启了仅支持服务器存储，但目前无法连接服务器'
+        ? '暂时无法连接服务器，请配对或者检查服务器状态'
         : '当前使用的自建服务器无法连接，请检查地址与网络后重试'
 
     const buttons = lockedByBuild
@@ -46,7 +45,7 @@ function showDataServerError(remote) {
                 <div id="pair-data-box" style="display:none;margin-top:22px">
                     <p style="color:#b4b2a9;margin:0 0 8px">在服务器上执行以下命令批准：</p>
                     <code style="display:block;padding:10px 12px;border-radius:8px;background:#1c1c1b;border:1px solid #4a4a47;
-                                 font:12px/1.5 ui-monospace,Consolas,monospace;word-break:break-all">npm run pair -- <span id="pair-data-code"></span></code>
+                        font:12px/1.5 ui-monospace,Consolas,monospace;word-break:break-all">npm run pair -- <span id="pair-data-code"></span></code>
                     <p id="pair-data-status" style="color:#888780;margin:8px 0 0">等待批准…</p>
                 </div>
             </div>
@@ -66,7 +65,7 @@ function showDataServerError(remote) {
     })
 
     // 传递服务端鉴权方式
-    if (lockedByBuild && crossOrigin) renderLockedFix(url)
+    if (lockedByBuild) renderLockedFix(url)
 }
 
 // 错误页配对
@@ -78,12 +77,21 @@ async function startDataPairing(url) {
     box.style.display = 'block'
     statusEl.textContent = '正在发起配对…'
 
+    const sameOrigin = (() => {
+        try {
+            return new URL(url, location.origin).origin === location.origin
+        } catch (error) {
+            return false
+        }
+    })()
+    const credentials = sameOrigin ? 'include' : 'omit'
+
     let session
     try {
         const response = await fetch(`${url}/pair/request`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            credentials: 'omit',
+            credentials,
             body: JSON.stringify({ name: '站点页面', platform: navigator.platform || '' })
         })
         const data = await response.json().catch(() => null)
@@ -101,7 +109,7 @@ async function startDataPairing(url) {
             const response = await fetch(`${url}/pair/claim`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'omit',
+                credentials,
                 body: JSON.stringify(session)
             })
             const data = await response.json().catch(() => null)

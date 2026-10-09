@@ -2,7 +2,7 @@
 // @name    自定义样式
 // @id    customStyle
 // @version    1.1.3
-// @updateUrl    https://nfdb.nitai.us.kg/customStyle.js
+// @updateUrl    https://nppdb.nitai.cc/customStyle.js
 // @description    用户可以自定义CSS
 // @author    Nitai
 // @type    coreNpp

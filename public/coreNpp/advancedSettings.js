@@ -2,7 +2,7 @@
 // @name    高级设置
 // @id    advancedSettings
 // @version    1.0.7
-// @updateUrl    https://nfdb.nitai.us.kg/advancedSettings.js
+// @updateUrl    https://nppdb.nitai.cc/advancedSettings.js
 // @description    用于开关高级设置
 // @author    Nitai
 // @type    coreNpp
