@@ -60,6 +60,16 @@ export function remoteBase() {
 
 const seg = (value) => encodeURIComponent(String(value))
 
+// 请求超时时间，防止服务器 half-open 时无法加载错误页
+const REQUEST_TIMEOUT_MS = 20000 //普通请求 20s
+const FILE_TIMEOUT_MS = 10 * 60 * 1000 //文件请求 10min
+
+export function timeoutSignal(ms) {
+    return typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function'
+        ? AbortSignal.timeout(ms)
+        : undefined
+}
+
 async function request(path, options = {}) {
     const headers = { ...(options.headers || {}) }
     if (options.body !== undefined && options.body !== null) headers['Content-Type'] = 'application/json'
@@ -69,7 +79,8 @@ async function request(path, options = {}) {
         ...options,
         // 跨域时不带凭证
         credentials: crossOrigin ? 'omit' : 'include',
-        headers
+        headers,
+        signal: timeoutSignal(REQUEST_TIMEOUT_MS)
     })
 
     let payload = null
@@ -201,7 +212,8 @@ export async function remotePutFile(file, name) {
         method: 'POST',
         credentials: crossOrigin ? 'omit' : 'include',
         headers: { ...authHeaders(), 'Content-Type': 'application/octet-stream' },
-        body: file
+        body: file,
+        signal: timeoutSignal(FILE_TIMEOUT_MS)
     })
 
     const payload = await response.json().catch(() => null)
@@ -221,7 +233,8 @@ export async function remotePutFile(file, name) {
 export async function remoteGetFile(ref) {
     const response = await fetch(`${baseUrl}/files/${encodeURIComponent(ref)}`, {
         credentials: crossOrigin ? 'omit' : 'include',
-        headers: authHeaders()
+        headers: authHeaders(),
+        signal: timeoutSignal(FILE_TIMEOUT_MS)
     })
 
     if (!response.ok) {
@@ -235,7 +248,8 @@ export async function remoteDeleteFile(ref) {
     const response = await fetch(`${baseUrl}/files/${encodeURIComponent(ref)}`, {
         method: 'DELETE',
         credentials: crossOrigin ? 'omit' : 'include',
-        headers: authHeaders()
+        headers: authHeaders(),
+        signal: timeoutSignal(REQUEST_TIMEOUT_MS)
     })
 
     // 文件不存在也成功

@@ -9,6 +9,7 @@ import {
     DATA_SERVER_KEY,
     DATA_SOURCE_KEY,
     DATA_TOKEN_KEY,
+    LOCAL_ONLY_KEYS,
     SOURCE_LOCAL,
     SOURCE_SERVER,
     dataServerToken,
@@ -16,6 +17,7 @@ import {
     lockedByBuild,
     normalizeServerUrl
 } from '@/utils/dataSource'
+import { timeoutSignal } from '@/utils/remoteStore'
 import PanelTextButton from '@/components/panel/items/PanelTextButton.vue'
 import PanelSection from '@/components/panel/items/PanelSection.vue'
 
@@ -105,7 +107,8 @@ async function probeApi(url, token) {
     try {
         const response = await fetch(`${url}/db/${'nitaiPageDB'}/${'prefs'}`, {
             headers,
-            credentials: token || !sameOrigin ? 'omit' : 'include'
+            credentials: token || !sameOrigin ? 'omit' : 'include',
+            signal: timeoutSignal(8000)
         })
         if (response.ok || response.status === 404) return 'online'
         if (response.status === 401 || response.status === 403) return 'unauthorized'
@@ -118,7 +121,7 @@ async function probeApi(url, token) {
 // 检查服务端的鉴权方式
 async function detectAuthKind(url) {
     try {
-        const response = await fetch(`${url}/version`, { credentials: 'omit' })
+        const response = await fetch(`${url}/version`, { credentials: 'omit', signal: timeoutSignal(5000) })
         if (!response.ok) return 'unknown'
         const data = await response.json()
         return data && data.authMode === 'password' ? 'password' : (data?.authMode === 'pairing' ? 'pairing' : 'unknown')
@@ -230,6 +233,7 @@ async function startPairing(url) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'omit',
+            signal: timeoutSignal(8000),
             body: JSON.stringify({ name: '站点设置', platform: navigator.platform || '' })
         })
         const data = await response.json().catch(() => null)
@@ -259,6 +263,7 @@ async function pollPairing() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'omit',
+            signal: timeoutSignal(8000),
             body: JSON.stringify({ deviceId: pairSession.deviceId, secret: pairSession.secret })
         })
         const data = await response.json().catch(() => null)
@@ -379,7 +384,16 @@ function onReset() {
                     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/'
                 }
                 // localStorage
+                // 此处会保留数据服务的连接配置，自建 server 的 shim clear 也会保留
+                const keptConnection = {}
+                for (const key of LOCAL_ONLY_KEYS) {
+                    const value = localStorage.getItem(key)
+                    if (value !== null) keptConnection[key] = value
+                }
                 localStorage.clear()
+                for (const [key, value] of Object.entries(keptConnection)) {
+                    localStorage.setItem(key, value)
+                }
                 // 本地模式删 IndexedDB，自建模式删服务端的 store
                 await wipeAllData()
                 toast.show({ timeout: 1500, message: t('@global:preinstall-success') })

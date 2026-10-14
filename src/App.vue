@@ -4,7 +4,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useUiStore, PANEL } from '@/stores/ui'
 import { initPageDB, initNppStore, initNppDB } from '@/utils/db'
 import { installFrameStyle, frameStyle } from '@/utils/frameStyle'
-import { loadNpp, checkUpdates, migrateLegacyUpdateUrls } from '@/core/npp/npplication.js'
+import { loadNpp, checkUpdates } from '@/core/npp/npplication.js'
 import { loadNodeTable } from '@/core/npp/nodes.js'
 import { logVersionInfo } from '@/core/version'
 import { useSearchEngines } from '@/composables/useSearchEngines'
@@ -182,11 +182,8 @@ async function bootstrap() {
     loadNodeTable().catch((error) => console.warn('节点表加载失败:', error.message))
 
     // 检查插件更新
-    // 老插件的更新地址迁到新入口
     checkUpdates('all', 'hide')
         .catch((error) => console.error('检查插件更新失败:', error))
-        .then(() => migrateLegacyUpdateUrls())
-        .catch((error) => console.error('插件更新地址迁移失败:', error))
 
     // 控制台版本信息
     logVersionInfo()

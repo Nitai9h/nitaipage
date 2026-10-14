@@ -1,8 +1,10 @@
 import {
-    CUSTOM_WALLPAPER_STORE, DB_SCHEMA, PAGEDB_NAME, RANDOM_WALLPAPER_STORE, resetDBConnections
+    CUSTOM_WALLPAPER_STORE, DB_SCHEMA, NPP_DB_NAME, PAGEDB_NAME, PAGEDB_STORE, RANDOM_WALLPAPER_STORE,
+    dbGet, resetDBConnections
 } from '@/utils/db'
 import { clearRemotePrefs, isRemote, remoteGetAll, remoteGetFile, remotePutFile, remoteReplaceAll } from '@/utils/remoteStore'
 import { BACKUP_VERSION, filterBackupData, hasBackupVersion, isSupportedDB } from '@/utils/backupSchema'
+import { LOCAL_ONLY_KEYS } from '@/utils/dataSource'
 import {
     FILES_PREFIX, base64ToBlob, blobToBytes, bytesToBlob, isZipBuffer, packArchive, unpackArchive
 } from '@/utils/backupArchive'
@@ -182,12 +184,33 @@ function knownDatabases() {
     return Object.entries(DB_SCHEMA).filter(([name]) => !isSkippedDB(name))
 }
 
+// nppDB 的 store 由已安装插件决定，无法用 schema 枚举
+// 远端导出 / 清空时用 已安装的插件列表 补
+const PLUGIN_LIST_KEY = 'npp_plugins'
+async function pluginStoreNames() {
+    try {
+        const record = await dbGet(PAGEDB_NAME, PAGEDB_STORE, PLUGIN_LIST_KEY)
+        const list = Array.isArray(record?.data) ? record.data : []
+        return list.map((item) => item && item.id).filter((id) => typeof id === 'string' && id)
+    } catch (error) {
+        return []
+    }
+}
+
+// 补全 nppDB 的插件 store
+// 防止备份时插件数据丢失、防止清空时不残留插件 store
+function storeNamesFor(name, schema, pluginStores) {
+    const base = schema.stores.map(([storeName]) => storeName)
+    return name === NPP_DB_NAME ? [...new Set([...base, ...pluginStores])] : base
+}
+
 async function getAllRemoteData(media) {
     const databases = []
+    const pluginStores = await pluginStoreNames()
 
     for (const [name, schema] of knownDatabases()) {
         const data = {}
-        for (const [storeName] of schema.stores) {
+        for (const storeName of storeNamesFor(name, schema, pluginStores)) {
             const rows = await remoteGetAll(name, storeName).catch(() => [])
             data[storeName] = await collectMedia(rows, name, storeName, media)
         }
@@ -200,11 +223,14 @@ async function getAllRemoteData(media) {
 // 清空当前配置的数据源里的全部数据
 export async function wipeAllData() {
     if (isRemote()) {
+        // 先取插件 store
+        const pluginStores = await pluginStoreNames()
+
         // 保存的设置项
         await clearRemotePrefs().catch(() => { /* 失败不阻塞 */ })
 
         for (const [name, schema] of knownDatabases()) {
-            for (const [storeName] of schema.stores) {
+            for (const storeName of storeNamesFor(name, schema, pluginStores)) {
                 await remoteReplaceAll(name, storeName, []).catch(() => { /* 单个 store 失败不阻塞 */ })
             }
         }
@@ -331,10 +357,12 @@ export async function importIndexedDBData(indexedDBData) {
 }
 
 // 获取全部 localStorage
+// 设备连接配置不备份
 export function getAllLocalStorage() {
     const data = {}
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i)
+        if (LOCAL_ONLY_KEYS.has(key)) continue
         data[key] = localStorage.getItem(key)
     }
     return data
@@ -343,6 +371,7 @@ export function getAllLocalStorage() {
 // 恢复 localStorage
 export function setAllLocalStorage(data = {}) {
     Object.entries(data).forEach(([key, value]) => {
+        if (LOCAL_ONLY_KEYS.has(key)) return
         localStorage.setItem(key, value)
     })
 }

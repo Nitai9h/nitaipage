@@ -7,7 +7,7 @@ import { initDefaultSettings, KEY, VISITED_VERSION } from '@/utils/storage'
 import { installPluginGlobals } from '@/core/npp/pluginGlobals.js'
 import { initPluginI18n } from '@/core/npp/pluginI18n.js'
 import { initCoreNpp } from '@/core/npp/npplication.js'
-import { initRemoteStore, onRemoteError } from '@/utils/remoteStore'
+import { initRemoteStore, onRemoteError, timeoutSignal } from '@/utils/remoteStore'
 import { DATA_TOKEN_KEY, lockedByBuild } from '@/utils/dataSource'
 import { installLocalStorageShim } from '@/utils/localShim'
 import { runMigrationReceiver } from '@/migrate/receiver'
@@ -92,6 +92,7 @@ async function startDataPairing(url) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials,
+            signal: timeoutSignal(8000),
             body: JSON.stringify({ name: '站点页面', platform: navigator.platform || '' })
         })
         const data = await response.json().catch(() => null)
@@ -110,6 +111,7 @@ async function startDataPairing(url) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials,
+                signal: timeoutSignal(8000),
                 body: JSON.stringify(session)
             })
             const data = await response.json().catch(() => null)
@@ -214,7 +216,8 @@ async function saveDataToken(url) {
     try {
         const response = await fetch(`${url}/db/nitaiPageDB/prefs`, {
             headers: { Authorization: `Bearer ${token}` },
-            credentials: 'omit'
+            credentials: 'omit',
+            signal: timeoutSignal(10000)
         })
         if (response.ok || response.status === 404) {
             if (statusEl) statusEl.textContent = '验证通过，正在刷新…'

@@ -12,6 +12,10 @@ import { useToast } from '@/composables/useToast'
 
 const { message: toastMessage, show: toastShow } = useToast()
 
+// 壁纸记录唯一 id
+let nextMediaId = Date.now()
+const makeMediaId = () => nextMediaId++
+
 /* 模块级单例状态 */
 
 // 壁纸选项列表（0=上传/自定义、1=随机、2=纯色、3+=已保存 URL / IndexedDB 壁纸）
@@ -128,6 +132,17 @@ function trackOpfsUrl(blob, name) {
     return url
 }
 
+// blob URL 对应服务端记录
+// 列表里只放 URL
+const remoteUrlRecords = new Map()
+
+// 建 blob URL 并登记对应记录
+function trackRemoteUrl(blob, record) {
+    const url = URL.createObjectURL(blob)
+    remoteUrlRecords.set(url, record)
+    return url
+}
+
 /* IndexedDB 媒体存储 */
 
 // 保存文件到 customWallpaper store，返回自增 id
@@ -138,6 +153,7 @@ async function saveMediaFileToDB(file) {
     if (isRemote()) {
         const { ref, size } = await remotePutFile(file, file.name)
         return dbPut(PAGEDB_NAME, CUSTOM_WALLPAPER_STORE, {
+            id: makeMediaId(),
             name: file.name,
             type: file.type,
             size: size || file.size,
@@ -152,6 +168,7 @@ async function saveMediaFileToDB(file) {
             const opfsName = newFileName(fileExt(file.name))
             await opfsPut(opfsName, file)
             return await dbPut(PAGEDB_NAME, CUSTOM_WALLPAPER_STORE, {
+                id: makeMediaId(),
                 name: file.name,
                 type: file.type,
                 size: file.size,
@@ -169,6 +186,7 @@ async function saveMediaFileToDB(file) {
         reader.onload = async () => {
             const base64Data = reader.result.split(',')[1]
             const mediaRecord = {
+                id: makeMediaId(),
                 name: file.name,
                 type: file.type,
                 size: file.size,
@@ -176,7 +194,7 @@ async function saveMediaFileToDB(file) {
                 uploadTime: new Date().toISOString()
             }
             try {
-                // dbPut 自动以 autoIncrement 生成 id 并返回该 id
+                // 写入、获取此记录的 id
                 const id = await dbPut(PAGEDB_NAME, CUSTOM_WALLPAPER_STORE, mediaRecord)
                 resolve(id)
             } catch (e) {
@@ -211,6 +229,8 @@ function blobToBase64(blob) {
 // 把内联 base64 迁移到 OPFS
 // 迁移失败不影响读取
 async function migrateInlineMedia(record, blob, storeName) {
+    // 连接到自建 server 时不迁移
+    if (isRemote()) return null
     if (!await opfsReady()) return null
     try {
         const opfsName = newFileName(fileExt(record.name) || mimeExt(record.type))
@@ -372,8 +392,10 @@ async function getWallpaperOptionsFromDB() {
 
 async function saveWallpaperOptionsToDB(options) {
     await ensureDB()
+    // 先 JSON 克隆一遍把 Vue Proxy 结构还原为普通对象，再写入 PAGEDB_STORE
+    const plain = JSON.parse(JSON.stringify(options ?? []))
     // key 走记录里的 id
-    return dbPut(PAGEDB_NAME, PAGEDB_STORE, { id: 'wallpaperOptions', data: options })
+    return dbPut(PAGEDB_NAME, PAGEDB_STORE, { id: 'wallpaperOptions', data: plain })
 }
 
 async function loadWallpaperOptions() {
@@ -426,6 +448,17 @@ async function getWallpaperPicturesFromDB() {
 
         const urls = []
         for (const item of all) {
+            // 自建 server
+            if (isRemote() && item.ref) {
+                try {
+                    const blob = await remoteGetFile(item.ref)
+                    urls.push(trackRemoteUrl(blob, item))
+                } catch (error) {
+                    console.error('读取壁纸失败 (server):', error)
+                }
+                continue
+            }
+
             // 文件在 OPFS
             if (item.opfsName) {
                 const blob = await opfsGet(item.opfsName)
@@ -447,7 +480,8 @@ async function getWallpaperPicturesFromDB() {
             }
         }
 
-        return urls.length > 0 ? urls : null
+        // 空 array !=  空库，用于判断是否使用默认壁纸
+        return urls
     } catch (e) {
         console.error('获取壁纸列表时加载数据库失败:', e)
         return null
@@ -489,6 +523,7 @@ async function saveWallpaperPicturesToDB(pictures) {
                 continue
             }
             records.push({
+                id: makeMediaId(),
                 name: `wallpaper_${records.length + 1}`,
                 type: blob.type,
                 size: blob.size,
@@ -526,10 +561,19 @@ async function saveWallpaperPicturesToDB(pictures) {
     const records = []
     for (let i = 0; i < pictures.length; i++) {
         const pic = pictures[i]
+
+        // 服务端的项复用原有记录
+        const trackedRecord = typeof pic === 'string' && pic.startsWith('blob:') ? remoteUrlRecords.get(pic) : null
+        if (trackedRecord) {
+            records.push(trackedRecord)
+            continue
+        }
+
         if (pic.startsWith('data:')) {
             const sep = pic.indexOf(',')
             if (sep < 0) continue
             records.push({
+                id: makeMediaId(),
                 name: `wallpaper_${i + 1}`,
                 type: pic.slice(5, sep).split(';')[0],
                 size: 0,
@@ -541,6 +585,7 @@ async function saveWallpaperPicturesToDB(pictures) {
             try {
                 const blob = await (await fetch(pic)).blob()
                 records.push({
+                    id: makeMediaId(),
                     name: `wallpaper_${i + 1}`,
                     type: blob.type,
                     size: blob.size,
@@ -560,12 +605,14 @@ async function saveWallpaperPicturesToDB(pictures) {
 async function loadWallpaperPictures() {
     try {
         const saved = await getWallpaperPicturesFromDB()
-        if (saved && Array.isArray(saved) && saved.length > 0) {
+        if (saved && saved.length > 0) {
             wallpaperPictures.value = saved
-        } else {
-            wallpaperPictures.value = [...defaultPictures]
-            await saveWallpaperPicturesToDB(wallpaperPictures.value)
+            return
         }
+        // 只有空库时才写入默认壁纸
+        // 空 array 时显示默认，不覆盖
+        wallpaperPictures.value = [...defaultPictures]
+        if (saved === null) await saveWallpaperPicturesToDB(wallpaperPictures.value)
     } catch (e) {
         console.error('加载壁纸列表失败:', e)
         wallpaperPictures.value = [...defaultPictures]
@@ -591,12 +638,30 @@ async function addWallpaperToList(file) {
         throw new Error('仅支持图片或视频')
     }
 
+    // 自建 Server
+    // 文件上传到服务端，库里只留引用
+    if (isRemote()) {
+        const { ref, size } = await remotePutFile(file, file.name)
+        const record = {
+            id: makeMediaId(),
+            name: file.name,
+            type: file.type,
+            size: size || file.size,
+            ref,
+            uploadTime: new Date().toISOString()
+        }
+        await dbPut(PAGEDB_NAME, RANDOM_WALLPAPER_STORE, record)
+        wallpaperPictures.value.push(trackRemoteUrl(file, record))
+        return true
+    }
+
     // 本地模式直接写 OPFS，列表放 blob URL
-    if (!isRemote() && await opfsReady()) {
+    if (await opfsReady()) {
         const opfsName = newFileName(fileExt(file.name))
         await opfsPut(opfsName, file)
         wallpaperPictures.value.push(trackOpfsUrl(file, opfsName))
         await dbPut(PAGEDB_NAME, RANDOM_WALLPAPER_STORE, {
+            id: makeMediaId(),
             name: file.name,
             type: file.type,
             size: file.size,
@@ -624,6 +689,7 @@ async function removeWallpaperFromList(index) {
 
     const url = wallpaperPictures.value[index]
     const opfsName = typeof url === 'string' ? opfsUrlNames.get(url) : null
+    const remoteRecord = typeof url === 'string' ? remoteUrlRecords.get(url) : null
     wallpaperPictures.value.splice(index, 1)
 
     // OPFS
@@ -634,6 +700,19 @@ async function removeWallpaperFromList(index) {
         const all = await dbGetAll(PAGEDB_NAME, RANDOM_WALLPAPER_STORE)
         const record = all.find(item => item.opfsName === opfsName)
         if (record) await dbDelete(PAGEDB_NAME, RANDOM_WALLPAPER_STORE, record.id)
+        return true
+    }
+
+    // 自建 Server
+    if (remoteRecord) {
+        remoteUrlRecords.delete(url)
+        try { URL.revokeObjectURL(url) } catch (error) { /* 忽略 */ }
+        try {
+            await remoteDeleteFile(remoteRecord.ref)
+        } catch (error) {
+            console.error('删除壁纸文件失败 (server):', error)
+        }
+        await dbDelete(PAGEDB_NAME, RANDOM_WALLPAPER_STORE, remoteRecord.id)
         return true
     }
 

@@ -23,9 +23,6 @@ const LEGACY_STORE_SOURCES = {
     'https://nfdb.nitai.us.kg/store': officialStoreUrl()
 };
 
-// 旧商店源
-const LEGACY_UPDATE_HOSTS = ['nfdb.nitai.us.kg'];
-
 
 /* 元数据解析 */
 
@@ -1048,51 +1045,6 @@ export async function loadStoreData() {
         window.storeData = { category: {} };
         return window.storeData;
     }
-}
-
-// 老插件更新地址迁移
-export async function migrateLegacyUpdateUrls() {
-    const fileNameOf = (url) => {
-        try {
-            return new URL(url).pathname.split('/').pop();
-        } catch (error) {
-            return '';
-        }
-    };
-
-    const plugins = await getPluginsList();
-    const legacy = plugins.filter((plugin) => {
-        try {
-            return LEGACY_UPDATE_HOSTS.includes(new URL(plugin.updateUrl).hostname);
-        } catch (error) {
-            return false;
-        }
-    });
-    if (legacy.length === 0) return { migrated: 0 };
-
-    const storeData = await loadStoreData();
-    const byFileName = new Map();
-    Object.entries(storeData).forEach(([key, value]) => {
-        if (key === 'category' || !Array.isArray(value)) return;
-        value.forEach((item) => {
-            if (!item || typeof item.url !== 'string') return;
-            const name = fileNameOf(item.url);
-            if (name && !byFileName.has(name)) byFileName.set(name, item.url);
-        });
-    });
-
-    let migrated = 0;
-    legacy.forEach((plugin) => {
-        const target = byFileName.get(fileNameOf(plugin.updateUrl));
-        if (!target || target === plugin.updateUrl) return;
-
-        console.log(`插件更新地址迁移: ${plugin.updateUrl} → ${target}`);
-        plugin.updateUrl = target;
-        migrated += 1;
-    });
-
-    if (migrated > 0) await savePluginsList(plugins);
-    return { migrated };
 }
 
 /* 核心插件注册 + 插件脚本注入 */

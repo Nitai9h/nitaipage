@@ -1,5 +1,6 @@
 // 只处理扩展发起的一次性写入，不加载整个应用，供 bridge 使用
 import { appendShortcut, broadcastShortcutAdded } from '@/composables/useShortcuts'
+import { initRemoteStore } from '@/utils/remoteStore'
 import {
     DATA_SERVER_KEY,
     DATA_SOURCE_KEY,
@@ -19,6 +20,9 @@ import {
     isFromExtensionFrame,
     makeNotice
 } from '@/ext-bridge'
+
+// 初始化数据源
+initRemoteStore()
 
 // 将扩展传递的 Payload 转换为标准的捷径
 // 扩展获取不到 icon 时，回退到 url

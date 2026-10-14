@@ -5,6 +5,9 @@ export const DATA_SOURCE_KEY = 'dataSource'
 export const DATA_SERVER_KEY = 'dataServerUrl'
 export const DATA_TOKEN_KEY = 'dataServerToken'
 
+// 设备本地的连接配置不上传服务器、不备份
+export const LOCAL_ONLY_KEYS = new Set([DATA_SOURCE_KEY, DATA_SERVER_KEY, DATA_TOKEN_KEY])
+
 export const SOURCE_LOCAL = 'local'
 export const SOURCE_SERVER = 'server'
 

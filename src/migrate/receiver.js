@@ -1,6 +1,8 @@
 // 用于接收域名迁移的数据
 
 import { useBackup } from '@/composables/useBackup'
+import { initRemoteStore } from '@/utils/remoteStore'
+import { installLocalStorageShim } from '@/utils/localShim'
 
 // 旧源
 const OLD_ORIGINS = ['https://www.nitai.us.kg', 'https://dev-www.nitai.us.kg']
@@ -107,9 +109,17 @@ export function runMigrationReceiver() {
         }
 
         async function finish() {
-            panel.setStatus('正在写入本机存储…')
+            panel.setStatus('正在写入存储…')
             try {
                 const payload = parsePayload(chunks.toBytes())
+
+                // 自建模式写入服务器
+                const remote = initRemoteStore()
+                if (remote.active && !await installLocalStorageShim()) {
+                    fail('无法连接服务器，请检查服务器状态后重试')
+                    return
+                }
+
                 await useBackup().applyBackup(payload)
             } catch (error) {
                 console.error('迁移写入失败:', error)

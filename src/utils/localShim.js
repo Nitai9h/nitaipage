@@ -7,11 +7,8 @@
 //
 // 若启动时从服务器拉取数据失败，则不启用此方案
 
-import { DATA_SERVER_KEY, DATA_SOURCE_KEY, DATA_TOKEN_KEY } from './dataSource'
+import { LOCAL_ONLY_KEYS } from './dataSource'
 import { loadRemotePrefs, removeRemotePref, saveRemotePref } from './remoteStore'
-
-// 只保存在本地，不上传服务器的 Key
-const LOCAL_ONLY_KEYS = new Set([DATA_SOURCE_KEY, DATA_SERVER_KEY, DATA_TOKEN_KEY])
 
 // 接管原生 localStorage，用于读写数据源配置
 const nativeStorage = (() => {
@@ -55,12 +52,11 @@ function createStorage() {
             memory.delete(name)
             removeRemotePref(name)
         },
-        // 清除时要把源配置一起清掉，否则会连接到旧的服务器
+        // 清除数据时保留 连接配置（LOCAL_ONLY_KEYS）
         clear() {
             const keys = [...memory.keys()]
             memory.clear()
             keys.forEach((name) => removeRemotePref(name))
-            if (nativeStorage) nativeKeys().forEach((name) => nativeStorage.removeItem(name))
         },
         key(index) {
             const all = [...nativeKeys(), ...memory.keys()]
