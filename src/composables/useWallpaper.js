@@ -82,6 +82,8 @@ function notifyBgLoaded(channel) {
 
 // 壁纸加载完成后的 UI 揭示
 function revealUI() {
+    document.documentElement.classList.add('bg-revealed')
+
     try {
         if (window.frameStyle && typeof window.frameStyle.removeLoading === 'function') {
             window.frameStyle.removeLoading()
@@ -108,6 +110,29 @@ function revealUI() {
     try {
         window.dispatchEvent(new Event('nitaipage:revealed'))
     } catch (e) { /* 忽略 */ }
+}
+
+// 图片加载完成时的样式收尾
+// 揭示前：只把 opacity 归零、备好过渡（真正的淡入由 reveal 的 fadeInBg 负责，动画发生在幕布揭开的瞬间）；
+// 揭示后（慢图迟到）：加载完成发生在 fadeInBg 之后，在这里自己补一次 0 → 1 的淡入
+// ⚠️ 不能用 cssText 直接写成 opacity:1 —— 那样在幕布揭开前就显示完，揭示时反而看不到淡入；
+// ⚠️ 补淡入用 CSS 动画（@keyframes bg-fade-in）：动画挂上必播、不依赖前后状态差分，
+//    transition 的「无过渡归零再升 1」写法在无头 / 后台标签页等不落帧环境会被合并、直接瞬跳；
+// ⚠️ 「是否已揭示」以 <html> 上的类为准（DOM 是共享的唯一事实，模块变量在多实例/竞态下不可靠）
+function settleImageElement(bg) {
+    if (!bg) return
+
+    const revealed = document.documentElement.classList.contains('bg-revealed')
+    if (!revealed) {
+        bg.style.cssText = 'opacity:0;filter:blur(0px);transition:ease 0.7s;'
+        return
+    }
+
+    bg.style.animation = 'none'
+    bg.style.opacity = '1'
+    bg.style.filter = 'blur(0px)'
+    void bg.offsetWidth
+    bg.style.animation = 'bg-fade-in 0.7s ease'
 }
 
 function fadeInBg() {
@@ -901,7 +926,7 @@ function setupImageElement(url, channel, saveUrl = true) {
 
     const probe = new Image()
     probe.onload = () => {
-        if (bg) bg.style.cssText = 'filter:blur(0px);transition:ease 0.7s;'
+        settleImageElement(bg)
         notifyBgLoaded(channel)
     }
     probe.src = url
@@ -954,7 +979,7 @@ function handleOriginalImageLoad(url, channel) {
 
     const probe = new Image()
     probe.onload = () => {
-        if (bg) bg.style.cssText = 'opacity:1;filter:blur(0px);transition:ease 0.7s;'
+        settleImageElement(bg)
         sessionStorage.setItem('bgImageFinalURL', probe.src)
         sessionStorage.setItem('bgImageOriginalURL', probe.src)
         notifyBgLoaded(channel)

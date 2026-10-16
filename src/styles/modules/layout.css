@@ -28,6 +28,16 @@
     z-index: -1;
 }
 
+@keyframes bg-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 #bg-video {
     opacity: 0;
     transform: scale(1.10);

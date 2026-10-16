@@ -10,6 +10,7 @@ import { initCoreNpp } from '@/core/npp/npplication.js'
 import { initRemoteStore, onRemoteError, timeoutSignal } from '@/utils/remoteStore'
 import { DATA_TOKEN_KEY, lockedByBuild } from '@/utils/dataSource'
 import { installLocalStorageShim } from '@/utils/localShim'
+import { initExtensionBridge } from '@/composables/useExtension'
 import { runMigrationReceiver } from '@/migrate/receiver'
 
 function showDataServerError(remote) {
@@ -237,6 +238,9 @@ async function saveDataToken(url) {
 // 完成当前版本的 Guide 后才进入主 APP
 async function start() {
     if (await runMigrationReceiver()) return
+
+    // 防止处于 guide 页时扩展跳转到离线页
+    initExtensionBridge()
 
     const remote = initRemoteStore()
     if (remote.active && !await installLocalStorageShim()) {

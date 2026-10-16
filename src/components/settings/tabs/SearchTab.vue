@@ -56,7 +56,10 @@ function setDefault(key) {
                 toast.show({
                     message: t('@global:se-set-default-search-engine-success'),
                     buttons: [
-                        ['<button>@global:toast-ok</button>', function (i2, t2) { i2.hide({ transitionOut: 'fadeOutUp' }, t2, 'buttonName') }, true],
+                        ['<button>@global:toast-ok</button>', function (i2, t2) {
+                            i2.hide({ transitionOut: 'fadeOutUp' }, t2, 'buttonName')
+                            setTimeout(() => window.location.reload(), 1000)
+                        }, true],
                         ['<button>@global:toast-later</button>', function (i2, t2) { i2.hide({ transitionOut: 'fadeOutUp' }, t2, 'buttonName') }]
                     ]
                 })
