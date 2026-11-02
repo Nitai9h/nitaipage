@@ -2,11 +2,14 @@
 // 插件管理页
 import { ref, onMounted, watch } from 'vue'
 import iziToast from 'izitoast'
+import { useI18n } from 'vue-i18n'
 import {
-    getPluginsList, uninstallNpp, checkUpdates
+    getPluginsList, uninstallNpp, checkUpdates,
+    parseMetadataText, saveJSContent, savePluginMetadata
 } from '@/core/npp/npplication.js'
 import { hideToastById } from '@/composables/useToast'
 import PanelBigButton from '@/components/panel/special/PanelBigButton.vue'
+import PanelButton from '@/components/panel/items/PanelButton.vue'
 import SwitchControl from '@/components/panel/SwitchControl.vue'
 import PanelFold from '@/components/panel/items/PanelFold.vue'
 import StoreSourcesDialog from './StoreSourcesDialog.vue'
@@ -15,12 +18,22 @@ const props = defineProps({
     visible: { type: Boolean, default: false }
 })
 
+const { t } = useI18n()
+
 const sourcesRef = ref(null)
 const normalPlugins = ref([])
 const translatePlugins = ref([])
 const autoUpdateOn = ref(localStorage.getItem('autoUpdatePlugins') === 'on')
 
+const advancedOn = ref(false)
+const fileInput = ref(null)
+
+function refreshAdvancedState() {
+    advancedOn.value = localStorage.getItem('advancedSettingEnabled') === 'on'
+}
+
 async function load() {
+    refreshAdvancedState()
     const plugins = await getPluginsList()
     normalPlugins.value = plugins.filter(p => p.type !== 'translate')
     translatePlugins.value = plugins.filter(p => p.type === 'translate')
@@ -83,9 +96,85 @@ watch(() => props.visible, (v) => {
         sourcesRef.value && sourcesRef.value.load()
     }
 })
+
+/* 从文件安装插件 */
+
+function pickFile() {
+    refreshAdvancedState()
+    fileInput.value && fileInput.value.click()
+}
+
+async function onFilePicked(event) {
+    const input = event.target
+    const file = input.files && input.files[0]
+    // 清空，允许选同一个文件
+    input.value = ''
+    if (!file) return
+
+    if (!/\.js$/i.test(file.name)) {
+        iziToast.show({ timeout: 3000, message: '@npplication:manual-install-invalid' })
+        return
+    }
+
+    const text = await file.text()
+    const metadata = parseMetadataText(text)
+    if (!metadata) {
+        iziToast.show({ timeout: 3000, message: '@npplication:manual-install-invalid' })
+        return
+    }
+
+    // coreNpp 默认不允许手动安装
+    const plugins = await getPluginsList()
+    const existing = plugins.find((p) => p.id === metadata.id)
+    if (!__ALLOW_CORE_NPP__ && (metadata.type === 'coreNpp' || (existing && existing.type === 'coreNpp'))) {
+        iziToast.show({ timeout: 3000, message: '@npplication:manual-install-core' })
+        return
+    }
+
+    iziToast.show({
+        timeout: 8000,
+        title: '@npplication:manual-install',
+        message: t('@npplication:manual-install-confirm') + '「' + metadata.name + ' v' + metadata.version + '」？',
+        buttons: [
+            ['<button>@global:toast-ok</button>', async function (instance, toast) {
+                instance.hide({ transitionOut: 'fadeOutUp' }, toast, 'buttonName')
+                const sourceSaved = await saveJSContent(metadata.id, text)
+                const metaSaved = sourceSaved && await savePluginMetadata({ ...metadata, updateUrl: '', ignoreUpdatePrompt: false })
+                if (!metaSaved) {
+                    iziToast.show({ timeout: 3000, message: '@npplication:manual-install-fail' })
+                    return
+                }
+                await load()
+                sourcesRef.value && sourcesRef.value.load()
+                iziToast.show({
+                    timeout: 4000,
+                    message: '@npplication:manual-install-success',
+                    buttons: [
+                        ['<button class="refresh-btn">@global:toast-refresh</button>', function (i, toastEl) {
+                            i.hide({ transitionOut: 'flipOutX' }, toastEl, 'confirm')
+                            window.location.reload(true)
+                        }, true],
+                        ['<button class="later-btn">@global:toast-later</button>', function (i, toastEl) {
+                            i.hide({ transitionOut: 'flipOutX' }, toastEl, 'cancel')
+                        }]
+                    ]
+                })
+            }, true],
+            ['<button>@global:toast-cancel</button>', function (instance, toast) {
+                instance.hide({ transitionOut: 'fadeOutUp' }, toast, 'buttonName')
+            }]
+        ]
+    })
+}
 </script>
 
 <template>
+    <PanelBigButton v-if="advancedOn" :title="$t('@npplication:manual-install')">
+        <PanelButton id="manualInstallPlugin" @click="pickFile">{{ $t('@npplication:manual-install-button') }}</PanelButton>
+    </PanelBigButton>
+    <input v-if="advancedOn" ref="fileInput" id="manualInstallFile" type="file"
+        accept=".js,text/javascript,application/javascript" style="display:none" @change="onFilePicked">
+
     <PanelBigButton
         :title="'@npplication:setting-auto-update-plugins'"
         :description="'@npplication:setting-auto-update-plugins-desc'"
@@ -108,7 +197,7 @@ watch(() => props.visible, (v) => {
                     </div>
                 </div>
                 <div class="plugin_actions" :id="p.id">
-                    <button class="update_plugin" :data-id="p.id" @click="doUpdate(p.id)">
+                    <button v-if="p.updateUrl" class="update_plugin" :data-id="p.id" @click="doUpdate(p.id)">
                         <i class="iconfont icon-refresh"></i>
                     </button>
                     <button class="uninstall_plugin" :data-id="p.id" @click="doUninstall(p.id)">
@@ -132,7 +221,7 @@ watch(() => props.visible, (v) => {
                     </div>
                 </div>
                 <div class="plugin_actions" :id="p.id">
-                    <button class="update_plugin" :data-id="p.id" @click="doUpdate(p.id)">
+                    <button v-if="p.updateUrl" class="update_plugin" :data-id="p.id" @click="doUpdate(p.id)">
                         <i class="iconfont icon-refresh"></i>
                     </button>
                     <button class="uninstall_plugin" :data-id="p.id" @click="doUninstall(p.id)">

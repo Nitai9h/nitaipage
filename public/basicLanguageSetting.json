@@ -302,5 +302,12 @@
   "@global:guide-reset-subtitle": "Reset data and upgrade to the new version",
   "@global:guide-enter": "进入起始页",
   "@global:guide-enter-subtitle": "Enter NitaiPage",
-  "@global:store": "商店"
+  "@global:store": "商店",
+  "@npplication:manual-install": "从文件安装插件",
+  "@npplication:manual-install-confirm": "确定安装？",
+  "@npplication:manual-install-invalid": "插件无效",
+  "@npplication:manual-install-core": "核心插件不能安装",
+  "@npplication:manual-install-success": "安装成功，刷新后生效",
+  "@npplication:manual-install-fail": "安装失败",
+  "@npplication:manual-install-button": "选择"
 }

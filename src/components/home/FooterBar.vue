@@ -10,7 +10,7 @@ const footerVisible = computed(() => LS.bool(KEY.footerDisplay, true))
 <template>
     <div class="foot" :style="{ opacity: footerVisible ? 1 : 0 }">
         <div class="power">
-            @global:nitaipage {{ VERSION }} <div v-if="COMMIT" class="commit">({{ COMMIT }})</div>
+            NitaiPage {{ VERSION }} <div v-if="COMMIT" class="commit">({{ COMMIT }})</div>
         </div>
     </div>
 </template>

@@ -1,6 +1,14 @@
 @charset "utf-8";
 /* 用户通知 */
 
+.iziToast-wrapper {
+    z-index: 2147483000 !important;
+}
+
+.iziToast {
+    max-width: min(568px, calc(100vw - 20px));
+}
+
 .iziToast {
     backdrop-filter: var(--main-box-gauss-plus) !important;
     -webkit-backdrop-filter: var(--main-box-gauss-plus) !important;

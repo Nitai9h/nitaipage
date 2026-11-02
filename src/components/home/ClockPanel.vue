@@ -8,14 +8,14 @@ const { t } = useI18n()
 
 const uiStore = useUiStore()
 
-const WEEKDAYS = [
-    t('@global:time-sun'),
-    t('@global:time-mon'),
-    t('@global:time-tue'),
-    t('@global:time-wed'),
-    t('@global:time-thu'),
-    t('@global:time-fri'),
-    t('@global:time-sat')
+const WEEKDAY_KEYS = [
+    '@global:time-sun',
+    '@global:time-mon',
+    '@global:time-tue',
+    '@global:time-wed',
+    '@global:time-thu',
+    '@global:time-fri',
+    '@global:time-sat'
 ]
 
 const hourDigits = ref([])
@@ -23,7 +23,9 @@ const minuteDigits = ref([])
 const monthDigits = ref([])
 const dayDigits = ref([])
 const ampm = ref('')
-const weekday = ref(WEEKDAYS[0])
+const weekday = ref('')
+const monthSuffix = ref('')
+const daySuffix = ref('')
 
 // 上一轮数位
 // 用于判断哪一位发生了变化
@@ -79,7 +81,10 @@ function tick() {
     minuteDigits.value = wrapDigits(mStr, 'minute')
     monthDigits.value = wrapDigits(mmStr, 'month')
     dayDigits.value = wrapDigits(dStr, 'day')
-    weekday.value = WEEKDAYS[day]
+    weekday.value = t(WEEKDAY_KEYS[day])
+
+    monthSuffix.value = t('@global:time-month')
+    daySuffix.value = t('@global:time-day')
 
     // 清理动画
     setTimeout(() => {
@@ -129,9 +134,9 @@ onUnmounted(() => {
             </div>
             <span id="day">
                 <span v-for="(item, i) in monthDigits" :key="'mm' + i"
-                    class="dayNum" :class="{ changing: item.changing }">{{ item.digit }}</span>&nbsp;@global:time-month&nbsp;<span
+                    class="dayNum" :class="{ changing: item.changing }">{{ item.digit }}</span>&nbsp;{{ monthSuffix }}&nbsp;<span
                     id="point"></span><span v-for="(item, i) in dayDigits" :key="'d' + i"
-                    class="dayNum" :class="{ changing: item.changing }">{{ item.digit }}</span>&nbsp;@global:time-day&nbsp;<span
+                    class="dayNum" :class="{ changing: item.changing }">{{ item.digit }}</span>&nbsp;{{ daySuffix }}&nbsp;<span
                     id="point"></span>{{ weekday }}
             </span>
         </div>

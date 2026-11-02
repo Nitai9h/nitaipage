@@ -205,7 +205,7 @@ function resetCustomStyle() {
     >
         <div class="mainConts" :class="{ selected: activeTab === 'returnToSettings' }"
             data-value="returnToSettings" id="noPluginSetting">
-            @global:plugin_settings-no-plugin
+            {{ $t('@global:plugin_settings-no-plugin') }}
         </div>
 
         <div v-for="p in settingPlugins" :key="p.id"

@@ -77,6 +77,20 @@ async function parseMetadata(url) {
         }
 
         const scriptText = await response.text();
+        return parseMetadataText(scriptText, url);
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+}
+
+// 按原文件解析元数据，失败返回 undefined
+export function parseMetadataText(scriptText, url = '') {
+    try {
+        if (typeof scriptText !== 'string' || !scriptText) {
+            console.error('插件源码为空');
+            return;
+        }
 
         const urlMetadata = scriptText.match(
             /\/\/\s*==Npplication==\s*\n([\s\S]*?)\n\/\/\s*==\/Npplication==/
@@ -498,6 +512,22 @@ export async function saveJSFile(id, url) {
     }
 }
 
+// 保存插件（用于手动安装插件）
+export async function saveJSContent(id, content) {
+    if (!id || typeof content !== 'string' || !content) {
+        console.error('缺少必要参数: ' + (id ? '' : 'id ') + (typeof content === 'string' && content ? '' : 'content'));
+        return false;
+    }
+    try {
+        await dbPut(NPPSTORE_NAME, NPPSTORE_STORE, { id, content });
+        console.log('保存成功');
+        return true;
+    } catch (error) {
+        console.error('保存失败:', error);
+        return false;
+    }
+}
+
 // 从 nppstore 取插件源码并转成 blob URL
 // 没有源码时返回 null
 async function getNppSourceUrl(id) {
@@ -611,7 +641,7 @@ export async function installNpplication(url) {
             return;
         }
 
-        if (metadata.type === 'coreNpp' && !isAllowedCoreSource(url)) {
+        if (metadata.type === 'coreNpp' && !isAllowedCoreSource(url) && !__ALLOW_CORE_NPP__) {
             console.warn('核心应用只能从指定源安装');
             iziToast.show({ timeout: 2000, message: '@npplication:install-fail' });
             hideToastById('#installToast');
@@ -620,7 +650,7 @@ export async function installNpplication(url) {
 
         const plugins = await getPluginsList();
         const existing = plugins.find(p => p.id === metadata.id);
-        if (metadata.type === 'coreNpp' && !existing) {
+        if (metadata.type === 'coreNpp' && !existing && !__ALLOW_CORE_NPP__) {
             console.warn('核心应用禁止安装');
             iziToast.show({ timeout: 2000, message: '@npplication:install-fail' });
             hideToastById('#installToast');
@@ -661,7 +691,7 @@ export async function uninstallNpp(id) {
             return false;
         }
         const localMetadata = localData.metadata;
-        if (localMetadata.type === 'coreNpp') {
+        if (localMetadata.type === 'coreNpp' && !__ALLOW_CORE_NPP__) {
             iziToast.show({ timeout: 2000, message: '@npplication:core-npp-uninstall-confirm' });
             return false;
         }
@@ -798,6 +828,8 @@ export async function checkUpdates(id, info = 'show') {
         )));
 
         for (const plugin of plugins) {
+            // 跳过手动安装的插件
+            if (!plugin || !plugin.updateUrl) continue;
             await checkSinglePluginUpdate(plugin.id, 'hide', autoUpdateEnabled, true);
         }
         if (info === 'show') {

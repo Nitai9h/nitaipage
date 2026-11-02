@@ -59,7 +59,10 @@ export default defineConfig(({ command }) => ({
         // SERVER_URL 指向自建 Server（留空则用同源/api）
         // 用户在设置里切换时只改 localStorage
         __ONLY_SERVER__: JSON.stringify(process.env.ONLY_SERVER === 'true'),
-        __SERVER_URL__: JSON.stringify(process.env.SERVER_URL || '')
+        __SERVER_URL__: JSON.stringify(process.env.SERVER_URL || ''),
+
+        // --allowcore 时允许安装 coreNpp
+        __ALLOW_CORE_NPP__: JSON.stringify(process.env.ALLOW_CORE_NPP === 'true')
     },
     server: {
         // 局域网共享

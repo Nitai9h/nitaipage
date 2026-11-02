@@ -276,7 +276,8 @@ function addTranslationEntries(entries) {
         return false
     }
     const locale = i18n.global.locale.value || BASE_LOCALE
-    i18n.global.mergeLocaleMessage(locale, entries)
+    // 用 setLocaleMessage 整体替换触发 t() 重渲染
+    i18n.global.setLocaleMessage(locale, { ...(i18n.global.getLocaleMessage(locale) || {}), ...entries })
     invalidateKeyCache()
     // 词条合并后重扫一遍已有 DOM
     startDomTranslation()
