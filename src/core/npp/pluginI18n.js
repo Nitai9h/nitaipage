@@ -285,5 +285,10 @@ function addTranslationEntries(entries) {
 }
 
 if (typeof window !== 'undefined') {
-    window.i18n = { addTranslationEntries }
+    // 暴露 t/has，插件可直接用于属性/非 DOM 文案
+    window.i18n = {
+        addTranslationEntries,
+        t,
+        has: (key) => i18n.global.te(key, i18n.global.locale.value || BASE_LOCALE)
+    }
 }
