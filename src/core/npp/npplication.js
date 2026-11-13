@@ -161,8 +161,8 @@ export function parseMetadataText(scriptText, url = '') {
             name: metadata.name,
             id: metadata.id,
             version: metadata.version,
-            // 更新地址不再允许插件使用自定义更新地址
-            updateUrl: url,
+            // 实际安装来源 > 元数据
+            updateUrl: url || metadata.updateUrl || '',
             description: metadata.description || '@npplication:no-description',
             author: metadata.author || '@npplication:no-author',
             type: metadata.type || '',
@@ -1277,6 +1277,8 @@ npp.remove = async function (key) {
 // 暴露到 window
 if (typeof window !== 'undefined') {
     window.npp = npp;
+    window.installNpplication = installNpplication;
+    window.uninstallNpp = uninstallNpp;
 }
 
 export { npp };

@@ -44,7 +44,22 @@ function toggleAutoUpdate() {
     localStorage.setItem('autoUpdatePlugins', autoUpdateOn.value ? 'on' : 'off')
 }
 
+// NPP 默认图标
+const FALLBACK_PLUGIN_ICON = import.meta.env.BASE_URL + 'img/default-plugin.svg'
+
+function onPluginIconError(event) {
+    const img = event.target
+    if (!img || img.dataset.fallback === '1') return
+    img.dataset.fallback = '1'
+    img.src = FALLBACK_PLUGIN_ICON
+}
+
 async function doUpdate(id) {
+    const target = normalPlugins.value.concat(translatePlugins.value).find((p) => p.id === id)
+    if (target && !target.updateUrl) {
+        iziToast.show({ timeout: 2000, message: `${target.name} @npplication:installed-latest-version-desc ${target.version}` })
+        return
+    }
     iziToast.show({ id: 'checkUpdateToast', message: '@npplication:checking-update' })
     try {
         await checkUpdates(id)
@@ -55,6 +70,8 @@ async function doUpdate(id) {
 }
 
 function doUninstall(id) {
+    const target = normalPlugins.value.concat(translatePlugins.value).find(p => p.id === id)
+    if (target && target.type === 'coreNpp') return
     iziToast.show({
         timeout: 8000,
         message: '@npplication:confirm-uninstall',
@@ -139,7 +156,7 @@ async function onFilePicked(event) {
             ['<button>@global:toast-ok</button>', async function (instance, toast) {
                 instance.hide({ transitionOut: 'fadeOutUp' }, toast, 'buttonName')
                 const sourceSaved = await saveJSContent(metadata.id, text)
-                const metaSaved = sourceSaved && await savePluginMetadata({ ...metadata, updateUrl: '', ignoreUpdatePrompt: false })
+                const metaSaved = sourceSaved && await savePluginMetadata({ ...metadata, ignoreUpdatePrompt: false })
                 if (!metaSaved) {
                     iziToast.show({ timeout: 3000, message: '@npplication:manual-install-fail' })
                     return
@@ -188,7 +205,7 @@ async function onFilePicked(event) {
         <PanelFold title="Npplications" :open="true">
             <div v-for="p in normalPlugins" :key="p.id" class="plugin_item" :class="{ coreNpp: p.type === 'coreNpp' }">
                 <div class="plugin_info">
-                    <div class="plugin_icon"><img :src="p.icon"></div>
+                    <div class="plugin_icon"><img :src="p.icon" @error="onPluginIconError"></div>
                     <div class="plugin_text">
                         <div class="plugin_name" translate="none">{{ p.name }}</div>
                         <div class="plugin_details">
@@ -197,10 +214,14 @@ async function onFilePicked(event) {
                     </div>
                 </div>
                 <div class="plugin_actions" :id="p.id">
-                    <button v-if="p.updateUrl" class="update_plugin" :data-id="p.id" @click="doUpdate(p.id)">
+                    <button class="update_plugin" :class="{ disabled: !p.updateUrl }" :data-id="p.id"
+                            :title="p.updateUrl ? '' : '已更新到最新版本'"
+                            @click="doUpdate(p.id)">
                         <i class="iconfont icon-refresh"></i>
                     </button>
-                    <button class="uninstall_plugin" :data-id="p.id" @click="doUninstall(p.id)">
+                    <button class="uninstall_plugin" :data-id="p.id" :disabled="p.type === 'coreNpp'"
+                            :title="p.type === 'coreNpp' ? 'coreNpp 无法卸载' : ''"
+                            @click="doUninstall(p.id)">
                         <i class="iconfont icon-delete"></i>
                     </button>
                 </div>
@@ -212,7 +233,7 @@ async function onFilePicked(event) {
         <PanelFold title="@npplication:installed-translate-plugins" :open="false">
             <div v-for="p in translatePlugins" :key="p.id" class="plugin_item translate-plugin">
                 <div class="plugin_info">
-                    <div class="plugin_icon"><img :src="p.icon"></div>
+                    <div class="plugin_icon"><img :src="p.icon" @error="onPluginIconError"></div>
                     <div class="plugin_text">
                         <div class="plugin_name" translate="none">{{ p.name }}</div>
                         <div class="plugin_details">
@@ -221,10 +242,14 @@ async function onFilePicked(event) {
                     </div>
                 </div>
                 <div class="plugin_actions" :id="p.id">
-                    <button v-if="p.updateUrl" class="update_plugin" :data-id="p.id" @click="doUpdate(p.id)">
+                    <button class="update_plugin" :class="{ disabled: !p.updateUrl }" :data-id="p.id"
+                            :title="p.updateUrl ? '' : '已更新到最新版本'"
+                            @click="doUpdate(p.id)">
                         <i class="iconfont icon-refresh"></i>
                     </button>
-                    <button class="uninstall_plugin" :data-id="p.id" @click="doUninstall(p.id)">
+                    <button class="uninstall_plugin" :data-id="p.id" :disabled="p.type === 'coreNpp'"
+                            :title="p.type === 'coreNpp' ? 'coreNpp 无法卸载' : ''"
+                            @click="doUninstall(p.id)">
                         <i class="iconfont icon-delete"></i>
                     </button>
                 </div>

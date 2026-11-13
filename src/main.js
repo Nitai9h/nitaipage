@@ -1,6 +1,7 @@
 import { createApp, h } from 'vue'
 import { createPinia } from 'pinia'
 import iziToast from 'izitoast'
+window.iziToast = iziToast
 
 import { i18n, setupI18n } from '@/i18n'
 import { initDefaultSettings, KEY, VISITED_VERSION } from '@/utils/storage'

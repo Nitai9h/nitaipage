@@ -740,6 +740,20 @@
     margin-left: 0;
 }
 
+.plugin_actions .update_plugin:disabled,
+.plugin_actions .update_plugin.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    background: var(--main-button-color);
+    transform: none;
+}
+
+.plugin_actions .update_plugin:disabled:hover,
+.plugin_actions .update_plugin.disabled:hover {
+    background: var(--main-button-color);
+    transform: none;
+}
+
 .plugin_actions .uninstall_plugin {
     border-radius: 0 8px 8px 0;
     margin-left: 0;
@@ -747,6 +761,11 @@
 
 .plugin_item.coreNpp .plugin_actions .uninstall_plugin {
     background: var(--main-button-active-color);
+}
+
+.plugin_item.coreNpp .plugin_actions .uninstall_plugin:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
 }
 
 .plugin_item.coreNpp .plugin_actions .uninstall_plugin .iconfont {
