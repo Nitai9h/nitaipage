@@ -139,6 +139,8 @@ function toggleWhiteTheme() {
     whiteThemeOn.value = !whiteThemeOn.value
     localStorage.setItem('whiteTheme', whiteThemeOn.value ? 'on' : 'off')
     if (whiteThemeOn.value) {
+        dynamicThemeOn.value = false
+        localStorage.setItem('dynamicTheme', 'off')
         applyWhiteTheme()
     } else {
         resetThemeColors()

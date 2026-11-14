@@ -1233,45 +1233,74 @@ npp.init = async function (pluginId) {
     }
 };
 
-npp.set = async function (key, value) {
+// 解析插件 ID
+// mode 默认为 0
+async function resolveStorePluginId(mode, pluginId) {
+    if (mode === 1) return pluginId || '';
     const metadata = await getCurrentPluginMetadata();
-    if (!metadata || !metadata.id) return false;
+    return metadata && metadata.id ? metadata.id : '';
+}
+
+// 统一返回
+// 成功 { ok: true, value, error: null }
+// 失败 { ok: false, value: undefined, error }
+function storeResult(ok, value, error) {
+    return ok
+        ? { ok: true, value: value, error: null }
+        : { ok: false, value: undefined, error: error };
+}
+
+npp.set = async function (key, value, mode = 0, pluginId) {
+    const id = await resolveStorePluginId(mode, pluginId);
+    if (!id) return storeResult(false, undefined, new Error('未找到当前插件 ID'));
     try {
-        await npp.init(metadata.id);
+        await npp.init(id);
         // nppDB 会随插件数量升版
-        return dbPut(NPP_DB_NAME, metadata.id, { key, value })
-            .then(() => true).catch(() => false);
+        await dbPut(NPP_DB_NAME, id, { key, value });
+        return storeResult(true, undefined, null);
     } catch (error) {
         console.error('设置插件存储失败:', error);
-        return false;
+        return storeResult(false, undefined, error);
     }
 };
 
-npp.get = async function (key) {
-    const metadata = await getCurrentPluginMetadata();
-    if (!metadata || !metadata.id) return undefined;
+npp.get = async function (key, mode = 0, pluginId) {
+    const id = await resolveStorePluginId(mode, pluginId);
+    if (!id) return storeResult(false, undefined, new Error('未找到当前插件 ID'));
     try {
-        await npp.init(metadata.id);
-        return dbGet(NPP_DB_NAME, metadata.id, key)
-            .then(result => result ? result.value : undefined)
-            .catch(() => undefined);
+        await npp.init(id);
+        const record = await dbGet(NPP_DB_NAME, id, key);
+        return storeResult(true, record ? record.value : undefined, null);
     } catch (error) {
         console.error('获取插件存储失败:', error);
-        return undefined;
+        return storeResult(false, undefined, error);
     }
 };
 
-npp.remove = async function (key) {
-    const metadata = await getCurrentPluginMetadata();
-    if (!metadata || !metadata.id) return false;
+npp.remove = async function (key, mode = 0, pluginId) {
+    const id = await resolveStorePluginId(mode, pluginId);
+    if (!id) return storeResult(false, undefined, new Error('未找到当前插件 ID'));
     try {
-        await npp.init(metadata.id);
-        return dbDelete(NPP_DB_NAME, metadata.id, key)
-            .then(() => true).catch(() => false);
+        await npp.init(id);
+        await dbDelete(NPP_DB_NAME, id, key);
+        return storeResult(true, undefined, null);
     } catch (error) {
         console.error('删除插件存储失败:', error);
-        return false;
+        return storeResult(false, undefined, error);
     }
+};
+
+/* 新存储三件套，mode = 1 */
+npp.dbGet = function (pluginId, key) {
+    return npp.get(key, 1, pluginId);
+};
+
+npp.dbSet = function (pluginId, key, value) {
+    return npp.set(key, value, 1, pluginId);
+};
+
+npp.dbRemove = function (pluginId, key) {
+    return npp.remove(key, 1, pluginId);
 };
 
 // 暴露到 window

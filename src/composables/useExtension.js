@@ -61,6 +61,9 @@ async function handshake() {
 
 // 询问扩展是否已有某项授权，未授予时扩展会弹横幅让用户点确认
 export async function requestExtensionPermission(permission) {
+    if (window.parent === window && window.__nppExtBridge && typeof window.__nppExtBridge.requestPermission === 'function') {
+        return await window.__nppExtBridge.requestPermission(permission)
+    }
     if (!isExtension.value) return { granted: false }
 
     try {
@@ -77,6 +80,9 @@ export function onExtensionPermissionGranted(handler) {
 
 // 按地址取网站图标，取不到一律返回 null，由调用方回退
 export async function requestFavicon(url, size = 32) {
+    if (window.parent === window && window.__nppExtBridge && typeof window.__nppExtBridge.getFavicon === 'function') {
+        return await window.__nppExtBridge.getFavicon(url, size)
+    }
     if (!isExtension.value) return null
     if (!capabilities.value.includes(CAPABILITY_FAVICON)) return null
 
@@ -86,6 +92,29 @@ export async function requestFavicon(url, size = 32) {
     } catch {
         return null
     }
+}
+
+let topBridgeTimer = 0
+
+function adoptTopBridge() {
+    const bridge = window.__nppExtBridge
+    if (!bridge) return false
+    isExtension.value = true
+    extensionVersion.value = bridge.version || ''
+    capabilities.value = Array.isArray(bridge.capabilities) ? bridge.capabilities : []
+    return true
+}
+
+function watchTopBridge() {
+    if (topBridgeTimer || adoptTopBridge()) return
+    let tries = 0
+    topBridgeTimer = setInterval(function () {
+        tries += 1
+        if (adoptTopBridge() || tries > 50) {
+            clearInterval(topBridgeTimer)
+            topBridgeTimer = 0
+        }
+    }, 100)
 }
 
 export function initExtensionBridge() {
@@ -108,8 +137,19 @@ export function initExtensionBridge() {
         getFavicon: requestFavicon
     }
 
-    // 没被扩展页框住就只留一个空壳
-    if (window.parent === window) return
+    // 用户来源分为 直接用浏览器打开 与 安装扩展后使用http连接到自部署站点
+
+    // 前者 bridge 不存在，nppExt 保持为空，isExtension 为 false
+
+    // 后者扩展页无法 iframe 嵌入（Mixed Content Security Policy）
+    // 扩展通过 content script 注入 window.__nppExtBridge 提供同等能力
+
+    // page-bridge 由扩展在 document_start 注入
+    if (window.parent === window) {
+        adoptTopBridge()
+        watchTopBridge()
+        return
+    }
 
     window.addEventListener('message', handleMessage)
     handshake()
