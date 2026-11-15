@@ -36,12 +36,15 @@ function createStorage() {
         },
         setItem(key, value) {
             const name = String(key)
+            const text = String(value)
             if (LOCAL_ONLY_KEYS.has(name)) {
-                if (nativeStorage) nativeStorage.setItem(name, String(value))
+                if (nativeStorage) nativeStorage.setItem(name, text)
                 return
             }
-            memory.set(name, String(value))
-            saveRemotePref(name, value)
+            // 值没变就不重写
+            if (memory.get(name) === text) return
+            memory.set(name, text)
+            saveRemotePref(name, text)
         },
         removeItem(key) {
             const name = String(key)
